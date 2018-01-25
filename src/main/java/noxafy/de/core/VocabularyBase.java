@@ -2,7 +2,6 @@ package noxafy.de.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class VocabularyBase {
 	private final List<Vocabulary> new_vocs = new LinkedList<>();
 
 	// Fill with Settings.NUMBER_SIMUL_VOCS vocs
-	private final List<Vocabulary> today;
+	private final List<Vocabulary> todo_now;
 
 	private Vocabulary last_asked;
 
@@ -38,38 +37,28 @@ public class VocabularyBase {
 				asked_vocs.add(voc);
 			}
 		}
-		today = new LinkedList<>();
+		todo_now = new LinkedList<>();
 	}
 
 	public void generateVocsForToday(Settings settings) throws IOException {
+		// test if enough is learned for today
 		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
 		if (settings.allDone()) {
-			ui.tell("All vocabularies for today already learned. Do you want to reset that? (y/n) [y]: ");
-			int ans = System.in.read();
-			if (ans != 10) {
-				while (System.in.read() != 10) {
-					//
-				}
+			if (ui.getAnswer("All vocabularies for today already learned. Do you want to reset that? (y/n) [y]: ", true)) {
+				settings.resetAllLearned();
 			}
-
-			switch (Character.toLowerCase(ans)) {
-				case 'y':
-				case 'j':
-				case 10:
-					settings.resetAllLearned();
-					break;
-				default:
-					return;
+			else {
+				return;
 			}
 		}
 
 		sortList(asked_vocs);
 		int number_asked_vocs = settings.NUMBER_SIMUL_VOCS - settings.NUMBER_NEW_VOCS_AT_START - settings.vocs_learned_today;
 		ui.debug("Add max " + number_asked_vocs + " asked vocs. Available: " + asked_vocs.size() + " asked vocs.");
-		for (int i = asked_vocs.size() - 1; today.size() < number_asked_vocs && i >= 0; i--) {
+		for (int i = asked_vocs.size() - 1; todo_now.size() < number_asked_vocs && i >= 0; i--) {
 			Vocabulary v = asked_vocs.get(i);
 			ui.debug("Added from asked voc: " + v);
-			today.add(v);
+			todo_now.add(v);
 		}
 		int new_vocs_add = settings.NUMBER_NEW_VOCS_AT_START;
 		if (number_asked_vocs < 0) {
@@ -81,7 +70,7 @@ public class VocabularyBase {
 		while (new_vocs_add > 0 && !new2.isEmpty()) {
 			Vocabulary v = new2.remove(rand.nextInt(new2.size()));
 			ui.debug("Added from newer voc: " + v);
-			today.add(v);
+			todo_now.add(v);
 			new_vocs_add--;
 		}
 
@@ -91,7 +80,7 @@ public class VocabularyBase {
 //		while (new_vocs_add > 0 && !new2.isEmpty()) {
 //			Vocabulary v = new2.remove(0);
 //			ui.debug("Added from newer voc: " + v);
-//			today.add(v);
+//			todo_now.add(v);
 //			new_vocs_add--;
 //		}
 	}
@@ -106,7 +95,7 @@ public class VocabularyBase {
 		if (last_asked.isKnown()) {
 			settings.vocLearned();
 			ui.debug(last_asked.getWord() + " removed because it's known!");
-			today.remove(last_asked);
+			todo_now.remove(last_asked);
 		}
 		// move from new to asked if not new anymore
 		if (new_vocs.remove(last_asked)) {
@@ -114,9 +103,9 @@ public class VocabularyBase {
 		}
 
 		// refill with new vocs if new vocs available
-//		while (today.size() < settings.NUMBER_SIMUL_VOCS && !new_vocs.isEmpty()) {
+//		while (todo_now.size() < settings.NUMBER_SIMUL_VOCS && !new_vocs.isEmpty()) {
 //			Vocabulary v = new_vocs.get(rand.nextInt(new_vocs.size()));
-//			today.add(v);
+//			todo_now.add(v);
 //			if (Settings.DEBUG) {
 //				System.out.println("Added new voc " + v.getWord() + "!");
 //			}
@@ -124,16 +113,16 @@ public class VocabularyBase {
 	}
 
 	public Vocabulary getNextVocabulary() {
-		ui.debug("Get new voc -> today.size(): " + today.size());
-		if (today.size() == 1) {
-			last_asked = today.get(0);
+		ui.debug("Get new voc -> todo_now.size(): " + todo_now.size());
+		if (todo_now.size() == 1) {
+			last_asked = todo_now.get(0);
 		}
 		else {
-			sortList(today);
+			sortList(todo_now);
 			// get and remove highest rated
-			Vocabulary last = today.get(today.size() - 1);
+			Vocabulary last = todo_now.get(todo_now.size() - 1);
 			if (last == last_asked) {
-				last_asked = today.get(today.size() - 2);
+				last_asked = todo_now.get(todo_now.size() - 2);
 			}
 			else {
 				last_asked = last;
@@ -143,7 +132,7 @@ public class VocabularyBase {
 	}
 
 	public boolean hasNextVocabulary() {
-		return !today.isEmpty();
+		return !todo_now.isEmpty();
 	}
 
 	public List<Vocabulary> getAllVocs() {

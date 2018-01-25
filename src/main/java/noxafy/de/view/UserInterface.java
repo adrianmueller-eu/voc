@@ -16,22 +16,22 @@ import static noxafy.de.view.ANSI.transparent;
 public final class UserInterface {
 
 	private static final Random rnd = new Random();
-	private static final String[] good_vibes = { "Good!", "Great!", "Awesome!", "Fabulous!", "Fantastic!" };
+	private static final String[] good_vibes = { "Good!", "Great!", "Awesome!", "Fabulous!", "Fantastic!", "Bravo!",
+			"Good job!", "Nice going!", "Nicely done!", "Well done!", "Way to go!" };
 	private static final UserInterface singleton = new UserInterface();
 
 	public void ask(Vocabulary voc) throws IOException {
 		boolean askWord = Math.random() < 0.5;
 		doAsk(voc, askWord);
-		getAnswer();
+		getAnswer("", false);
 		showAnswer(voc, askWord);
-		boolean known = getAnswer();
-		voc.asked();
-		if (known) {
+		if (getAnswer(" ? (y/n) [n]: ", false)) {
 			voc.succeeded();
 		}
 		else {
 			voc.failed();
 		}
+		voc.asked();
 		if (voc.isKnown()) {
 			tellln(good_vibes[rnd.nextInt(good_vibes.length)]);
 		}
@@ -51,11 +51,12 @@ public final class UserInterface {
 		if (voc.hasMnemonic()) {
 			tell("\n\t" + transparent(voc.getMnemonic()));
 		}
-		tell(" ? (y/n) [n]: ");
 	}
 
-	private boolean getAnswer() throws IOException {
-		boolean known = false;
+	public boolean getAnswer(String message, boolean default_true) throws IOException {
+		if (!message.isEmpty()) {
+			tell(message);
+		}
 		int ans = System.in.read();
 		if (ans != 10) {
 			while (System.in.read() != 10) {
@@ -66,9 +67,12 @@ public final class UserInterface {
 		switch (Character.toLowerCase(ans)) {
 			case 'y':
 			case 'j':
-				known = true;
+				return true;
+			case 'n':
+				return false;
+			default:
+				return default_true;
 		}
-		return known;
 	}
 
 	private void doAsk(Vocabulary voc, boolean askWord) {
