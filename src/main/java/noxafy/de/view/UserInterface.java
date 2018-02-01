@@ -16,9 +16,8 @@ import static noxafy.de.view.ANSI.transparent;
 public final class UserInterface {
 
 	private static final Random rnd = new Random();
-	private static final String[] good_vibes = { "Good!", "Great!", "Awesome!", "Fabulous!", "Fantastic!", "Bravo!",
-			"Good job!", "Nice going!", "Nicely done!", "Well done!", "Way to go!" };
 	private static final UserInterface singleton = new UserInterface();
+	public final Strings str;
 
 	public void ask(Vocabulary voc) throws IOException {
 		boolean askWord = Math.random() < 0.5;
@@ -27,18 +26,26 @@ public final class UserInterface {
 		showAnswer(voc, askWord);
 		if (getAnswer(" ? (y/n) [n]: ", false)) {
 			voc.succeeded();
+			if (voc.isKnown()) {
+				tellln(str.getGoodVibes()[rnd.nextInt(str.getGoodVibes().length)]);
+			}
 		}
 		else {
 			voc.failed();
-		}
-		voc.asked();
-		if (voc.isKnown()) {
-			tellln(good_vibes[rnd.nextInt(good_vibes.length)]);
 		}
 		tell("\n");
 	}
 
 	private UserInterface() {
+		switch (Settings.LANG) {
+			case "de":
+				str = new Strings_de();
+				break;
+			default:
+				// "en" is default
+				str = new Strings_en();
+				break;
+		}
 	}
 
 	public static UserInterface getInstance() {

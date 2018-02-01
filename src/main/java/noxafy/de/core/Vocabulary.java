@@ -25,6 +25,8 @@ public class Vocabulary {
 	private int succeeded_in_a_row;
 	private double rating;
 	private Date ratingDate;
+	private KnowledgeLevel level;
+
 	private final UserInterface ui = UserInterface.getInstance();
 
 	public Vocabulary(String word, String meaning, String mnemonic, Date added, Date lastAsked, int asked, int failed, int succeeded_in_a_row) {
@@ -36,6 +38,7 @@ public class Vocabulary {
 		this.asked = asked;
 		this.failed = failed;
 		this.succeeded_in_a_row = succeeded_in_a_row;
+		level = KnowledgeLevel.decide(succeeded_in_a_row);
 	}
 
 	public Date getAdded() {
@@ -69,12 +72,15 @@ public class Vocabulary {
 
 	public void succeeded() {
 		succeeded_in_a_row++;
+		asked();
 		ui.debug("Success! " + succeeded_in_a_row + " in a row.");
 	}
 
 	public void failed() {
 		succeeded_in_a_row = 0;
+		level = KnowledgeLevel.UNKNOWN;
 		failed++;
+		asked();
 		ui.debug("Failed!");
 	}
 
@@ -96,7 +102,7 @@ public class Vocabulary {
 	}
 
 	public boolean isKnown() {
-		return succeeded_in_a_row >= 3;
+		return level != KnowledgeLevel.UNKNOWN;
 	}
 
 	public int getFailed() {
@@ -105,10 +111,11 @@ public class Vocabulary {
 
 	@Override
 	public String toString() {
-		return String.format("voc: %s" + transparent("; meaning: %s%s ") + "(a: %d, f: %d, srow: %d, rtng: %.2f)",
+		return String.format("word: %s" + transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
 				word,
 				meaning,
 				(hasMnemonic()) ? "; mnemonic: " + mnemonic : "",
+				level.toString(),
 				asked,
 				failed,
 				succeeded_in_a_row,
@@ -121,8 +128,8 @@ public class Vocabulary {
 			ratingDate = now;
 			// 0 ... 1 for number of fails
 			double failRate = (isNew()) ? 0.5 : failed / (double) asked;
-			if (succeeded_in_a_row != 0) {
-				failRate /= succeeded_in_a_row;
+			if (succeeded_in_a_row > 2) {
+				failRate /= succeeded_in_a_row - 2;
 			}
 			// (-20000 ...) 0 ... 1 for time passed since last asked
 			// never asked vocs should be asked, so default to 1
@@ -147,11 +154,53 @@ public class Vocabulary {
 				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
 					tabs.append("\t");
 				}
-				String debug_rating = String.format("Rated \"%s\":%sfailR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
-						word, tabs.toString(), 3 * failRate, time_passed_rating, random, rating);
+				String debug_rating = String.format("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
+						word, tabs.toString(), level.toString(), 3 * failRate, time_passed_rating, random, rating);
 				ui.tellln("DEBUG: " + debug_rating);
 			}
 		}
 		return rating;
+	}
+
+	public boolean shouldBeAsked(Date now) {
+		long diff = now.getTime() - lastAsked.getTime();
+		switch (level) {
+			case LEVEL1:
+				return diff > 86400000L; // 1 day
+			case LEVEL2:
+				return diff > 259200000L; // 3 days
+			case LEVEL3:
+				return diff > 604800000L; // 7 days
+			case LEVEL4:
+				return diff > 7862400000L; // 3 months
+			default:
+				return true;
+		}
+	}
+
+	enum KnowledgeLevel {
+		UNKNOWN, LEVEL1, LEVEL2, LEVEL3, LEVEL4;
+
+		static KnowledgeLevel decide(int succeeded_in_a_row) {
+			switch (succeeded_in_a_row) {
+				case 0:
+				case 1:
+				case 2:
+					return UNKNOWN;
+				case 3:
+				case 4:
+					return LEVEL1;
+				case 5:
+				case 6:
+					return LEVEL2;
+				case 7:
+				case 8:
+				case 9:
+				case 10:
+					return LEVEL3;
+				default:
+					return LEVEL4;
+			}
+		}
 	}
 }

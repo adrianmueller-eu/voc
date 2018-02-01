@@ -3,11 +3,11 @@ package noxafy.de.fileManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import noxafy.de.core.Settings;
 import noxafy.de.core.Vocabulary;
+import noxafy.de.view.UserInterface;
 
 /**
  * @author noxafy
@@ -15,44 +15,113 @@ import noxafy.de.core.Vocabulary;
  */
 public class VocGenerator extends FileManager<String[]> {
 
-	private static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-	private static final File vocs = new File(vok_dir + "vocs");
-	private static final File csv = new File(vok_dir + "Englisch.csv");
+	private static File from = null;
+	private static File to = null;
+	private static Exception convert_e = null;
+
+	private static final UserInterface ui = UserInterface.getInstance();
 
 	private VocGenerator(File file) {
 		super(file);
 	}
 
 	public static void main(String[] args) throws IOException {
-		VocGenerator vocGenerator = new VocGenerator(vocs);
+		if (!parseArgs(args)) return;
+		Settings.DEBUG = true; // show all error messages
+
+		if (from == null || to == null) {
+			if (to == null && from != null) {
+				ui.tellln("Please give a csv where to write the generated items.");
+				return;
+			}
+			else if (to != null) {
+				ui.tellln("Please give a csv where to read the items from.");
+				return;
+			}
+			final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
+			from = new File(vok_dir + "vocs");
+			to = new File(vok_dir + "Englisch.csv");
+		}
+		VocGenerator vocGenerator = new VocGenerator(from);
 		String[] lines = vocGenerator.load();
 		String res;
-		List<String> fails = new ArrayList<>();
+		int success = 0;
 		for (int i = 0; i < lines.length; i++) {
+			convert_e = null;
 			Vocabulary voc = getVoc(lines[i]);
-			if (voc == null) {
-				fails.add(lines[i]);
-				System.err.println("Failed to process line " + (i + 1) + ": " + lines[i]);
+			if (voc == null) { // has error
+				ui.tellln("Failed to process line " + (i + 1) + ": " + lines[i]);
+				ui.debug(convert_e.toString());
+				continue;
 			}
-			else {
-				res = getLine(voc);
-				System.out.println("Processing " + res);
-				vocGenerator.appendNewVoc(res);
-				lines[i] = "";
-				vocGenerator.write(lines);
+			res = getLine(voc);
+			ui.tellln("Processing " + res);
+			vocGenerator.appendNewVoc(res);
+			lines[i] = "";
+			vocGenerator.write(lines);
+			success++;
+		}
+		ui.tellln(success + " new vocs added.");
+	}
+
+	private static boolean parseArgs(String[] args) throws IOException {
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+				case "-d":
+					Settings.DEBUG = true;
+					break;
+				case "-f":
+					from = evalFile(args, ++i);
+					break;
+				case "-t":
+					to = ensureFile(args, ++i);
+					break;
+//				case "-h":
+//				case "--help":
 			}
 		}
-		System.out.println(lines.length + " new vocs added.");
-		if (!fails.isEmpty()) {
-			System.out.println(fails.size() + " lines failed processing:");
-			for (String fail : fails) {
-				System.out.println(fail);
+		return true;
+	}
+
+	private static File evalFile(String[] args, int i) {
+		if (i < args.length) {
+			File file = new File(args[i]);
+			if (!file.exists()) {
+				ui.tellln("Please give an existing file to a csv with vocs.");
+				System.exit(1);
 			}
+			else if (!file.canRead()) {
+				ui.tellln("Please give a readable file to a csv with vocs. See --help for more information.");
+				System.exit(1);
+			}
+			else if (!file.canWrite()) {
+				ui.tellln("Please give a writable file to a csv with vocs. See --help for more information.");
+				System.exit(1);
+			}
+			return file;
+		}
+		else {
+			ui.tellln("Please give a path to a csv with vocs. See --help for more information.");
+			System.exit(1);
+			return null;
 		}
 	}
 
-	private static Vocabulary getVoc(String line) {
-		line = line.substring(1, line.length() - 1);
+	private static File ensureFile(String[] args, int i) throws IOException {
+		if (i < args.length) {
+			File file = new File(args[i]);
+			file.createNewFile();
+			return file;
+		}
+		else {
+			ui.tellln("Please give a path to a csv with vocs. See --help for more information.");
+			System.exit(1);
+		}
+		return null;
+	}
+
+	private static Vocabulary getVoc(String org_line) {
+		String line = org_line.substring(1, org_line.length() - 1);
 
 		String[] args = line.split("\",\"");
 		String word;
@@ -68,30 +137,39 @@ public class VocGenerator extends FileManager<String[]> {
 			switch (args.length) {
 				default:
 				case 8:
-					succeeded_in_a_row = Integer.parseInt(args[7]);
+					succeeded_in_a_row = parseInt("succeeded_in_a_row", args[7]);
 				case 7:
-					failed = Integer.parseInt(args[6]);
+					failed = parseInt("failed", args[6]);
 				case 6:
-					asked = Integer.parseInt(args[5]);
+					asked = parseInt("asked", args[5]);
 				case 5:
 					if (!args[4].isEmpty()) {
-						lastAsked = new Date(Long.parseLong(args[4]));
+						lastAsked = new Date(parseLong("lastAsked", args[4]));
 					}
 				case 4:
-					added = new Date(Long.parseLong(args[3]));
+					added = new Date(parseLong("added", args[3]));
 				case 3:
 					mnemonic = args[2];
 				case 2:
 					meaning = args[1];
+					if (meaning.isEmpty()) {
+						convert_e = new IllegalArgumentException("Meaning field must not be empty.");
+						return null;
+					}
 					word = args[0];
+					if (word.isEmpty()) {
+						convert_e = new IllegalArgumentException("Word field must not be empty.");
+						return null;
+					}
 					break;
 				case 1:
 				case 0:
+					convert_e = new TooShortLineException(org_line);
 					return null;
 			}
 		}
 		catch (NumberFormatException e) {
-			e.printStackTrace();
+			convert_e = e;
 			return null;
 		}
 		return new Vocabulary(word, meaning, mnemonic, added, lastAsked, asked, failed, succeeded_in_a_row);
@@ -113,21 +191,21 @@ public class VocGenerator extends FileManager<String[]> {
 	}
 
 	@Override
-	String[] load() throws IOException {
+	String[] load() {
 		String content = getStringFromFile();
 		if (content == null) {
-			System.err.println("File " + getFile().getAbsolutePath() + " not found!");
 			return new String[0];
 		}
-		else if (content.isEmpty()) {
-			System.err.println("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
+
+		if (content.isEmpty()) {
+			ui.tellln("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
 			return new String[0];
 		}
 		return content.split("\n");
 	}
 
 	@Override
-	void write(String[] data) {
+	void write(String[] data) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		for (String line : data) {
 			if (line.isEmpty()) continue;
@@ -136,13 +214,36 @@ public class VocGenerator extends FileManager<String[]> {
 		writeOutFile(sb.toString());
 	}
 
-	private void appendNewVoc(String line) {
+	private void appendNewVoc(String line) throws IOException {
 		line += "\n";
-		try (FileOutputStream out = new FileOutputStream(csv, true)) {
+		try (FileOutputStream out = new FileOutputStream(to, true)) {
 			out.write(line.getBytes());
 		}
 		catch (IOException e) {
-			throw new RuntimeException("Writing a new line to " + csv.getAbsolutePath() + " failed.", e);
+			ui.tellln("Writing a new line to " + to.getAbsolutePath() + " failed.");
+			throw e;
 		}
+	}
+
+	private static int parseInt(String type, String toParse) {
+		int res;
+		try {
+			res = Integer.parseInt(toParse);
+		}
+		catch (NumberFormatException e) {
+			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
+		}
+		return res;
+	}
+
+	private static long parseLong(String type, String toParse) {
+		long res;
+		try {
+			res = Long.parseLong(toParse);
+		}
+		catch (NumberFormatException e) {
+			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
+		}
+		return res;
 	}
 }

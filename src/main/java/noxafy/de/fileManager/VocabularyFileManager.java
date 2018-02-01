@@ -8,6 +8,7 @@ import java.util.List;
 
 import noxafy.de.core.Vocabulary;
 import noxafy.de.core.VocabularyBase;
+import noxafy.de.view.UserInterface;
 
 /**
  * @author noxafy
@@ -17,38 +18,48 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 
 	private static VocabularyFileManager singleton;
 
+	private final UserInterface ui = UserInterface.getInstance();
+
 	private VocabularyFileManager(File file) {
 		super(file);
 	}
 
-	public static VocabularyFileManager getInstance(File settings_file) {
+	public static VocabularyFileManager getInstance(String settings_path) {
 		if (singleton == null) {
-			singleton = new VocabularyFileManager(settings_file);
+			singleton = new VocabularyFileManager(new File(settings_path));
 		}
 		return singleton;
 	}
 
 	@Override
-	public VocabularyBase load() throws IOException {
+	public VocabularyBase load() {
 		String content = getStringFromFile();
 		if (content == null) {
 			return new VocabularyBase(new ArrayList<>());
 		}
+
 		String[] lines = content.split("\n");
 		ArrayList<Vocabulary> vocs = new ArrayList<>(lines.length);
-		for (String line : lines) {
-			vocs.add(getVocabulary(line));
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			try {
+				vocs.add(getVocabulary(line));
+			}
+			catch (Exception e) {
+				ui.tellln("Failed to parse line " + (i + 1) + ": " + line);
+				ui.debug(e.toString());
+			}
 		}
 		return new VocabularyBase(vocs);
 	}
 
-	private Vocabulary getVocabulary(String line) {
+	private Vocabulary getVocabulary(String org_line) {
 		// cut start and end "
-		line = line.substring(1, line.length() - 1);
+		String line = org_line.substring(1, org_line.length() - 1);
 
 		String[] args = line.split("\",\"");
 		if (args.length < 8) {
-			throw new TooShortLineException(line);
+			throw new TooShortLineException(org_line);
 		}
 		String word = args[0];
 		String meaning = args[1];
@@ -65,7 +76,7 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 	}
 
 	@Override
-	public void write(VocabularyBase base) {
+	public void write(VocabularyBase base) throws IOException {
 		List<Vocabulary> vocs = base.getAllVocs();
 		StringBuilder csv = new StringBuilder();
 		for (Vocabulary voc : vocs) {
@@ -89,11 +100,5 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 
 	private String quote(Object inner, boolean comma) {
 		return "\"" + inner + ((comma) ? "\"," : "\"");
-	}
-
-	private static class TooShortLineException extends RuntimeException {
-		TooShortLineException(String line) {
-			super("Line has not enough arguments or is bad formatted: " + line);
-		}
 	}
 }

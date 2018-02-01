@@ -32,20 +32,20 @@ public final class SettingsFileManager extends FileManager<Settings> {
 		super(file);
 	}
 
-	public static SettingsFileManager getInstance(File settings_file) {
+	public static SettingsFileManager getInstance(String settings_path) {
 		if (singleton == null) {
-			singleton = new SettingsFileManager(settings_file);
+			singleton = new SettingsFileManager(new File(settings_path));
 		}
 		return singleton;
 	}
 
 	@Override
-	public Settings load() throws IOException {
+	public Settings load() {
 		String jsonContent = getStringFromFile();
 		if (jsonContent == null) {
-			ui.debug("Config file was missing. (Path: " + getFile().getAbsolutePath() + ")");
 			return new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT, 0, null);
 		}
+
 		JsonObject obj = Json.createReader(new StringReader(jsonContent)).readObject();
 
 		// NUMBER_SIMUL_VOCS
@@ -88,7 +88,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	}
 
 	@Override
-	public void write(Settings settings) {
+	public void write(Settings settings) throws IOException {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
 		obj.add(str_NUMBER_NEW_VOCS_AT_START, settings.NUMBER_NEW_VOCS_AT_START);

@@ -8,6 +8,8 @@ import java.util.Date;
  * @created 28.08.17
  */
 public class Settings {
+	// default lang for ui is "en"
+	public static String LANG = "en";
 	public static boolean DEBUG = false;
 	public final int NUMBER_SIMUL_VOCS;
 	// should not be bigger than the previous two

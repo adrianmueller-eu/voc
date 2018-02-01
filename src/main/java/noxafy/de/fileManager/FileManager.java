@@ -3,9 +3,10 @@ package noxafy.de.fileManager;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import noxafy.de.view.UserInterface;
 
 /**
  * @author noxafy
@@ -15,20 +16,23 @@ abstract class FileManager<T> {
 
 	private final File file;
 
+	private final UserInterface ui = UserInterface.getInstance();
+
 	FileManager(File file) {
 		this.file = file;
 	}
 
-	abstract T load() throws IOException;
+	abstract T load();
 
-	abstract void write(T data);
+	abstract void write(T data) throws IOException;
 
-	void writeOutFile(String content) {
+	void writeOutFile(String content) throws IOException {
 		try (FileOutputStream out = new FileOutputStream(file)) {
 			out.write(content.getBytes());
 		}
 		catch (IOException e) {
-			throw new RuntimeException("Writing [" + content + "] to file " + file.getAbsolutePath() + " failed.", e);
+			ui.debug("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");
+			throw e;
 		}
 	}
 
@@ -38,7 +42,7 @@ abstract class FileManager<T> {
 	 *
 	 * @return the content as String or <code>null</code> if no content available
 	 */
-	String getStringFromFile() throws IOException {
+	String getStringFromFile() {
 		try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			byte[] buf = new byte[1024];
 			int bytesRead;
@@ -47,7 +51,9 @@ abstract class FileManager<T> {
 			}
 			return baos.toString();
 		}
-		catch (FileNotFoundException e) {
+		catch (Exception e) {
+			ui.tellln("Reading from file " + file.getAbsolutePath() + " failed.");
+			ui.debug(e.toString());
 			return null;
 		}
 	}
