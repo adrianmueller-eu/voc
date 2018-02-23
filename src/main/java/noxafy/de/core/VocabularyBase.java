@@ -199,9 +199,9 @@ public class VocabularyBase {
 			ui.tell("+");
 		}
 
-		ui.tell(String.format("\nKnown: %d/%d (%.2f%%); ", known, number_vocs, perc_known * 100));
-		ui.tell(String.format("Unknown: %d/%d (%.2f%%); ", asked_vocs.size() - known, number_vocs, (1 - perc_known - perc_new) * 100));
-		ui.tellln(String.format("New: %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
+		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ", known, number_vocs, perc_known * 100));
+		ui.tell(String.format(ui.str.getUnknown() + ": %d/%d (%.2f%%); ", asked_vocs.size() - known, number_vocs, (1 - perc_known - perc_new) * 100));
+		ui.tellln(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 		ui.tell(todo.size() + ui.str.getVocsLeft());
 		// newline printed at exit
 	}

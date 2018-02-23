@@ -4,7 +4,7 @@ package noxafy.de.view;
  * @author noxafy
  * @created 31.01.18
  */
-public class Strings_en extends Strings {
+public class Strings_en implements Strings {
 	private static final String[] vibes = { "Good!", "Great!", "Awesome!", "Fabulous!", "Fantastic!", "Bravo!",
 			"Good job!", "Nice going!", "Nicely done!", "Well done!", "Way to go!" };
 
@@ -36,5 +36,20 @@ public class Strings_en extends Strings {
 	@Override
 	public String getNoVocFound() {
 		return "No vocabulary item found.";
+	}
+
+	@Override
+	public String getKnown() {
+		return "Known";
+	}
+
+	@Override
+	public String getUnknown() {
+		return "Unknown";
+	}
+
+	@Override
+	public String getNew() {
+		return "Neu";
 	}
 }

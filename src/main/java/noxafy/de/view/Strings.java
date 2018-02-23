@@ -1,22 +1,26 @@
 package noxafy.de.view;
 
-import noxafy.de.core.Settings;
-
 /**
  * @author noxafy
  * @created 31.01.18
  */
-public abstract class Strings {
+public interface Strings {
 
-	public abstract String[] getGoodVibes();
+	String[] getGoodVibes();
 
-	public abstract String getFinal();
+	String getFinal();
 
-	public abstract String getFinalAndReset();
+	String getFinalAndReset();
 
-	public abstract String getVocsLeft();
+	String getVocsLeft();
 
-	public abstract String getStatistics();
+	String getStatistics();
 
-	public abstract String getNoVocFound();
+	String getNoVocFound();
+
+	String getKnown();
+
+	String getUnknown();
+
+	String getNew();
 }
