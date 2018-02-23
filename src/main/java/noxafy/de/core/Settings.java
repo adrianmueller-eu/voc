@@ -11,6 +11,9 @@ public class Settings {
 	// default lang for ui is "en"
 	public static String LANG = "en";
 	public static boolean DEBUG = false;
+	// shrink window on start and clear after each voc
+	public static boolean TRAINING_MODE = false;
+
 	public final int NUMBER_SIMUL_VOCS;
 	// should not be bigger than the previous two
 	public final int NUMBER_NEW_VOCS_AT_START;

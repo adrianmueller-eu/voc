@@ -19,7 +19,7 @@ public class AskingRoutine {
 
 	private final UserInterface ui = UserInterface.getInstance();
 
-	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) {
+	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) throws IOException {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
 
@@ -28,10 +28,6 @@ public class AskingRoutine {
 	}
 
 	public void run() throws IOException {
-		if (vocabularyBase.isEmpty()) {
-			ui.tell(ui.str.getNoVocFound());
-			return;
-		}
 		vocabularyBase.generateVocsForToday(settings);
 
 		while (vocabularyBase.hasNextVocabulary()) {
@@ -44,6 +40,7 @@ public class AskingRoutine {
 	}
 
 	public void summarize() {
+		vocabularyBase.generateTodo();
 		vocabularyBase.summarize();
 	}
 

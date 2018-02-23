@@ -34,6 +34,9 @@ public final class UserInterface {
 			voc.failed();
 		}
 		tell("\n");
+		if (Settings.TRAINING_MODE) {
+			tell(ANSI.CLEAR_WINDOW);
+		}
 	}
 
 	private UserInterface() {
@@ -45,6 +48,11 @@ public final class UserInterface {
 				// "en" is default
 				str = new Strings_en();
 				break;
+		}
+
+		if (Settings.TRAINING_MODE) {
+			tell(ANSI.SHIRNK_WINDOW);
+			tell(ANSI.CLEAR_WINDOW);
 		}
 	}
 

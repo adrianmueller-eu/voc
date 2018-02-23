@@ -5,20 +5,23 @@ package noxafy.de.view;
  * @created 20.01.18
  */
 public class ANSI {
-	private static final String ANSI_RESET = "\u001B[0m";
-	private static final String ANSI_BOLD = "\u001B[1m";
-	private static final String ANSI_TRANSPARENT = "\u001B[2m";
-	private static final String ANSI_UNDERLINE = "\u001B[4m";
+	private static final String RESET = "\u001B[0m";
+	private static final String BOLD = "\u001B[1m";
+	private static final String TRANSPARENT = "\u001B[2m";
+	private static final String UNDERLINE = "\u001B[4m";
+
+	public static final String SHIRNK_WINDOW = "\u001B[8;4;60t";
+	public static final String CLEAR_WINDOW = "\u001B[2J\u001B[H";
 
 	public static String bold(String bold) {
-		return ANSI_BOLD + bold + ANSI_RESET;
+		return BOLD + bold + RESET;
 	}
 
 	public static String transparent(String transparent) {
-		return ANSI_TRANSPARENT + transparent + ANSI_RESET;
+		return TRANSPARENT + transparent + RESET;
 	}
 
 	public static String underline(String underline) {
-		return ANSI_UNDERLINE + underline + ANSI_RESET;
+		return UNDERLINE + underline + RESET;
 	}
 }
