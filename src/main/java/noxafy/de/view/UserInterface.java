@@ -27,7 +27,8 @@ public final class UserInterface {
 		if (getAnswer(" ? (y/n) [n]: ", false)) {
 			voc.succeeded();
 			if (voc.isKnown()) {
-				tellln(str.getGoodVibes()[rnd.nextInt(str.getGoodVibes().length)]);
+				String random_vibe = str.getGoodVibes()[rnd.nextInt(str.getGoodVibes().length)];
+				letReadThat(random_vibe);
 			}
 		}
 		else {
@@ -36,6 +37,18 @@ public final class UserInterface {
 		tell("\n");
 		if (Settings.TRAINING_MODE) {
 			tell(ANSI.CLEAR_WINDOW);
+		}
+	}
+
+	public void letReadThat(String message) {
+		tellln(message);
+		if (Settings.TRAINING_MODE) {
+			try {
+				Thread.sleep(message.length() * 67 + 1710); // about 15 chars per second + 360 attention shift + 1350 feel good :)
+			}
+			catch (InterruptedException e) {
+				// ignore
+			}
 		}
 	}
 

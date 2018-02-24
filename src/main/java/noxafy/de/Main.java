@@ -22,7 +22,7 @@ public class Main {
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exists.\n" +
 			"\t" + bold("-d") + "\tVerboses very much debug information while asking.\n" +
-			"\t" + bold("-t") + "\tShrinks the shell window to 4;60 and clears the screen after each voc.\n" +
+			"\t" + bold("-t") + "\tShrinks the shell window to 5;100 and clears the screen after each voc.\n" +
 			"\t" + bold("-l") + "\tChoose an alternative language. Available: \"de\", \"en\"\n" +
 			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
 			"\n" +

@@ -36,7 +36,7 @@ public class AskingRoutine {
 			vocabularyBase.update(settings);
 			writeOutChanges();
 		}
-		ui.tellln(ui.str.getFinal());
+		ui.letReadThat(ui.str.getFinal());
 	}
 
 	public void summarize() {

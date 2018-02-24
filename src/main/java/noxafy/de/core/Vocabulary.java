@@ -72,6 +72,7 @@ public class Vocabulary {
 
 	public void succeeded() {
 		succeeded_in_a_row++;
+		level = KnowledgeLevel.decide(succeeded_in_a_row);
 		asked();
 		ui.debug("Success! " + succeeded_in_a_row + " in a row.");
 	}
