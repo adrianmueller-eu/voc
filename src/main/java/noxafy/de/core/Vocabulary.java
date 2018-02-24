@@ -85,7 +85,7 @@ public class Vocabulary {
 		ui.debug("Failed!");
 	}
 
-	public void asked() {
+	private void asked() {
 		asked++;
 		lastAsked = new Date();
 	}

@@ -19,7 +19,7 @@ public class AskingRoutine {
 
 	private final UserInterface ui = UserInterface.getInstance();
 
-	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) throws IOException {
+	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
 
