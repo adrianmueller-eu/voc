@@ -49,10 +49,13 @@ public class VocabularyBase {
 				settings.resetAllLearned();
 			}
 			else {
+				ui.tell(ui.str.comeTomorrow());
+				System.exit(0);
 				return;
 			}
 		}
 
+		ui.init();
 		generateTodo();
 
 		// sort vocs to do by rating

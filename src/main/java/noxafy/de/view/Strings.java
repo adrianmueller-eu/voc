@@ -23,4 +23,6 @@ public interface Strings {
 	String getUnknown();
 
 	String getNew();
+
+	String comeTomorrow();
 }

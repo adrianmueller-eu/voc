@@ -52,4 +52,9 @@ public class Strings_en implements Strings {
 	public String getNew() {
 		return "Neu";
 	}
+
+	@Override
+	public String comeTomorrow() {
+		return "Come back again tomorrow! :)";
+	}
 }

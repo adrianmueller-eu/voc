@@ -41,10 +41,10 @@ public final class UserInterface {
 	}
 
 	public void letReadThat(String message) {
-		tellln(message);
+		tellln(message + (message.length() * 25 + 360));
 		if (Settings.TRAINING_MODE) {
 			try {
-				Thread.sleep(message.length() * 67 + 1710); // about 15 chars per second + 360 attention shift + 1350 feel good :)
+				Thread.sleep(message.length() * 25 + 360); // about 40 chars per second + 360 attention shift
 			}
 			catch (InterruptedException e) {
 				// ignore
@@ -61,11 +61,6 @@ public final class UserInterface {
 				// "en" is default
 				str = new Strings_en();
 				break;
-		}
-
-		if (Settings.TRAINING_MODE) {
-			tell(ANSI.SHIRNK_WINDOW);
-			tell(ANSI.CLEAR_WINDOW);
 		}
 	}
 
@@ -126,6 +121,13 @@ public final class UserInterface {
 			for (Object o : list) {
 				debug(o.toString());
 			}
+		}
+	}
+
+	public void init() {
+		if (Settings.TRAINING_MODE) {
+			tell(ANSI.SHIRNK_WINDOW);
+			tell(ANSI.CLEAR_WINDOW);
 		}
 	}
 }
