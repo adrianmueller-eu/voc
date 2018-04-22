@@ -7,6 +7,8 @@ import noxafy.de.core.AskingRoutine;
 import noxafy.de.core.Settings;
 import noxafy.de.fileManager.SettingsFileManager;
 import noxafy.de.fileManager.VocabularyFileManager;
+import noxafy.de.view.ANSI;
+import noxafy.de.view.LANG;
 
 import static noxafy.de.view.ANSI.bold;
 import static noxafy.de.view.ANSI.underline;
@@ -22,8 +24,8 @@ public class Main {
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exists.\n" +
 			"\t" + bold("-d") + "\tVerboses very much debug information while asking.\n" +
-			"\t" + bold("-t") + "\tShrinks the shell window to 5;100 and clears the screen after each voc.\n" +
-			"\t" + bold("-l") + "\tChoose an alternative language. Available: \"de\", \"en\"\n" +
+			"\t" + bold("-t") + "\tShrinks the shell window to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
+			"\t" + bold("-l") + "\tChoose an alternative language. Available: " + LANG.getAvailable() + "\n" +
 			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
 			"\n" +
 			"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file.getAbsolutePath() + ").\n" +
@@ -98,20 +100,17 @@ public class Main {
 
 	private static void evalLang(String[] args, int i) {
 		if (i < args.length) {
-			switch (args[i]) {
-				case "de":
-					Settings.LANG = "de";
-					break;
-				case "en":
-					Settings.LANG = "en";
-					break;
-				default:
-					System.out.print("Please give an available language. Available: \"de\", \"en\".  See -h for more help.");
-					System.exit(1);
+			final LANG lang = LANG.get(args[i].toUpperCase());
+			if (lang == null) {
+				System.out.print("Please give an available language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
+				System.exit(1);
+			}
+			else {
+				Settings.LANG = lang;
 			}
 		}
 		else {
-			System.out.print("Please give a language. Available: \"de\", \"en\".  See -h for more help.");
+			System.out.print("Please give a language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
 			System.exit(1);
 		}
 	}
@@ -123,12 +122,8 @@ public class Main {
 				System.out.print("Please give an existing file to a csv with vocs.");
 				System.exit(1);
 			}
-			else if (!voc_file.canRead()) {
-				System.out.print("Please give a readable file to a csv with vocs. See -h for more information.");
-				System.exit(1);
-			}
-			else if (!voc_file.canWrite()) {
-				System.out.print("Please give a writable file to a csv with vocs. See -h for more information.");
+			else if (!voc_file.canRead() || !voc_file.canWrite()) {
+				System.out.print("Please give a read- and writable file to a csv with vocs. See -h for more information.");
 				System.exit(1);
 			}
 		}

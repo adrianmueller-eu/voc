@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Settings {
 	// default lang for ui is "en"
-	public static String LANG = "en";
+	public static noxafy.de.view.LANG LANG = noxafy.de.view.LANG.EN;
 	public static boolean DEBUG = false;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;

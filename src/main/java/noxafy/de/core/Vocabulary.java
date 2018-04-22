@@ -16,13 +16,14 @@ public class Vocabulary {
 	private final String word;
 	// own lang
 	private final String meaning;
-	// additional
+	// additional saved
 	private final String mnemonic;
 	private final Date added;
 	private Date lastAsked;
 	private int asked;
 	private int failed;
 	private int succeeded_in_a_row;
+	// additional calculated
 	private double rating;
 	private Date ratingDate;
 	private KnowledgeLevel level;
@@ -157,7 +158,7 @@ public class Vocabulary {
 				}
 				String debug_rating = String.format("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
 						word, tabs.toString(), level.toString(), 3 * failRate, time_passed_rating, random, rating);
-				ui.tellln("DEBUG: " + debug_rating);
+				ui.tellLn("DEBUG: " + debug_rating);
 			}
 		}
 		return rating;

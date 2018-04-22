@@ -31,11 +31,11 @@ public class VocGenerator extends FileManager<String[]> {
 
 		if (from == null || to == null) {
 			if (to == null && from != null) {
-				ui.tellln("Please give a csv where to write the generated items.");
+				ui.tellLn("Please give a csv where to write the generated items.");
 				return;
 			}
 			else if (to != null) {
-				ui.tellln("Please give a csv where to read the items from.");
+				ui.tellLn("Please give a csv where to read the items from.");
 				return;
 			}
 			final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
@@ -50,18 +50,18 @@ public class VocGenerator extends FileManager<String[]> {
 			convert_e = null;
 			Vocabulary voc = getVoc(lines[i]);
 			if (voc == null) { // has error
-				ui.tellln("Failed to process line " + (i + 1) + ": " + lines[i]);
+				ui.tellLn("Failed to process line " + (i + 1) + ": " + lines[i]);
 				ui.debug(convert_e.toString());
 				continue;
 			}
 			res = getLine(voc);
-			ui.tellln("Processing " + res);
+			ui.tellLn("Processing " + res);
 			vocGenerator.appendNewVoc(res);
 			lines[i] = "";
 			vocGenerator.write(lines);
 			success++;
 		}
-		ui.tellln(success + " new vocs added.");
+		ui.tellLn(success + " new vocs added.");
 	}
 
 	private static boolean parseArgs(String[] args) throws IOException {
@@ -87,21 +87,21 @@ public class VocGenerator extends FileManager<String[]> {
 		if (i < args.length) {
 			File file = new File(args[i]);
 			if (!file.exists()) {
-				ui.tellln("Please give an existing file to a csv with vocs.");
+				ui.tellLn("Please give an existing file to a csv with vocs.");
 				System.exit(1);
 			}
 			else if (!file.canRead()) {
-				ui.tellln("Please give a readable file to a csv with vocs. See --help for more information.");
+				ui.tellLn("Please give a readable file to a csv with vocs. See --help for more information.");
 				System.exit(1);
 			}
 			else if (!file.canWrite()) {
-				ui.tellln("Please give a writable file to a csv with vocs. See --help for more information.");
+				ui.tellLn("Please give a writable file to a csv with vocs. See --help for more information.");
 				System.exit(1);
 			}
 			return file;
 		}
 		else {
-			ui.tellln("Please give a path to a csv with vocs. See --help for more information.");
+			ui.tellLn("Please give a path to a csv with vocs. See --help for more information.");
 			System.exit(1);
 			return null;
 		}
@@ -114,7 +114,7 @@ public class VocGenerator extends FileManager<String[]> {
 			return file;
 		}
 		else {
-			ui.tellln("Please give a path to a csv with vocs. See --help for more information.");
+			ui.tellLn("Please give a path to a csv with vocs. See --help for more information.");
 			System.exit(1);
 		}
 		return null;
@@ -198,7 +198,7 @@ public class VocGenerator extends FileManager<String[]> {
 		}
 
 		if (content.isEmpty()) {
-			ui.tellln("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
+			ui.tellLn("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
 			return new String[0];
 		}
 		return content.split("\n");
@@ -220,7 +220,7 @@ public class VocGenerator extends FileManager<String[]> {
 			out.write(line.getBytes());
 		}
 		catch (IOException e) {
-			ui.tellln("Writing a new line to " + to.getAbsolutePath() + " failed.");
+			ui.tellLn("Writing a new line to " + to.getAbsolutePath() + " failed.");
 			throw e;
 		}
 	}

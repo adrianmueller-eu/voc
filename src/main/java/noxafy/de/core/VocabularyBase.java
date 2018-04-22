@@ -177,7 +177,7 @@ public class VocabularyBase {
 
 		final int statistics_length = 80;
 
-		ui.tellln(ui.str.getStatistics());
+		ui.tellLn(ui.str.getStatistics());
 		int number_vocs = asked_vocs.size() + new_vocs.size();
 		int known = 0;
 		for (Vocabulary asked_voc : asked_vocs) {
@@ -204,7 +204,7 @@ public class VocabularyBase {
 
 		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ", known, number_vocs, perc_known * 100));
 		ui.tell(String.format(ui.str.getUnknown() + ": %d/%d (%.2f%%); ", asked_vocs.size() - known, number_vocs, (1 - perc_known - perc_new) * 100));
-		ui.tellln(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
+		ui.tellLn(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 		ui.tell(todo.size() + ui.str.getVocsLeft());
 		// newline printed at exit
 	}

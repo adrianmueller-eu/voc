@@ -52,7 +52,7 @@ abstract class FileManager<T> {
 			return baos.toString();
 		}
 		catch (Exception e) {
-			ui.tellln("Reading from file " + file.getAbsolutePath() + " failed.");
+			ui.tellLn("Reading from file " + file.getAbsolutePath() + " failed.");
 			ui.debug(e.toString());
 			return null;
 		}

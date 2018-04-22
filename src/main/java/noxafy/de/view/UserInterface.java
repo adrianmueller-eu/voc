@@ -41,7 +41,7 @@ public final class UserInterface {
 	}
 
 	public void letReadThat(String message) {
-		tellln(message + (message.length() * 25 + 360));
+		tellLn(message + (message.length() * 25 + 360));
 		if (Settings.TRAINING_MODE) {
 			try {
 				Thread.sleep(message.length() * 25 + 360); // about 40 chars per second + 360 attention shift
@@ -53,15 +53,7 @@ public final class UserInterface {
 	}
 
 	private UserInterface() {
-		switch (Settings.LANG) {
-			case "de":
-				str = new Strings_de();
-				break;
-			default:
-				// "en" is default
-				str = new Strings_en();
-				break;
-		}
+		str = Settings.LANG.getStrings();
 	}
 
 	public static UserInterface getInstance() {
@@ -102,7 +94,7 @@ public final class UserInterface {
 		tell(((askWord) ? voc.getWord() : voc.getMeaning()) + " ? ");
 	}
 
-	public void tellln(String message) {
+	public void tellLn(String message) {
 		tell(message + "\n");
 	}
 
@@ -112,7 +104,7 @@ public final class UserInterface {
 
 	public void debug(String debug_message) {
 		if (Settings.DEBUG) {
-			tellln("DEBUG: " + debug_message);
+			tellLn("DEBUG: " + debug_message);
 		}
 	}
 
