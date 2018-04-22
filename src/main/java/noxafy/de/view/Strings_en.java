@@ -35,7 +35,7 @@ public class Strings_en implements Strings {
 
 	@Override
 	public String getNoVocFound() {
-		return "No vocabulary item found.";
+		return "No vocabulary items found. Please specify some in database. See -h for more information.";
 	}
 
 	@Override

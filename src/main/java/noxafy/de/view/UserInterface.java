@@ -108,11 +108,15 @@ public final class UserInterface {
 		}
 	}
 
-	public void debug(List list) {
+	public void debugWithTab(String debug_message) {
 		if (Settings.DEBUG) {
-			for (Object o : list) {
-				debug(o.toString());
-			}
+			tellLn("\tDEBUG: " + debug_message);
+		}
+	}
+
+	public void debug(List list) {
+		for (Object o : list) {
+			debugWithTab(o.toString());
 		}
 	}
 

@@ -158,7 +158,7 @@ public class Vocabulary {
 				}
 				String debug_rating = String.format("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
 						word, tabs.toString(), level.toString(), 3 * failRate, time_passed_rating, random, rating);
-				ui.tellLn("DEBUG: " + debug_rating);
+				ui.debugWithTab(debug_rating);
 			}
 		}
 		return rating;

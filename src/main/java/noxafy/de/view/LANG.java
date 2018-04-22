@@ -7,7 +7,7 @@ import noxafy.de.core.Settings;
  * @created 22.04.18
  */
 public enum LANG {
-	DE(new Strings_de()), EN(new Strings_en());
+	EN(new Strings_en()), DE(new Strings_de());
 
 	private final Strings strings;
 
@@ -29,12 +29,12 @@ public enum LANG {
 		for (LANG lang : values()) {
 			res.append("\"").append(lang.name().toLowerCase()).append("\"");
 			if (lang == Settings.LANG) {
-				res.append("(default)");
+				res.append(" (default)");
 			}
-			res.append(",");
+			res.append(", ");
 		}
-		if (res.length() > 0) {
-			res.deleteCharAt(res.length() - 1);
+		if (res.length() > 1) {
+			res.delete(res.length() - 2, res.length());
 		}
 		return res.toString();
 	}

@@ -59,6 +59,7 @@ public class VocabularyBase {
 		generateTodo();
 
 		// sort vocs to do by rating
+		ui.debug("Sorting vocs to do by rating ...");
 		sortList(todo);
 		// add vocs from to do, but leave space for new vocs
 		int new_vocs_add = generateAskedVocs(settings);
@@ -67,7 +68,7 @@ public class VocabularyBase {
 		List<Vocabulary> new2 = new LinkedList<>(new_vocs);
 		while (new_vocs_add > 0 && !new2.isEmpty()) {
 			Vocabulary v = new2.remove(rand.nextInt(new2.size()));
-			ui.debug("Added from newer: " + v);
+			ui.debugWithTab("Added from newer: " + v);
 			todo_now.add(v);
 			new_vocs_add--;
 		}
@@ -88,7 +89,7 @@ public class VocabularyBase {
 		ui.debug("Add max " + number_asked_vocs + " vocs from already asked. Available: " + todo.size() + " vocs to do.");
 		for (int i = todo.size() - 1; todo_now.size() < number_asked_vocs && i >= 0; i--) {
 			Vocabulary v = todo.get(i);
-			ui.debug("Added from asked: " + v);
+			ui.debugWithTab("Added from asked: " + v);
 			todo_now.add(v);
 		}
 		int new_vocs_add = settings.NUMBER_NEW_VOCS_AT_START;
@@ -100,14 +101,15 @@ public class VocabularyBase {
 
 	public void generateTodo() {
 		// sort out vocs that have to be learned now
+		ui.debug("Picking up vocs that have to be learned now ...");
 		Date now = new Date();
 		for (Vocabulary voc : asked_vocs) {
 			if (voc.shouldBeAsked(now)) {
 				todo.add(voc);
-				ui.debug("To ask: " + voc);
+				ui.debugWithTab("To ask: " + voc);
 			}
 			else {
-				ui.debug("Not to ask: " + voc);
+				ui.debugWithTab("Not to ask: " + voc);
 			}
 		}
 		ui.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size());
@@ -116,6 +118,7 @@ public class VocabularyBase {
 	private void sortList(List<Vocabulary> list) {
 		Date now = new Date();
 		list.sort(comparingDouble(v -> v.getRating(now)));
+		ui.debug("List sorted:");
 		ui.debug(list);
 	}
 
@@ -207,5 +210,9 @@ public class VocabularyBase {
 		ui.tellLn(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 		ui.tell(todo.size() + ui.str.getVocsLeft());
 		// newline printed at exit
+	}
+
+	public boolean isEmpty() {
+		return asked_vocs.isEmpty() && new_vocs.isEmpty();
 	}
 }

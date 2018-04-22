@@ -28,6 +28,10 @@ public class AskingRoutine {
 	}
 
 	public void run() throws IOException {
+		if (vocabularyBase.isEmpty()) {
+			ui.tellLn(ui.str.getNoVocFound());
+			System.exit(1);
+		}
 		vocabularyBase.generateVocsForToday(settings);
 
 		while (vocabularyBase.hasNextVocabulary()) {

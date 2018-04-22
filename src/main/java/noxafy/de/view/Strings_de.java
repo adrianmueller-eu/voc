@@ -20,7 +20,7 @@ public class Strings_de implements Strings {
 
 	@Override
 	public String getFinalAndReset() {
-		return "Alle Vokabeln für heute bereits gelernt. Möchstest du das zurücksetzen?";
+		return "Alle Vokabeln für heute bereits gelernt. Möchtest du das zurücksetzen?";
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class Strings_de implements Strings {
 
 	@Override
 	public String getNoVocFound() {
-		return "Keine Vokabel gefunden!";
+		return "Keine Vokabeln gefunden! Speichere welche in die Datenbank! Für weitere Informationen: -h";
 	}
 
 	@Override
