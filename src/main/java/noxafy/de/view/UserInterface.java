@@ -41,7 +41,7 @@ public final class UserInterface {
 	}
 
 	public void letReadThat(String message) {
-		tellLn(message + (message.length() * 25 + 360));
+		tellLn(message);
 		if (Settings.TRAINING_MODE) {
 			try {
 				Thread.sleep(message.length() * 25 + 360); // about 40 chars per second + 360 attention shift
