@@ -50,7 +50,7 @@ public class Strings_en implements Strings {
 
 	@Override
 	public String getNew() {
-		return "Neu";
+		return "New";
 	}
 
 	@Override
