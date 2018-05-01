@@ -49,7 +49,7 @@ public class Main {
 		// Print newline after sigint
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("")));
 
-		if (!parseArgs(args)) return;
+		parse(args);
 
 		// load settings file
 		SettingsFileManager settingsFileManager = SettingsFileManager.getInstance(settings_file.getAbsolutePath());
@@ -65,13 +65,13 @@ public class Main {
 		askingRoutine.summarize();
 	}
 
-	private static boolean parseArgs(String[] args) {
+	private static void parse(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-h":
 				case "--help":
 					System.out.print(help);
-					return false;
+					System.exit(0);
 				case "-s":
 					justSummarize = true;
 					break;
@@ -95,7 +95,6 @@ public class Main {
 					}
 			}
 		}
-		return true;
 	}
 
 	private static void evalLang(String[] args, int i) {
