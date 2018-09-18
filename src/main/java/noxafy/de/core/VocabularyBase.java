@@ -41,7 +41,7 @@ public class VocabularyBase {
 		todo_now = new LinkedList<>();
 	}
 
-	public void generateVocsForToday(Settings settings) throws IOException {
+	void generateVocsForToday(Settings settings) throws IOException {
 		// test if enough is learned for today
 		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
 		if (settings.allDone()) {
@@ -99,10 +99,11 @@ public class VocabularyBase {
 		return new_vocs_add;
 	}
 
-	public void generateTodo() {
+	void generateTodo() {
 		// sort out vocs that have to be learned now
 		ui.debug("Picking up vocs that have to be learned now ...");
 		Date now = new Date();
+		todo.clear(); // filled if asking routine has been run
 		for (Vocabulary voc : asked_vocs) {
 			if (voc.shouldBeAsked(now)) {
 				todo.add(voc);
@@ -122,7 +123,7 @@ public class VocabularyBase {
 		ui.debug(list);
 	}
 
-	public void update(Settings settings) {
+	void update(Settings settings) {
 		if (last_asked.isKnown()) {
 			settings.vocLearned();
 			ui.debug(last_asked.getWord() + " removed because it's known!");
@@ -144,7 +145,7 @@ public class VocabularyBase {
 //		}
 	}
 
-	public Vocabulary getNextVocabulary() {
+	Vocabulary getNextVocabulary() {
 		ui.debug("Get new voc -> todo_now.size(): " + todo_now.size());
 		if (todo_now.size() == 1) {
 			last_asked = todo_now.get(0);
@@ -163,7 +164,7 @@ public class VocabularyBase {
 		return last_asked;
 	}
 
-	public boolean hasNextVocabulary() {
+	boolean hasNextVocabulary() {
 		return !todo_now.isEmpty();
 	}
 
@@ -173,7 +174,7 @@ public class VocabularyBase {
 		return vocabularies;
 	}
 
-	public void summarize() {
+	void summarize() {
 		if (asked_vocs.isEmpty() && new_vocs.isEmpty()) {
 			return;
 		}
@@ -212,7 +213,7 @@ public class VocabularyBase {
 		// newline printed at exit
 	}
 
-	public boolean isEmpty() {
+	boolean isEmpty() {
 		return asked_vocs.isEmpty() && new_vocs.isEmpty();
 	}
 }
