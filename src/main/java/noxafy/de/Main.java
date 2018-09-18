@@ -18,14 +18,14 @@ public class Main {
 	static final File settings_file = new File(vok_dir + "voc.conf");
 	static File voc_file = new File(vok_dir + "Englisch.csv");
 	static boolean justSummarize = false;
-	static String usage = "Usage: " + bold("voc2") + " -h | -s | [-d] [-l " + underline("lang") + "] [-f " + underline("csv") + "]";
+	static String usage = "Usage: " + bold("voc2") + " -h | -s | [-d] [-t] [-l " + underline("lang") + "] [-f " + underline("csv") + "]";
 	static String help = "Asks vocabularies based on a rating algorithm.\n" +
 			usage + "\n" +
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
-			"\t" + bold("-d") + "\tVerboses very much debug information while asking.\n" +
+			"\t" + bold("-d") + "\tPrints very much debug information while asking. (alternative: -v)\n" +
 			"\t" + bold("-t") + "\tShrinks the shell window to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
-			"\t" + bold("-l") + "\tChoose an alternative language. Available: " + LANG.getAvailable() + "\n" +
+			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailable() + "\n" +
 			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
 			"\n" +
 			"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file.getAbsolutePath() + ").\n" +
@@ -75,6 +75,7 @@ public class Main {
 				case "-s":
 					justSummarize = true;
 					break;
+				case "-v":
 				case "-d":
 					Settings.DEBUG = true;
 					break;
