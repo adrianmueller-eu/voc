@@ -49,7 +49,25 @@ public class Main {
 		// Print newline after sigint
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println("")));
 
-		parse(args);
+		try {
+			parse(args);
+		}
+		catch (IllegalArgumentException e) {
+			String message;
+			int exitCode;
+
+			if ("help".equals(e.getMessage())) {
+				message = help;
+				exitCode = 0;
+			}
+			else {
+				message = e.getMessage();
+				exitCode = 1;
+			}
+
+			System.out.print(message);
+			System.exit(exitCode);
+		}
 
 		// load settings file
 		SettingsFileManager settingsFileManager = SettingsFileManager.getInstance(settings_file.getAbsolutePath());
@@ -65,13 +83,12 @@ public class Main {
 		askingRoutine.summarize();
 	}
 
-	private static void parse(String[] args) {
+	private static void parse(String[] args) throws IllegalArgumentException {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-h":
 				case "--help":
-					System.out.print(help);
-					System.exit(0);
+					throw new IllegalArgumentException("help");
 				case "-s":
 					justSummarize = true;
 					break;
@@ -89,47 +106,41 @@ public class Main {
 					evalFile(args, ++i);
 					break;
 				default:
-					if (args[i].matches("-*")) {
-						System.out.println("Wrong argument: " + args[i]);
-						System.out.print(usage + " -- See -h for more help.");
-						System.exit(1);
-					}
+//					if (args[i].matches("-*")) {
+					throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
+							usage + " -- See -h for more help.");
+//					}
 			}
 		}
 	}
 
-	private static void evalLang(String[] args, int i) {
+	private static void evalLang(String[] args, int i) throws IllegalArgumentException {
 		if (i < args.length) {
 			final LANG lang = LANG.get(args[i].toUpperCase());
 			if (lang == null) {
-				System.out.print("Please give an available language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
-				System.exit(1);
+				throw new IllegalArgumentException("Please give an available language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
 			}
 			else {
 				Settings.LANG = lang;
 			}
 		}
 		else {
-			System.out.print("Please give a language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
-			System.exit(1);
+			throw new IllegalArgumentException("Please give a language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
 		}
 	}
 
-	private static void evalFile(String[] args, int i) {
+	private static void evalFile(String[] args, int i) throws IllegalArgumentException {
 		if (i < args.length) {
 			voc_file = new File(args[i]);
 			if (!voc_file.exists()) {
-				System.out.print("Please give an existing file to a csv with vocs.");
-				System.exit(1);
+				throw new IllegalArgumentException("Please give an existing file to a csv with vocs.");
 			}
 			else if (!voc_file.canRead() || !voc_file.canWrite()) {
-				System.out.print("Please give a read- and writable file to a csv with vocs. See -h for more information.");
-				System.exit(1);
+				throw new IllegalArgumentException("Please give a read- and writable file to a csv with vocs. See -h for more information.");
 			}
 		}
 		else {
-			System.out.print("Please give a path to a csv with vocs. See -h for more information.");
-			System.exit(1);
+			throw new IllegalArgumentException("Please give a path to a csv with vocs. See -h for more information.");
 		}
 	}
 }
