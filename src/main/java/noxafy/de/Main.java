@@ -2,6 +2,7 @@ package noxafy.de;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import noxafy.de.core.AskingRoutine;
 import noxafy.de.core.Settings;
@@ -18,15 +19,18 @@ public class Main {
 	static final File settings_file = new File(vok_dir + "voc.conf");
 	static File voc_file = new File(vok_dir + "Englisch.csv");
 	static boolean justSummarize = false;
-	static String usage = "Usage: " + bold("voc2") + " -h | -s | [-d] [-t] [-l " + underline("lang") + "] [-f " + underline("csv") + "]";
+	static String usage = "Usage: " + bold("voc2") + " -h | [-d] [-n|-t] [-l " + underline("lang") + "] [-f " + underline("csv") + "] | -s";
 	static String help = "Asks vocabularies based on a rating algorithm.\n" +
 			usage + "\n" +
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
-			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
-			"\t" + bold("-d") + "\tPrints very much debug information while asking. (alternative: -v)\n" +
-			"\t" + bold("-t") + "\tShrinks the shell window to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
-			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailable() + "\n" +
+			"\t" + bold("-d") + "\tPrints very much debug information while asking (also " + bold("-v") + "). \n" +
+			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
+			"\t" + bold("-n") + "\tOpens a new window and tests you from there in training mode.\n" +
+			"\t" + "\tIn training mode the shell window shrinks to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
+			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
+			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
 			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
+			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
 			"\n" +
 			"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file.getAbsolutePath() + ").\n" +
 			"Each entry there contains following information:\n" +
@@ -53,16 +57,12 @@ public class Main {
 			parse(args);
 		}
 		catch (IllegalArgumentException e) {
-			String message;
-			int exitCode;
+			String message = e.getMessage();
+			int exitCode = 1;
 
-			if ("help".equals(e.getMessage())) {
+			if ("help".equals(message)) {
 				message = help;
 				exitCode = 0;
-			}
-			else {
-				message = e.getMessage();
-				exitCode = 1;
 			}
 
 			System.out.print(message);
@@ -99,6 +99,26 @@ public class Main {
 				case "-t":
 					Settings.TRAINING_MODE = true;
 					break;
+				case "-n":
+					try {
+						args[i] = ""; // delete -n argument (prevent circularity)
+						final String[] cmd = { "osascript", "-e",
+								"tell application \"Terminal\" to do script \"voc2 -t " + String.join(" ", args) + "; exit\""
+						};
+						final Process p = Runtime.getRuntime().exec(cmd);
+						// print out possible error
+						InputStream in = p.getErrorStream();
+						int c;
+						while ((c = in.read()) != -1) {
+							System.out.print((char) c);
+						}
+						in.close();
+						// exit with osascript's exit code
+						System.exit(p.waitFor());
+					}
+					catch (IOException | InterruptedException e) {
+						throw new IllegalArgumentException("New window not available in this mode");
+					}
 				case "-l":
 					evalLang(args, ++i);
 					break;
@@ -118,14 +138,14 @@ public class Main {
 		if (i < args.length) {
 			final LANG lang = LANG.get(args[i].toUpperCase());
 			if (lang == null) {
-				throw new IllegalArgumentException("Please give an available language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
+				throw new IllegalArgumentException("Please give an available language. Available: " + LANG.getAvailableString() + ".  See -h for more help.");
 			}
 			else {
 				Settings.LANG = lang;
 			}
 		}
 		else {
-			throw new IllegalArgumentException("Please give a language. Available: " + LANG.getAvailable() + ".  See -h for more help.");
+			throw new IllegalArgumentException("Please give a language. Available: " + LANG.getAvailableString() + ".  See -h for more help.");
 		}
 	}
 

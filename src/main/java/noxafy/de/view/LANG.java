@@ -24,7 +24,7 @@ public enum LANG {
 		}
 	}
 
-	public static String getAvailable() {
+	public static String getAvailableString() {
 		final StringBuilder res = new StringBuilder();
 		for (LANG lang : values()) {
 			res.append("\"").append(lang.name().toLowerCase()).append("\"");
