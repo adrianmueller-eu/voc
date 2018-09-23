@@ -103,7 +103,7 @@ public class Main {
 					try {
 						args[i] = ""; // delete -n argument (prevent circularity)
 						final String[] cmd = { "osascript", "-e",
-								"tell application \"Terminal\" to do script \"voc2 -t " + String.join(" ", args) + "; exit\""
+								"tell application \"Terminal\" to do script \"voc2 -t " + String.join(" ", args) + "\""
 						};
 						final Process p = Runtime.getRuntime().exec(cmd);
 						// print out possible error
