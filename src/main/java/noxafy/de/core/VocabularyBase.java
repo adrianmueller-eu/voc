@@ -86,16 +86,17 @@ public class VocabularyBase {
 
 	private int generateAskedVocs(Settings settings) {
 		int number_asked_vocs = settings.NUMBER_SIMUL_VOCS - settings.NUMBER_NEW_VOCS_AT_START - settings.vocs_learned_today;
-		ui.debug("Add max " + number_asked_vocs + " vocs from already asked. Available: " + todo.size() + " vocs to do.");
+		ui.debug("Add max " + number_asked_vocs + " vocs from already asked. Available: " + todo.size() + " vocs to do");
 		for (int i = todo.size() - 1; todo_now.size() < number_asked_vocs && i >= 0; i--) {
 			Vocabulary v = todo.get(i);
 			ui.debugWithTab("Added from asked: " + v);
 			todo_now.add(v);
 		}
-		int new_vocs_add = settings.NUMBER_NEW_VOCS_AT_START;
+		int new_vocs_add = settings.NUMBER_SIMUL_VOCS - todo_now.size();
 		if (number_asked_vocs < 0) {
 			new_vocs_add += number_asked_vocs;
 		}
+		ui.debug("Add max " + new_vocs_add + " vocs from new. Available: " + new_vocs.size() + " new vocs");
 		return new_vocs_add;
 	}
 
