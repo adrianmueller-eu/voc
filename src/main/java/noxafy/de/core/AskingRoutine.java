@@ -40,7 +40,7 @@ public class AskingRoutine {
 			vocabularyBase.update(settings);
 			writeOutChanges();
 		}
-		ui.letReadThat(ui.str.getFinal());
+		ui.tellLn(ui.str.getFinal());
 	}
 
 	public void summarize() {
