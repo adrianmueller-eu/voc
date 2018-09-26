@@ -15,22 +15,22 @@ import static noxafy.de.view.ANSI.bold;
 import static noxafy.de.view.ANSI.underline;
 
 public class Main {
-	static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-	static final File settings_file = new File(vok_dir + "voc.conf");
-	static File voc_file = new File(vok_dir + "Englisch.csv");
-	static boolean justSummarize = false;
-	static String usage = "Usage: " + bold("voc2") + " -h | [-d] [-n|-t] [-l " + underline("lang") + "] [-f " + underline("csv") + "] | -s";
-	static String help = "Asks vocabularies based on a rating algorithm.\n" +
+	private static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
+	private static final File settings_file = new File(vok_dir + "voc.conf");
+	private static File voc_file = new File(vok_dir + "Englisch.csv");
+	private static boolean justSummarize = false;
+	private static final String usage = "Usage: " + bold("voc2") + " -h | [-n|-t] [-l " + underline("lang") + "] [-d] [-s] [-f " + underline("csv") + "]";
+	private static final String help = "Asks vocabularies based on a rating algorithm.\n" +
 			usage + "\n" +
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
-			"\t" + bold("-d") + "\tPrints very much debug information while asking (also " + bold("-v") + "). \n" +
-			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
 			"\t" + bold("-n") + "\tOpens a new window and tests you from there in training mode.\n" +
 			"\t" + "\tIn training mode the shell window shrinks to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
 			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
-			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
+			"\t" + bold("-d") + "\tPrints very much debug information while asking (also " + bold("-v") + "). \n" +
+			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
+			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
 			"\n" +
 			"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file.getAbsolutePath() + ").\n" +
 			"Each entry there contains following information:\n" +
@@ -44,7 +44,7 @@ public class Main {
 			"\t8. how often user succeeded in a row\n" +
 			"The last four stats are used by rating calculation.\n" +
 			"\n" +
-			"Further it is using the settings file located in " + settings_file.getAbsolutePath() + "\n" +
+			"Further, a settings file is used (defaults to " + settings_file.getAbsolutePath() + ")\n" +
 			"There is defined:\n" +
 			"\t- how many vocs should be asked each day (NUMBER_SIMUL_VOCS) and\n" +
 			"\t- how many of them should be new ones (NUMBER_NEW_VOCS_AT_START).";
