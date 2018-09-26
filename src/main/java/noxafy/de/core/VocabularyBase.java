@@ -184,33 +184,37 @@ public class VocabularyBase {
 
 		ui.tellLn(ui.str.getStatistics());
 		int number_vocs = asked_vocs.size() + new_vocs.size();
-		int known = 0;
-		for (Vocabulary asked_voc : asked_vocs) {
-			if (asked_voc.isKnown()) {
-				known++;
-			}
-		}
-		final double perc_known = known / (double) number_vocs;
+		final double perc_todo = todo.size() / (double) number_vocs;
 		final double perc_new = new_vocs.size() / (double) number_vocs;
 
-		int known_signs = (int) Math.round(perc_known * statistics_length);
+		int todo_signs = (int) Math.round(perc_todo * statistics_length);
 		int new_signs = (int) Math.round(perc_new * statistics_length);
-		int rest = statistics_length - (known_signs + new_signs);
+		int known_signs = statistics_length - (todo_signs + new_signs);
 
 		for (; known_signs > 0; known_signs--) {
 			ui.tell("#");
 		}
-		for (; rest > 0; rest--) {
+		for (; todo_signs > 0; todo_signs--) {
 			ui.tell("-");
 		}
 		for (; new_signs > 0; new_signs--) {
 			ui.tell("+");
 		}
 
-		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ", known, number_vocs, perc_known * 100));
-		ui.tell(String.format(ui.str.getUnknown() + ": %d/%d (%.2f%%); ", asked_vocs.size() - known, number_vocs, (1 - perc_known - perc_new) * 100));
-		ui.tellLn(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
-		ui.tell(todo.size() + ui.str.getVocsLeft());
+		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ", asked_vocs.size() - todo.size(), number_vocs, perc_todo * 100));
+		ui.tell(String.format(ui.str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, (1 - perc_todo - perc_new) * 100));
+		ui.tell(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
+
+		int unknown = 0;
+		for (Vocabulary asked_voc : asked_vocs) {
+			if (!asked_voc.isKnown()) {
+				unknown++;
+			}
+		}
+		if (unknown > 0) {
+			ui.tellLn("");
+			ui.tell(unknown + ui.str.getUnknownVocsLeft());
+		}
 		// newline printed at exit
 	}
 

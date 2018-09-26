@@ -12,7 +12,7 @@ public interface Strings {
 
 	String getFinalAndReset();
 
-	String getVocsLeft();
+	String getUnknownVocsLeft();
 
 	String getStatistics();
 
@@ -20,7 +20,7 @@ public interface Strings {
 
 	String getKnown();
 
-	String getUnknown();
+	String getTodo();
 
 	String getNew();
 

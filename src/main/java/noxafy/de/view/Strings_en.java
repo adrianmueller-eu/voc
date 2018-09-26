@@ -24,8 +24,8 @@ public class Strings_en implements Strings {
 	}
 
 	@Override
-	public String getVocsLeft() {
-		return " already asked items left to do.";
+	public String getUnknownVocsLeft() {
+		return " vocs are asked, but unknown.";
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class Strings_en implements Strings {
 	}
 
 	@Override
-	public String getUnknown() {
-		return "Unknown";
+	public String getTodo() {
+		return "Todo";
 	}
 
 	@Override

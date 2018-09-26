@@ -24,8 +24,8 @@ public class Strings_de implements Strings {
 	}
 
 	@Override
-	public String getVocsLeft() {
-		return " bereits gefragte Vokabeln stehen noch aus.";
+	public String getUnknownVocsLeft() {
+		return " Vokabeln sind gefragt, aber nicht gewusst.";
 	}
 
 	@Override
@@ -44,8 +44,8 @@ public class Strings_de implements Strings {
 	}
 
 	@Override
-	public String getUnknown() {
-		return "Nicht gewusst";
+	public String getTodo() {
+		return "Ausstehend";
 	}
 
 	@Override
