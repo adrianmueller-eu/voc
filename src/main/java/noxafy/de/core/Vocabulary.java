@@ -175,13 +175,15 @@ public class Vocabulary {
 				return diff > 604800000L; // 7 days
 			case LEVEL4:
 				return diff > 7862400000L; // 3 months
+			case LEVEL5:
+				return diff > 31536000000L; // 1 year
 			default:
 				return true;
 		}
 	}
 
 	enum KnowledgeLevel {
-		UNKNOWN, LEVEL1, LEVEL2, LEVEL3, LEVEL4;
+		UNKNOWN, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5;
 
 		static KnowledgeLevel decide(int succeeded_in_a_row) {
 			switch (succeeded_in_a_row) {
@@ -200,8 +202,12 @@ public class Vocabulary {
 				case 9:
 				case 10:
 					return LEVEL3;
-				default:
+				case 11:
+				case 12:
+				case 13:
 					return LEVEL4;
+				default:
+					return LEVEL5;
 			}
 		}
 	}
