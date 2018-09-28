@@ -111,20 +111,6 @@ public class Vocabulary {
 		return failed;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("word: %s" + transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
-				word,
-				meaning,
-				(hasMnemonic()) ? "; mnemonic: " + mnemonic : "",
-				level.toString(),
-				asked,
-				failed,
-				succeeded_in_a_row,
-				rating
-		);
-	}
-
 	public double getRating(Date now) {
 		if (ratingDate == null || now.getTime() != ratingDate.getTime()) {
 			ratingDate = now;
@@ -165,6 +151,8 @@ public class Vocabulary {
 	}
 
 	public boolean shouldBeAsked(Date now) {
+		if (level == KnowledgeLevel.UNKNOWN) return true;
+
 		long diff = now.getTime() - lastAsked.getTime();
 		switch (level) {
 			case LEVEL1:
@@ -178,8 +166,22 @@ public class Vocabulary {
 			case LEVEL5:
 				return diff > 31536000000L; // 1 year
 			default:
-				return true;
+				throw new IllegalArgumentException("Unknown level: " + level + " for " + this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("word: %s" + transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
+				word,
+				meaning,
+				(hasMnemonic()) ? "; mnemonic: " + mnemonic : "",
+				level.toString(),
+				asked,
+				failed,
+				succeeded_in_a_row,
+				rating
+		);
 	}
 
 	enum KnowledgeLevel {

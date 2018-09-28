@@ -58,19 +58,46 @@ public class VocabularyBase {
 		ui.init();
 		generateTodo();
 
-		// sort vocs to do by rating
-		ui.debug("Sorting vocs to do by rating ...");
-		sortList(todo);
-		// add vocs from to do, but leave space for new vocs
-		int new_vocs_add = generateAskedVocs(settings);
+		// get how many at all should be asked
+		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS - settings.vocs_learned_today;
+		List<Vocabulary> todo_tmp = new ArrayList<>(todo);
 
-		// ask randomly from new vocs
-		List<Vocabulary> new2 = new LinkedList<>(new_vocs);
-		while (new_vocs_add > 0 && !new2.isEmpty()) {
-			Vocabulary v = new2.remove(rand.nextInt(new2.size()));
-			ui.debugWithTab("Added from newer: " + v);
-			todo_now.add(v);
-			new_vocs_add--;
+		// add from unknown, remove them from todo_tmp
+		for (int i = 0; i < todo.size() && todo_now.size() < should_be_asked_overall; i++) {
+			Vocabulary v = todo.get(i);
+			if (!v.isKnown()) {
+				ui.debug("Add from unknown vocs: " + v);
+				todo_now.add(v);
+				todo_tmp.remove(v);
+			}
+		}
+
+		// get how many asked should be asked (leave space for new)
+		int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
+		ui.debug("Space left for asked: " + (should_be_asked_overall - todo_now.size()));
+		// if space left
+		if (should_be_asked_from_asked > todo_now.size()) {
+			// sort list todo_tmp
+			ui.debug("Sorting todo by rating ...");
+			sortList(todo_tmp);
+			// add highest rated
+			for (int i = todo_tmp.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
+				Vocabulary v = todo_tmp.get(i);
+				ui.debug("Add from asked vocs: " + v);
+				todo_now.add(v);
+			}
+		}
+
+		// if space left
+		ui.debug("Space left for new: " + (should_be_asked_overall - todo_now.size()));
+		if (should_be_asked_overall > todo_now.size()) {
+			// ask randomly from new vocs
+			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
+			while (todo_now.size() < should_be_asked_overall && !new2.isEmpty()) {
+				Vocabulary v = new2.remove(rand.nextInt(new2.size()));
+				ui.debugWithTab("Added from new vocs: " + v);
+				todo_now.add(v);
+			}
 		}
 
 		//  ask last added new vocs first
@@ -82,22 +109,6 @@ public class VocabularyBase {
 //			todo_now.add(v);
 //			new_vocs_add--;
 //		}
-	}
-
-	private int generateAskedVocs(Settings settings) {
-		int number_asked_vocs = settings.NUMBER_SIMUL_VOCS - settings.NUMBER_NEW_VOCS_AT_START - settings.vocs_learned_today;
-		ui.debug("Add max " + number_asked_vocs + " vocs from already asked. Available: " + todo.size() + " vocs to do");
-		for (int i = todo.size() - 1; todo_now.size() < number_asked_vocs && i >= 0; i--) {
-			Vocabulary v = todo.get(i);
-			ui.debugWithTab("Added from asked: " + v);
-			todo_now.add(v);
-		}
-		int new_vocs_add = settings.NUMBER_SIMUL_VOCS - todo_now.size();
-		if (number_asked_vocs < 0) {
-			new_vocs_add += number_asked_vocs;
-		}
-		ui.debug("Add max " + new_vocs_add + " vocs from new. Available: " + new_vocs.size() + " new vocs");
-		return new_vocs_add;
 	}
 
 	void generateTodo() {
@@ -114,7 +125,7 @@ public class VocabularyBase {
 				ui.debugWithTab("Not to ask: " + voc);
 			}
 		}
-		ui.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size());
+		ui.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
 	}
 
 	private void sortList(List<Vocabulary> list) {
