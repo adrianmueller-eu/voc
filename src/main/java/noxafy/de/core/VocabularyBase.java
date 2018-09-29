@@ -40,20 +40,7 @@ public class VocabularyBase {
 		todo_now = new LinkedList<>();
 	}
 
-	void generateVocsForToday(Settings settings) throws IOException {
-		// test if enough is learned for today
-		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
-		if (settings.allDone()) {
-			if (ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
-				settings.resetAllLearned();
-			}
-			else {
-				ui.tell(ui.str.comeTomorrow());
-				System.exit(0);
-				return;
-			}
-		}
-
+	void generateVocsForToday(Settings settings) {
 		ui.init();
 		generateTodo();
 
@@ -194,6 +181,7 @@ public class VocabularyBase {
 
 		ui.tellLn(ui.str.getStatistics());
 		int number_vocs = asked_vocs.size() + new_vocs.size();
+		todo.addAll(unknowns);
 		final double perc_todo = todo.size() / (double) number_vocs;
 		final double perc_new = new_vocs.size() / (double) number_vocs;
 

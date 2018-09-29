@@ -19,11 +19,22 @@ public class AskingRoutine {
 
 	private final UserInterface ui = UserInterface.getInstance();
 
-	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) {
+	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) throws IOException {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
 
 		settings = settingsFileManager.load();
+		// test if enough is learned for today
+		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
+		if (settings.allDone()) {
+			if (ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
+				settings.resetAllLearned();
+			}
+			else {
+				ui.tell(ui.str.comeTomorrow());
+				System.exit(0);
+			}
+		}
 		vocabularyBase = vocabularyFileManager.load();
 	}
 
