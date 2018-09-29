@@ -58,7 +58,7 @@ abstract class FileManager<T> {
 		}
 	}
 
-	File getFile() {
-		return file;
+	public String getFilePath() {
+		return file.getAbsolutePath();
 	}
 }

@@ -29,7 +29,7 @@ public class VocabularyBase {
 	private List<Vocabulary> todo;
 
 	// Fill with Settings.NUMBER_SIMUL_VOCS vocs
-	private final List<Vocabulary> todo_now;
+	private final List<Vocabulary> todo_now = new LinkedList<>();
 
 	private Vocabulary last_asked;
 
@@ -42,7 +42,6 @@ public class VocabularyBase {
 				asked_vocs.add(voc);
 			}
 		}
-		todo_now = new LinkedList<>();
 	}
 
 	void generateVocsForToday(Settings settings) {
@@ -135,7 +134,7 @@ public class VocabularyBase {
 	void update(Settings settings) {
 		if (last_asked.isKnown()) {
 			settings.vocLearned();
-			ui.debug(last_asked.getWord() + " removed because it's known!");
+			ui.debug("\"" + last_asked.getWord() + "\" removed because it's known!");
 			todo_now.remove(last_asked);
 			// Don't know where it came from
 			if (!unknowns.remove(last_asked)) {
@@ -228,5 +227,9 @@ public class VocabularyBase {
 
 	boolean isEmpty() {
 		return asked_vocs.isEmpty() && new_vocs.isEmpty();
+	}
+
+	int size() {
+		return asked_vocs.size() + new_vocs.size();
 	}
 }

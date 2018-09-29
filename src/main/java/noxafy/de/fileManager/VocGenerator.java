@@ -194,7 +194,7 @@ public class VocGenerator extends FileManager<String[]> {
 		}
 
 		if (content.isEmpty()) {
-			ui.tellLn("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
+			ui.tellLn("File " + getFilePath() + " is empty. No line processed.");
 			return new String[0];
 		}
 		return content.split("\n");

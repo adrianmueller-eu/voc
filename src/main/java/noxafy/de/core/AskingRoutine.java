@@ -23,19 +23,24 @@ public class AskingRoutine {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
 
+		ui.debug("Loading settings from " + settingsFileManager.getFilePath());
 		settings = settingsFileManager.load();
 		// test if enough is learned for today
 		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
 		if (settings.allDone()) {
 			if (ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
 				settings.resetAllLearned();
+				settingsFileManager.write(settings);
+				ui.debug("Reset Settings.vocs_learned_today to 0.");
 			}
 			else {
 				ui.tell(ui.str.comeTomorrow());
 				System.exit(0);
 			}
 		}
+		ui.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
 		vocabularyBase = vocabularyFileManager.load();
+		ui.debug("Loaded " + vocabularyBase.size() + " vocs.");
 	}
 
 	public void run() throws IOException {
