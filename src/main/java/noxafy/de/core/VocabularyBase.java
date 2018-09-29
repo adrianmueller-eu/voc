@@ -1,6 +1,5 @@
 package noxafy.de.core;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,13 @@ public class VocabularyBase {
 
 	private final List<Vocabulary> asked_vocs = new LinkedList<>();
 	private final List<Vocabulary> new_vocs = new LinkedList<>();
-	private final List<Vocabulary> todo = new LinkedList<>();
+	private final List<Vocabulary> unknowns = new ArrayList<>();
+	/**
+	 * Contains all vocs already asked (not {@link Vocabulary#isNew}) but {@link Vocabulary#shouldBeAsked}, EXCEPT ones
+	 * that are {@link Vocabulary#isUnknown}. Unknown vocs are only existing in database if user terminated session
+	 * premature and therefore stored in own list {@link #unknowns} for being preferred in todo_now selection.
+	 */
+	private List<Vocabulary> todo;
 
 	// Fill with Settings.NUMBER_SIMUL_VOCS vocs
 	private final List<Vocabulary> todo_now;
@@ -46,16 +51,12 @@ public class VocabularyBase {
 
 		// get how many at all should be asked
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS - settings.vocs_learned_today;
-		List<Vocabulary> todo_tmp = new ArrayList<>(todo);
 
 		// add from unknown, remove them from todo_tmp
-		for (int i = 0; i < todo.size() && todo_now.size() < should_be_asked_overall; i++) {
-			Vocabulary v = todo.get(i);
-			if (!v.isKnown()) {
-				ui.debug("Add from unknown vocs: " + v);
-				todo_now.add(v);
-				todo_tmp.remove(v);
-			}
+		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
+			Vocabulary v = unknowns.get(i);
+			ui.debug("Add from unknown vocs: " + v);
+			todo_now.add(v);
 		}
 
 		// get how many asked should be asked (leave space for new)
@@ -65,10 +66,10 @@ public class VocabularyBase {
 		if (should_be_asked_from_asked > todo_now.size()) {
 			// sort list todo_tmp
 			ui.debug("Sorting todo by rating ...");
-			sortList(todo_tmp);
+			sortList(todo);
 			// add highest rated
-			for (int i = todo_tmp.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
-				Vocabulary v = todo_tmp.get(i);
+			for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
+				Vocabulary v = todo.get(i);
 				ui.debug("Add from asked vocs: " + v);
 				todo_now.add(v);
 			}
@@ -101,14 +102,18 @@ public class VocabularyBase {
 		// sort out vocs that have to be learned now
 		ui.debug("Picking up vocs that have to be learned now ...");
 		long now = System.currentTimeMillis();
-		todo.clear(); // filled if asking routine has been run
-		for (Vocabulary voc : asked_vocs) {
-			if (voc.shouldBeAsked(now)) {
-				todo.add(voc);
-				ui.debugWithTab("To ask: " + voc);
+		todo = new ArrayList<>(asked_vocs.size()); // filled if asking routine has been run
+		for (Vocabulary v : asked_vocs) {
+			if (v.isUnknown()) {
+				unknowns.add(v);
+				ui.debugWithTab("To ask from unknown: " + v);
+			}
+			else if (v.shouldBeAsked(now)) {
+				todo.add(v);
+				ui.debugWithTab("To ask: " + v);
 			}
 			else {
-				ui.debugWithTab("Not to ask: " + voc);
+				ui.debugWithTab("Not to ask: " + v);
 			}
 		}
 		ui.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
@@ -126,7 +131,10 @@ public class VocabularyBase {
 			settings.vocLearned();
 			ui.debug(last_asked.getWord() + " removed because it's known!");
 			todo_now.remove(last_asked);
-			todo.remove(last_asked);
+			// Don't know where it came from
+			if (!unknowns.remove(last_asked)) {
+				todo.remove(last_asked);
+			}
 		}
 		// move from new to asked if not new anymore
 		if (new_vocs.remove(last_asked)) {
@@ -204,15 +212,9 @@ public class VocabularyBase {
 		ui.tell(String.format(ui.str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, perc_todo * 100));
 		ui.tell(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 
-		int unknown = 0;
-		for (Vocabulary asked_voc : asked_vocs) {
-			if (!asked_voc.isKnown()) {
-				unknown++;
-			}
-		}
-		if (unknown > 0) {
+		if (unknowns.size() > 0) {
 			ui.tellLn("");
-			ui.tell(unknown + ui.str.getUnknownVocsLeft());
+			ui.tell(unknowns.size() + ui.str.getUnknownVocsLeft());
 		}
 		// newline printed at exit
 	}

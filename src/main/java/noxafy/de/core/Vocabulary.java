@@ -106,6 +106,10 @@ public class Vocabulary {
 		return level != KnowledgeLevel.UNKNOWN;
 	}
 
+	public boolean isUnknown() {
+		return level == KnowledgeLevel.UNKNOWN;
+	}
+
 	public int getFailed() {
 		return failed;
 	}
