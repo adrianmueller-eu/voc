@@ -3,7 +3,6 @@ package noxafy.de.fileManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
 
 import noxafy.de.core.Settings;
 import noxafy.de.core.Vocabulary;
@@ -122,16 +121,11 @@ public class VocGenerator extends FileManager<String[]> {
 
 	private static Vocabulary getVoc(String org_line) {
 		String line = org_line.substring(1, org_line.length() - 1);
-
 		String[] args = line.split("\",\"");
-		String word;
-		String meaning;
-		String mnemonic = "";
-		Date added = new Date();
-		Date lastAsked = null;
-		int asked = 0;
-		int failed = 0;
-		int succeeded_in_a_row = 0;
+
+		String word, meaning, mnemonic = "";
+		long added = 0, lastAsked = 0;
+		int asked = 0, failed = 0, succeeded_in_a_row = 0;
 
 		try {
 			switch (args.length) {
@@ -144,10 +138,10 @@ public class VocGenerator extends FileManager<String[]> {
 					asked = parseInt("asked", args[5]);
 				case 5:
 					if (!args[4].isEmpty()) {
-						lastAsked = new Date(parseLong("lastAsked", args[4]));
+						lastAsked = parseLong("lastAsked", args[4]);
 					}
 				case 4:
-					added = new Date(parseLong("added", args[3]));
+					added = parseLong("added", args[3]);
 				case 3:
 					mnemonic = args[2];
 				case 2:
@@ -172,6 +166,8 @@ public class VocGenerator extends FileManager<String[]> {
 			convert_e = e;
 			return null;
 		}
+		if (added == 0) added = System.currentTimeMillis();
+
 		return new Vocabulary(word, meaning, mnemonic, added, lastAsked, asked, failed, succeeded_in_a_row);
 	}
 
@@ -179,8 +175,8 @@ public class VocGenerator extends FileManager<String[]> {
 		return quote(voc.getWord(), true) +
 				quote(voc.getMeaning(), true) +
 				quote(voc.getMnemonic(), true) +
-				quote(voc.getAdded().getTime(), true) +
-				quote((voc.getLastAsked() == null) ? "" : voc.getLastAsked().getTime(), true) +
+				quote(voc.getAdded(), true) +
+				quote((voc.getLastAsked() == 0) ? "" : voc.getLastAsked(), true) +
 				quote(voc.getAsked(), true) +
 				quote(voc.getFailed(), true) +
 				quote(voc.getSucceeded_in_a_row(), false);

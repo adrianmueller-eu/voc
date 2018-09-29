@@ -2,7 +2,6 @@ package noxafy.de.core;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -114,7 +113,7 @@ public class VocabularyBase {
 	void generateTodo() {
 		// sort out vocs that have to be learned now
 		ui.debug("Picking up vocs that have to be learned now ...");
-		Date now = new Date();
+		long now = System.currentTimeMillis();
 		todo.clear(); // filled if asking routine has been run
 		for (Vocabulary voc : asked_vocs) {
 			if (voc.shouldBeAsked(now)) {
@@ -129,7 +128,7 @@ public class VocabularyBase {
 	}
 
 	private void sortList(List<Vocabulary> list) {
-		Date now = new Date();
+		long now = System.currentTimeMillis();
 		list.sort(comparingDouble(v -> v.getRating(now)));
 		ui.debug("List sorted:");
 		ui.debug(list);

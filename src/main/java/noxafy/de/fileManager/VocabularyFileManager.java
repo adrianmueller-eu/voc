@@ -3,7 +3,6 @@ package noxafy.de.fileManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import noxafy.de.core.Vocabulary;
@@ -64,10 +63,10 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 		String word = args[0];
 		String meaning = args[1];
 		String mnemonic = args[2];
-		Date added = new Date(Long.parseLong(args[3]));
-		Date lastAsked = null;
+		long added = Long.parseLong(args[3]);
+		long lastAsked = 0;
 		if (!args[4].isEmpty()) {
-			lastAsked = new Date(Long.parseLong(args[4]));
+			lastAsked = Long.parseLong(args[4]);
 		}
 		int asked = Integer.parseInt(args[5]);
 		int failed = Integer.parseInt(args[6]);
@@ -87,18 +86,18 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 
 	private StringBuilder getLine(Vocabulary voc) {
 		StringBuilder line = new StringBuilder();
-		line.append(quote(voc.getWord(), true))
-				.append(quote(voc.getMeaning(), true))
-				.append(quote(voc.getMnemonic(), true))
-				.append(quote(voc.getAdded().getTime(), true))
-				.append(quote((voc.getLastAsked() == null) ? "" : voc.getLastAsked().getTime(), true))
-				.append(quote(voc.getAsked(), true))
-				.append(quote(voc.getFailed(), true))
-				.append(quote(voc.getSucceeded_in_a_row(), false));
-		return line;
+		line.append(quote(voc.getWord()))
+				.append(quote(voc.getMeaning()))
+				.append(quote(voc.getMnemonic()))
+				.append(quote(voc.getAdded()))
+				.append(quote(voc.getLastAsked() == 0 ? "" : voc.getLastAsked()))
+				.append(quote(voc.getAsked()))
+				.append(quote(voc.getFailed()))
+				.append(quote(voc.getSucceeded_in_a_row()));
+		return line.deleteCharAt(line.length() - 1);
 	}
 
-	private String quote(Object inner, boolean comma) {
-		return "\"" + inner + ((comma) ? "\"," : "\"");
+	private String quote(Object inner) {
+		return "\"" + inner + "\",";
 	}
 }

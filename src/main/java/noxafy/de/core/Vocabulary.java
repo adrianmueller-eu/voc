@@ -1,7 +1,5 @@
 package noxafy.de.core;
 
-import java.util.Date;
-
 import noxafy.de.view.UserInterface;
 
 import static noxafy.de.view.ANSI.transparent;
@@ -12,25 +10,26 @@ import static noxafy.de.view.ANSI.transparent;
  */
 public class Vocabulary {
 
+	private static final UserInterface ui = UserInterface.getInstance();
+
 	// foreign lang
 	private final String word;
 	// own lang
 	private final String meaning;
-	// additional saved
+	// helping comment
 	private final String mnemonic;
-	private final Date added;
-	private Date lastAsked;
+	// additional saved
+	private final long added;
 	private int asked;
 	private int failed;
 	private int succeeded_in_a_row;
-	// additional calculated
+	private long lastAsked;
+	// calculated
 	private double rating;
-	private Date ratingDate;
 	private KnowledgeLevel level;
+	private long ratingDate;
 
-	private final UserInterface ui = UserInterface.getInstance();
-
-	public Vocabulary(String word, String meaning, String mnemonic, Date added, Date lastAsked, int asked, int failed, int succeeded_in_a_row) {
+	public Vocabulary(String word, String meaning, String mnemonic, long added, long lastAsked, int asked, int failed, int succeeded_in_a_row) {
 		this.word = word;
 		this.meaning = meaning;
 		this.mnemonic = mnemonic;
@@ -42,7 +41,7 @@ public class Vocabulary {
 		level = KnowledgeLevel.decide(succeeded_in_a_row);
 	}
 
-	public Date getAdded() {
+	public long getAdded() {
 		return added;
 	}
 
@@ -51,7 +50,7 @@ public class Vocabulary {
 	 *
 	 * @return date when voc was asked last time
 	 */
-	public Date getLastAsked() {
+	public long getLastAsked() {
 		return lastAsked;
 	}
 
@@ -88,7 +87,7 @@ public class Vocabulary {
 
 	private void asked() {
 		asked++;
-		lastAsked = new Date();
+		lastAsked = System.currentTimeMillis();
 	}
 
 	public boolean hasMnemonic() {
@@ -111,8 +110,8 @@ public class Vocabulary {
 		return failed;
 	}
 
-	public double getRating(Date now) {
-		if (ratingDate == null || now.getTime() != ratingDate.getTime()) {
+	public double getRating(long now) {
+		if (ratingDate == 0 || now != ratingDate) {
 			ratingDate = now;
 			// 0 ... 1 for number of fails
 			double failRate = (isNew()) ? 0.5 : failed / (double) asked;
@@ -122,9 +121,9 @@ public class Vocabulary {
 			// (-20000 ...) 0 ... 1 for time passed since last asked
 			// never asked vocs should be asked, so default to 1
 			double time_passed_rating = 1;
-			if (lastAsked != null) {
+			if (lastAsked != 0) {
 				long forgot50percents = 43200000; // half day
-				long time_passed = now.getTime() - lastAsked.getTime();
+				long time_passed = now - lastAsked;
 				// prevent div 0 error
 				time_passed++;
 				time_passed_rating = -forgot50percents / (double) (time_passed + forgot50percents) + 1;
@@ -150,10 +149,10 @@ public class Vocabulary {
 		return rating;
 	}
 
-	public boolean shouldBeAsked(Date now) {
+	public boolean shouldBeAsked(long now) {
 		if (level == KnowledgeLevel.UNKNOWN) return true;
 
-		long diff = now.getTime() - lastAsked.getTime();
+		long diff = now - lastAsked;
 		switch (level) {
 			case LEVEL1:
 				return diff > 86400000L; // 1 day
