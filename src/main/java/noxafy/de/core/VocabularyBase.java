@@ -53,6 +53,7 @@ public class VocabularyBase {
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS - settings.vocs_learned_today;
 
 		// add from unknown, remove them from todo_tmp
+		ui.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
 			ui.debug("Add from unknown vocs: " + v);
@@ -68,6 +69,7 @@ public class VocabularyBase {
 			ui.debug("Sorting todo by rating ...");
 			sortList(todo);
 			// add highest rated
+			ui.debug("Adding highest rated vocs.");
 			for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 				Vocabulary v = todo.get(i);
 				ui.debug("Add from asked vocs: " + v);
@@ -86,6 +88,10 @@ public class VocabularyBase {
 				todo_now.add(v);
 			}
 		}
+
+		ui.debug("*************************************************");
+		ui.debug("*** Todo today generation done with " + todo_now.size() + " vocs. ***");
+		ui.debug("*************************************************");
 
 		//  ask last added new vocs first
 //		List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -152,11 +158,12 @@ public class VocabularyBase {
 	}
 
 	Vocabulary getNextVocabulary() {
-		ui.debug("Get new voc -> todo_now.size(): " + todo_now.size());
+		ui.debug("Fetch next voc. " + todo_now.size() + " vocs left.");
 		if (todo_now.size() == 1) {
 			last_asked = todo_now.get(0);
 		}
 		else {
+			ui.debug("Sorting todo_now by rating ...");
 			sortList(todo_now);
 			// get and remove highest rated
 			Vocabulary last = todo_now.get(todo_now.size() - 1);
