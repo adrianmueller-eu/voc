@@ -45,6 +45,7 @@ public class VocabularyBase {
 	}
 
 	void generateVocsForToday(Settings settings) {
+		long now = System.currentTimeMillis();
 		ui.init();
 		generateTodo();
 
@@ -88,9 +89,9 @@ public class VocabularyBase {
 			}
 		}
 
-		ui.debug("*************************************************");
-		ui.debug("*** Todo today generation done with " + todo_now.size() + " vocs. ***");
-		ui.debug("*************************************************");
+		ui.debug("**********************************************************");
+		ui.debug("*** Todo today generation done with " + todo_now.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms. ***");
+		ui.debug("**********************************************************");
 
 		//  ask last added new vocs first
 //		List<Vocabulary> new2 = new LinkedList<>(new_vocs);

@@ -39,8 +39,9 @@ public class AskingRoutine {
 			}
 		}
 		ui.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
+		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
-		ui.debug("Loaded " + vocabularyBase.size() + " vocs.");
+		ui.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
 	}
 
 	public void run() throws IOException {
