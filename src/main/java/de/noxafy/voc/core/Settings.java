@@ -1,4 +1,4 @@
-package noxafy.de.core;
+package de.noxafy.voc.core;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Settings {
 	// default lang for ui is "en"
-	public static noxafy.de.view.LANG LANG = noxafy.de.view.LANG.EN;
+	public static de.noxafy.voc.view.LANG LANG = de.noxafy.voc.view.LANG.EN;
 	public static boolean DEBUG = false;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;

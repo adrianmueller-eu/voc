@@ -1,30 +1,28 @@
-package noxafy.de;
+package de.noxafy.voc;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import noxafy.de.core.AskingRoutine;
-import noxafy.de.core.Settings;
-import noxafy.de.fileManager.SettingsFileManager;
-import noxafy.de.fileManager.VocabularyFileManager;
-import noxafy.de.view.ANSI;
-import noxafy.de.view.LANG;
+import de.noxafy.voc.core.AskingRoutine;
+import de.noxafy.voc.core.Settings;
+import de.noxafy.voc.fileManager.SettingsFileManager;
+import de.noxafy.voc.fileManager.VocabularyFileManager;
+import de.noxafy.voc.view.LANG;
 
-import static noxafy.de.view.ANSI.bold;
-import static noxafy.de.view.ANSI.underline;
+import static de.noxafy.voc.view.ANSI.*;
 
 public class Main {
 	private static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
 	private static final File settings_file = new File(vok_dir + "voc.conf");
 	private static File voc_file = new File(vok_dir + "Englisch.csv");
 	private static boolean justSummarize = false;
-	private static final String usage = "Usage: " + bold("voc2") + " -h | [-n|-t] [-l " + underline("lang") + "] [-d] [-s] [-f " + underline("csv") + "]";
+	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-d] [-s] [-f " + underline("csv") + "]";
 	private static final String help = "Asks vocabularies based on a rating algorithm.\n" +
 			usage + "\n" +
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
 			"\t" + bold("-n") + "\tOpens a new window and tests you from there in training mode.\n" +
-			"\t" + "\tIn training mode the shell window shrinks to " + ANSI.TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
+			"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
 			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
 			"\t" + bold("-d") + "\tPrints very much debug information while asking (also " + bold("-v") + "). \n" +
@@ -103,7 +101,7 @@ public class Main {
 					try {
 						args[i] = ""; // delete -n argument (prevent circularity)
 						final String[] cmd = { "osascript", "-e",
-								"tell application \"Terminal\" to do script \"voc2 -t " + String.join(" ", args) + "\""
+								"tell application \"Terminal\" to do script \"voc -t " + String.join(" ", args) + "\""
 						};
 						final Process p = Runtime.getRuntime().exec(cmd);
 						// print out possible error

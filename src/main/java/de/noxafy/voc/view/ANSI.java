@@ -1,4 +1,4 @@
-package noxafy.de.view;
+package de.noxafy.voc.view;
 
 /**
  * @author noxafy

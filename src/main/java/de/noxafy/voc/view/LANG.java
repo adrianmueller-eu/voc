@@ -1,6 +1,6 @@
-package noxafy.de.view;
+package de.noxafy.voc.view;
 
-import noxafy.de.core.Settings;
+import de.noxafy.voc.core.Settings;
 
 /**
  * @author noxafy

@@ -1,13 +1,11 @@
-package noxafy.de.view;
+package de.noxafy.voc.view;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import noxafy.de.core.Settings;
-import noxafy.de.core.Vocabulary;
-
-import static noxafy.de.view.ANSI.transparent;
+import de.noxafy.voc.core.Settings;
+import de.noxafy.voc.core.Vocabulary;
 
 /**
  * @author noxafy
@@ -64,7 +62,7 @@ public final class UserInterface {
 		tell((askWord) ? voc.getMeaning() : voc.getWord());
 
 		if (voc.hasMnemonic()) {
-			tell("\n\t" + transparent(voc.getMnemonic()));
+			tell("\n\t" + ANSI.transparent(voc.getMnemonic()));
 		}
 	}
 

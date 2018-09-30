@@ -1,13 +1,13 @@
-package noxafy.de.fileManager;
+package de.noxafy.voc.fileManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import noxafy.de.core.Vocabulary;
-import noxafy.de.core.VocabularyBase;
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.core.Vocabulary;
+import de.noxafy.voc.core.VocabularyBase;
+import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy

@@ -1,8 +1,8 @@
-package noxafy.de.core;
+package de.noxafy.voc.core;
 
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.view.UserInterface;
 
-import static noxafy.de.view.ANSI.transparent;
+import de.noxafy.voc.view.ANSI;
 
 /**
  * @author noxafy
@@ -175,7 +175,7 @@ public class Vocabulary {
 
 	@Override
 	public String toString() {
-		return String.format("word: %s" + transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
+		return String.format("word: %s" + ANSI.transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
 				word,
 				meaning,
 				(hasMnemonic()) ? "; mnemonic: " + mnemonic : "",

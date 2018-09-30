@@ -1,4 +1,4 @@
-package noxafy.de.fileManager;
+package de.noxafy.voc.fileManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,8 +8,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
-import noxafy.de.core.Settings;
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.core.Settings;
+import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy

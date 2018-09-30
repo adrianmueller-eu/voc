@@ -1,4 +1,4 @@
-package noxafy.de.fileManager;
+package de.noxafy.voc.fileManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy

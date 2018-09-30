@@ -1,10 +1,10 @@
-package noxafy.de.core;
+package de.noxafy.voc.core;
 
 import java.io.IOException;
 
-import noxafy.de.fileManager.SettingsFileManager;
-import noxafy.de.fileManager.VocabularyFileManager;
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.fileManager.SettingsFileManager;
+import de.noxafy.voc.fileManager.VocabularyFileManager;
+import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy

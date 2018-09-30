@@ -1,11 +1,11 @@
-package noxafy.de.core;
+package de.noxafy.voc.core;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import noxafy.de.view.UserInterface;
+import de.noxafy.voc.view.UserInterface;
 
 import static java.util.Comparator.comparingDouble;
 
