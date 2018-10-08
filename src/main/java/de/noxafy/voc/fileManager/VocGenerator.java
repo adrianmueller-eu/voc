@@ -15,11 +15,9 @@ import de.noxafy.voc.view.UserInterface;
  */
 public final class VocGenerator extends FileManager<String[]> {
 
+	private static final UserInterface ui = UserInterface.getInstance();
 	private static File from = null;
 	private static File to = null;
-	private static Exception convert_e = null;
-
-	private static final UserInterface ui = UserInterface.getInstance();
 
 	private VocGenerator(File file) {
 		super(file);
@@ -46,11 +44,13 @@ public final class VocGenerator extends FileManager<String[]> {
 		String res;
 		int success = 0;
 		for (int i = 0; i < lines.length; i++) {
-			convert_e = null;
-			Vocabulary voc = getVoc(lines[i]);
-			if (voc == null) { // has error
+			Vocabulary voc;
+			try {
+				voc = getVoc(lines[i]);
+			}
+			catch (IllegalArgumentException e) {
 				ui.tellLn("Failed to process line " + (i + 1) + ": " + lines[i]);
-				ui.debug(convert_e.toString());
+				ui.debug(e.toString());
 				continue;
 			}
 			res = getLine(voc);
@@ -119,7 +119,7 @@ public final class VocGenerator extends FileManager<String[]> {
 		return null;
 	}
 
-	private static Vocabulary getVoc(String org_line) {
+	private static Vocabulary getVoc(String org_line) throws IllegalArgumentException {
 		String line = org_line.substring(1, org_line.length() - 1);
 		String[] args = line.split("\",\"");
 
@@ -127,50 +127,41 @@ public final class VocGenerator extends FileManager<String[]> {
 		long added = 0, lastAsked = 0;
 		int asked = 0, failed = 0, succeeded_in_a_row = 0;
 
-		try {
-			switch (args.length) {
-				default:
-				case 8:
-					succeeded_in_a_row = parseInt("succeeded_in_a_row", args[7]);
+		switch (args.length) {
+			default:
+			case 8:
+				succeeded_in_a_row = parseInt("succeeded_in_a_row", args[7]);
 				// fallthrough
-				case 7:
-					failed = parseInt("failed", args[6]);
+			case 7:
+				failed = parseInt("failed", args[6]);
 				// fallthrough
-				case 6:
-					asked = parseInt("asked", args[5]);
+			case 6:
+				asked = parseInt("asked", args[5]);
 				// fallthrough
-				case 5:
-					if (!args[4].isEmpty()) {
-						lastAsked = parseLong("lastAsked", args[4]);
-					}
+			case 5:
+				if (!args[4].isEmpty()) {
+					lastAsked = parseLong("lastAsked", args[4]);
+				}
 				// fallthrough
-				case 4:
-					added = parseLong("added", args[3]);
+			case 4:
+				added = parseLong("added", args[3]);
 				// fallthrough
-				case 3:
-					mnemonic = args[2];
+			case 3:
+				mnemonic = args[2];
 				// fallthrough
-				case 2:
-					meaning = args[1];
-					if (meaning.isEmpty()) {
-						convert_e = new IllegalArgumentException("Meaning field must not be empty.");
-						return null;
-					}
-					word = args[0];
-					if (word.isEmpty()) {
-						convert_e = new IllegalArgumentException("Word field must not be empty.");
-						return null;
-					}
-					break;
-				case 1:
-				case 0:
-					convert_e = new TooShortLineException(org_line);
-					return null;
-			}
-		}
-		catch (NumberFormatException e) {
-			convert_e = e;
-			return null;
+			case 2:
+				meaning = args[1];
+				if (meaning.isEmpty()) {
+					throw new IllegalArgumentException("Meaning field must not be empty.");
+				}
+				word = args[0];
+				if (word.isEmpty()) {
+					throw new IllegalArgumentException("Word field must not be empty.");
+				}
+				break;
+			case 1:
+			case 0:
+				throw new TooShortLineException(org_line);
 		}
 		if (added == 0) added = System.currentTimeMillis();
 
@@ -190,6 +181,28 @@ public final class VocGenerator extends FileManager<String[]> {
 
 	private static String quote(Object inner, boolean comma) {
 		return "\"" + inner + ((comma) ? "\"," : "\"");
+	}
+
+	private static int parseInt(String type, String toParse) {
+		int res;
+		try {
+			res = Integer.parseInt(toParse);
+		}
+		catch (NumberFormatException e) {
+			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
+		}
+		return res;
+	}
+
+	private static long parseLong(String type, String toParse) {
+		long res;
+		try {
+			res = Long.parseLong(toParse);
+		}
+		catch (NumberFormatException e) {
+			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
+		}
+		return res;
 	}
 
 	@Override
@@ -225,27 +238,5 @@ public final class VocGenerator extends FileManager<String[]> {
 			ui.tellLn("Writing a new line to " + to.getAbsolutePath() + " failed.");
 			throw e;
 		}
-	}
-
-	private static int parseInt(String type, String toParse) {
-		int res;
-		try {
-			res = Integer.parseInt(toParse);
-		}
-		catch (NumberFormatException e) {
-			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
-		}
-		return res;
-	}
-
-	private static long parseLong(String type, String toParse) {
-		long res;
-		try {
-			res = Long.parseLong(toParse);
-		}
-		catch (NumberFormatException e) {
-			throw new NumberFormatException("Failed to parse \"" + type + "\": " + toParse);
-		}
-		return res;
 	}
 }
