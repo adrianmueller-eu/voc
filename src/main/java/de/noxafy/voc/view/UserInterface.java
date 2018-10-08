@@ -17,6 +17,14 @@ public final class UserInterface {
 	private static final UserInterface singleton = new UserInterface();
 	public final Strings str;
 
+	private UserInterface() {
+		str = Settings.LANG.getStrings();
+	}
+
+	public static UserInterface getInstance() {
+		return singleton;
+	}
+
 	public void ask(Vocabulary voc) throws IOException {
 		boolean askWord = Math.random() < 0.5;
 		doAsk(voc, askWord);
@@ -48,14 +56,6 @@ public final class UserInterface {
 				// ignore
 			}
 		}
-	}
-
-	private UserInterface() {
-		str = Settings.LANG.getStrings();
-	}
-
-	public static UserInterface getInstance() {
-		return singleton;
 	}
 
 	private void showAnswer(Vocabulary voc, boolean askWord) {
@@ -101,15 +101,11 @@ public final class UserInterface {
 	}
 
 	public void debug(String debug_message) {
-		if (Settings.DEBUG) {
-			tellLn("DEBUG: " + debug_message);
-		}
+		tellLn("DEBUG: " + debug_message);
 	}
 
 	public void debugWithTab(String debug_message) {
-		if (Settings.DEBUG) {
-			tellLn("\tDEBUG: " + debug_message);
-		}
+		tellLn("\tDEBUG: " + debug_message);
 	}
 
 	public void debug(List list) {

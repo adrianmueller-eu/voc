@@ -1,8 +1,7 @@
 package de.noxafy.voc.core;
 
-import de.noxafy.voc.view.UserInterface;
-
 import de.noxafy.voc.view.ANSI;
+import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy
@@ -74,7 +73,7 @@ public class Vocabulary {
 		succeeded_in_a_row++;
 		level = KnowledgeLevel.decide(succeeded_in_a_row);
 		asked();
-		ui.debug("Success! " + succeeded_in_a_row + " in a row.");
+		if (Settings.DEBUG != 0) ui.debug("Success! " + succeeded_in_a_row + " in a row.");
 	}
 
 	public void failed() {
@@ -82,7 +81,7 @@ public class Vocabulary {
 		level = KnowledgeLevel.UNKNOWN;
 		failed++;
 		asked();
-		ui.debug("Failed!");
+		if (Settings.DEBUG != 0) ui.debug("Failed!");
 	}
 
 	private void asked() {
@@ -140,7 +139,7 @@ public class Vocabulary {
 			// failRate weighted 3 times
 			// 57% via heuristics, 43% random
 			rating = 3 * failRate + time_passed_rating + random;
-			if (Settings.DEBUG) {
+			if (Settings.DEBUG == 2) {
 				StringBuilder tabs = new StringBuilder();
 				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
 					tabs.append("\t");

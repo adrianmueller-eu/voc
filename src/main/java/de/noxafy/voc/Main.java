@@ -17,7 +17,7 @@ public class Main {
 	private static final File settings_file = new File(vok_dir + "voc.conf");
 	private static File voc_file = new File(vok_dir + "Englisch.csv");
 	private static boolean justSummarize = false;
-	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-d] [-s] [-f " + underline("csv") + "]";
+	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-v|-d] [-s] [-f " + underline("csv") + "]";
 	private static final String help = "Asks vocabularies based on a rating algorithm.\n" +
 			usage + "\n" +
 			"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
@@ -25,7 +25,8 @@ public class Main {
 			"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
 			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
-			"\t" + bold("-d") + "\tPrints very much debug information while asking (also " + bold("-v") + "). \n" +
+			"\t" + bold("-v") + "\tBe a bit verbose. \n" +
+			"\t" + bold("-d") + "\tPrints very much debug information while asking. \n" +
 			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
 			"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
@@ -91,8 +92,10 @@ public class Main {
 					justSummarize = true;
 					break;
 				case "-v":
+					Settings.DEBUG = 1;
+					break;
 				case "-d":
-					Settings.DEBUG = true;
+					Settings.DEBUG = 2;
 					break;
 				case "-t":
 					Settings.TRAINING_MODE = true;

@@ -3,8 +3,8 @@ package de.noxafy.voc.fileManager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.core.Vocabulary;
 import de.noxafy.voc.view.UserInterface;
 
@@ -12,7 +12,7 @@ import de.noxafy.voc.view.UserInterface;
  * @author noxafy
  * @created 30.08.17
  */
-public class VocGenerator extends FileManager<String[]> {
+public final class VocGenerator extends FileManager<String[]> {
 
 	private static File from = null;
 	private static File to = null;
@@ -26,7 +26,6 @@ public class VocGenerator extends FileManager<String[]> {
 
 	public static void main(String[] args) throws IOException {
 		if (!parseArgs(args)) return;
-		Settings.DEBUG = true; // show all error messages
 
 		if (from == null || to == null) {
 			if (to == null && from != null) {
@@ -66,9 +65,6 @@ public class VocGenerator extends FileManager<String[]> {
 	private static boolean parseArgs(String[] args) throws IOException {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
-				case "-d":
-					Settings.DEBUG = true;
-					break;
 				case "-f":
 					from = evalFile(args, ++i);
 					break;
@@ -132,18 +128,24 @@ public class VocGenerator extends FileManager<String[]> {
 				default:
 				case 8:
 					succeeded_in_a_row = parseInt("succeeded_in_a_row", args[7]);
+				// fallthrough
 				case 7:
 					failed = parseInt("failed", args[6]);
+				// fallthrough
 				case 6:
 					asked = parseInt("asked", args[5]);
+				// fallthrough
 				case 5:
 					if (!args[4].isEmpty()) {
 						lastAsked = parseLong("lastAsked", args[4]);
 					}
+				// fallthrough
 				case 4:
 					added = parseLong("added", args[3]);
+				// fallthrough
 				case 3:
 					mnemonic = args[2];
+				// fallthrough
 				case 2:
 					meaning = args[1];
 					if (meaning.isEmpty()) {
@@ -213,7 +215,7 @@ public class VocGenerator extends FileManager<String[]> {
 	private void appendNewVoc(String line) throws IOException {
 		line += "\n";
 		try (FileOutputStream out = new FileOutputStream(to, true)) {
-			out.write(line.getBytes());
+			out.write(line.getBytes(StandardCharsets.UTF_8));
 		}
 		catch (IOException e) {
 			ui.tellLn("Writing a new line to " + to.getAbsolutePath() + " failed.");

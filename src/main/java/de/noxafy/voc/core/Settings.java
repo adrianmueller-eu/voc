@@ -10,7 +10,7 @@ import java.util.Date;
 public class Settings {
 	// default lang for ui is "en"
 	public static de.noxafy.voc.view.LANG LANG = de.noxafy.voc.view.LANG.EN;
-	public static boolean DEBUG = false;
+	public static int DEBUG = 0;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;
 

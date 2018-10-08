@@ -219,7 +219,7 @@ public class VocabularyBase {
 		ui.tell(String.format(ui.str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, perc_todo * 100));
 		ui.tell(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 
-		if (unknowns.size() > 0) {
+		if (!unknowns.isEmpty()) {
 			ui.tellLn("");
 			ui.tell(unknowns.size() + ui.str.getUnknownVocsLeft());
 		}
