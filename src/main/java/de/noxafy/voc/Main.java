@@ -8,7 +8,7 @@ import de.noxafy.voc.core.AskingRoutine;
 import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.fileManager.SettingsFileManager;
 import de.noxafy.voc.fileManager.VocabularyFileManager;
-import de.noxafy.voc.view.LANG;
+import de.noxafy.voc.view.Lang;
 
 import static de.noxafy.voc.view.ANSI.*;
 
@@ -24,7 +24,7 @@ public class Main {
 			"\t" + bold("-n") + "\tOpens a new window and tests you from there in training mode.\n" +
 			"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
-			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
+			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + Lang.getAvailableString() + "\n" +
 			"\t" + bold("-v") + "\tBe a bit verbose.\n" +
 			"\t" + bold("-d") + "\tPrints very much debug information while asking. \n" +
 			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
@@ -137,16 +137,16 @@ public class Main {
 
 	private static void evalLang(String[] args, int i) throws IllegalArgumentException {
 		if (i < args.length) {
-			final LANG lang = LANG.get(args[i].toUpperCase());
+			final Lang lang = Lang.get(args[i].toUpperCase());
 			if (lang == null) {
-				throw new IllegalArgumentException("Please give an available language. Available: " + LANG.getAvailableString() + ".  See -h for more help.");
+				throw new IllegalArgumentException("Please give an available language. Available: " + Lang.getAvailableString() + ".  See -h for more help.");
 			}
 			else {
 				Settings.LANG = lang;
 			}
 		}
 		else {
-			throw new IllegalArgumentException("Please give a language. Available: " + LANG.getAvailableString() + ".  See -h for more help.");
+			throw new IllegalArgumentException("Please give a language. Available: " + Lang.getAvailableString() + ".  See -h for more help.");
 		}
 	}
 

@@ -3,13 +3,15 @@ package de.noxafy.voc.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.noxafy.voc.view.Lang;
+
 /**
  * @author noxafy
  * @created 28.08.17
  */
 public class Settings {
 	// default lang for ui is "en"
-	public static de.noxafy.voc.view.LANG LANG = de.noxafy.voc.view.LANG.EN;
+	public static Lang LANG = Lang.EN;
 	public static DEBUG_LEVEL DEBUG = DEBUG_LEVEL.NONE;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;

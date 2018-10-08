@@ -6,16 +6,16 @@ import de.noxafy.voc.core.Settings;
  * @author noxafy
  * @created 22.04.18
  */
-public enum LANG {
+public enum Lang {
 	EN(new Strings_en()), DE(new Strings_de());
 
 	private final Strings strings;
 
-	LANG(Strings strings) {
+	Lang(Strings strings) {
 		this.strings = strings;
 	}
 
-	public static LANG get(String lang) {
+	public static Lang get(String lang) {
 		try {
 			return valueOf(lang);
 		}
@@ -26,7 +26,7 @@ public enum LANG {
 
 	public static String getAvailableString() {
 		final StringBuilder res = new StringBuilder();
-		for (LANG lang : values()) {
+		for (Lang lang : values()) {
 			res.append("\"").append(lang.name().toLowerCase()).append("\"");
 			if (lang == Settings.LANG) {
 				res.append(" (default)");
