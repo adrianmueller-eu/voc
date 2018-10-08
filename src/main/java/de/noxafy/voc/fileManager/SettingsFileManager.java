@@ -54,7 +54,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
 		}
 		catch (NullPointerException e) {
-			if (Settings.DEBUG != 0) ui.debug(str_NUMBER_SIMUL_VOCS + " was missing.");
+			ui.debug(str_NUMBER_SIMUL_VOCS + " was missing.");
 		}
 
 		// NUMBER_NEW_VOCS_AT_START
@@ -63,7 +63,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_NEW_VOCS_AT_START = obj.getInt(str_NUMBER_NEW_VOCS_AT_START);
 		}
 		catch (Exception e) {
-			if (Settings.DEBUG != 0) ui.debug(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
+			ui.debug(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
 		}
 
 		// VOCS_LEARNED_TODAY
@@ -72,7 +72,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			VOCS_LEARNED_TODAY = obj.getInt(str_VOCS_LEARNED_TODAY);
 		}
 		catch (Exception e) {
-			if (Settings.DEBUG != 0) ui.debug(str_VOCS_LEARNED_TODAY + " was missing.");
+			ui.debug(str_VOCS_LEARNED_TODAY + " was missing.");
 		}
 
 		// LAST_UPDATED
@@ -81,7 +81,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			LAST_UPDATED = obj.getString(str_LAST_UPDATED);
 		}
 		catch (Exception e) {
-			if (Settings.DEBUG != 0) ui.debug(str_LAST_UPDATED + " was missing.");
+			ui.debug(str_LAST_UPDATED + " was missing.");
 		}
 
 		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START, VOCS_LEARNED_TODAY, LAST_UPDATED);

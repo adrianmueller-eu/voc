@@ -101,14 +101,24 @@ public final class UserInterface {
 	}
 
 	public void debug(String debug_message) {
-		tellLn("DEBUG: " + debug_message);
+		debug(debug_message, Settings.DEBUG_LEVEL.SHORT);
 	}
 
-	public void debugWithTab(String debug_message) {
-		tellLn("\tDEBUG: " + debug_message);
+	public void debug(String debug_message, Settings.DEBUG_LEVEL level) {
+		if (Settings.DEBUG.is(level)) {
+			tellLn("DEBUG: " + debug_message);
+		}
+	}
+
+	public void debugWithTab(String debug_fmt_message, Object... objs) {
+		if (Settings.DEBUG.is(Settings.DEBUG_LEVEL.LONG)) {
+			tellLn("\tDEBUG: " + String.format(debug_fmt_message, objs));
+		}
 	}
 
 	public void debug(List list) {
+		if (Settings.DEBUG.is(Settings.DEBUG_LEVEL.LONG)) return;
+
 		for (Object o : list) {
 			debugWithTab(o.toString());
 		}

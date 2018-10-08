@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.core.Vocabulary;
 import de.noxafy.voc.view.UserInterface;
 
@@ -65,6 +66,9 @@ public final class VocGenerator extends FileManager<String[]> {
 	private static boolean parseArgs(String[] args) throws IOException {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
+				case "-d":
+					Settings.DEBUG = Settings.DEBUG_LEVEL.SHORT;
+					break;
 				case "-f":
 					from = evalFile(args, ++i);
 					break;

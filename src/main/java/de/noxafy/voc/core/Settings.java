@@ -10,7 +10,7 @@ import java.util.Date;
 public class Settings {
 	// default lang for ui is "en"
 	public static de.noxafy.voc.view.LANG LANG = de.noxafy.voc.view.LANG.EN;
-	public static int DEBUG = 0;
+	public static DEBUG_LEVEL DEBUG = DEBUG_LEVEL.NONE;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;
 
@@ -40,5 +40,13 @@ public class Settings {
 
 	public void resetAllLearned() {
 		vocs_learned_today = 0;
+	}
+
+	public enum DEBUG_LEVEL {
+		NONE, SHORT, LONG;
+
+		public boolean is(DEBUG_LEVEL level) {
+			return this.ordinal() >= level.ordinal();
+		}
 	}
 }

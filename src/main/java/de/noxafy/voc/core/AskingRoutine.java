@@ -23,25 +23,25 @@ public class AskingRoutine {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
 
-		if (Settings.DEBUG != 0) ui.debug("Loading settings from " + settingsFileManager.getFilePath());
+		ui.debug("Loading settings from " + settingsFileManager.getFilePath());
 		settings = settingsFileManager.load();
 		// test if enough is learned for today
-		if (Settings.DEBUG != 0) ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
+		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
 		if (settings.allDone()) {
 			if (ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
 				settings.resetAllLearned();
 				settingsFileManager.write(settings);
-				if (Settings.DEBUG != 0) ui.debug("Reset Settings.vocs_learned_today to 0.");
+				ui.debug("Reset Settings.vocs_learned_today to 0.");
 			}
 			else {
 				ui.tell(ui.str.comeTomorrow());
 				System.exit(0);
 			}
 		}
-		if (Settings.DEBUG != 0) ui.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
+		ui.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
 		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
-		if (Settings.DEBUG != 0) ui.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
+		ui.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
 	}
 
 	public void run() throws IOException {

@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.view.UserInterface;
 
 /**
@@ -32,7 +31,7 @@ abstract class FileManager<T> {
 			out.write(content.getBytes());
 		}
 		catch (IOException e) {
-			if (Settings.DEBUG != 0) ui.debug("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");
+			ui.debug("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");
 			throw e;
 		}
 	}
@@ -54,7 +53,7 @@ abstract class FileManager<T> {
 		}
 		catch (Exception e) {
 			ui.tellLn("Reading from file " + file.getAbsolutePath() + " failed.");
-			if (Settings.DEBUG != 0) ui.debug(e.toString());
+			ui.debug(e.toString());
 			return null;
 		}
 	}

@@ -56,7 +56,7 @@ public class VocabularyBase {
 		ui.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
-			ui.debug("Add from unknown vocs: " + v);
+			ui.debug("Add from unknown vocs: " + v, Settings.DEBUG_LEVEL.LONG);
 			todo_now.add(v);
 		}
 
@@ -72,7 +72,7 @@ public class VocabularyBase {
 			ui.debug("Adding highest rated vocs.");
 			for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 				Vocabulary v = todo.get(i);
-				ui.debug("Add from asked vocs: " + v);
+				ui.debug("Add from asked vocs: " + v, Settings.DEBUG_LEVEL.LONG);
 				todo_now.add(v);
 			}
 		}
@@ -84,7 +84,7 @@ public class VocabularyBase {
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
 			while (todo_now.size() < should_be_asked_overall && !new2.isEmpty()) {
 				Vocabulary v = new2.remove(rand.nextInt(new2.size()));
-				ui.debugWithTab("Added from new vocs: " + v);
+				ui.debugWithTab("Added from new vocs: %s", v);
 				todo_now.add(v);
 			}
 		}
@@ -112,14 +112,14 @@ public class VocabularyBase {
 		for (Vocabulary v : asked_vocs) {
 			if (v.isUnknown()) {
 				unknowns.add(v);
-				ui.debugWithTab("To ask from unknown: " + v);
+				ui.debugWithTab("To ask from unknown: %s", v);
 			}
 			else if (v.shouldBeAsked(now)) {
 				todo.add(v);
-				ui.debugWithTab("To ask: " + v);
+				ui.debugWithTab("To ask: %s", v);
 			}
 			else {
-				ui.debugWithTab("Not to ask: " + v);
+				ui.debugWithTab("Not to ask: %s", v);
 			}
 		}
 		ui.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
@@ -128,7 +128,7 @@ public class VocabularyBase {
 	private void sortList(List<Vocabulary> list) {
 		long now = System.currentTimeMillis();
 		list.sort(comparingDouble(v -> v.getRating(now)));
-		ui.debug("List sorted:");
+		ui.debug("List sorted");
 		ui.debug(list);
 	}
 

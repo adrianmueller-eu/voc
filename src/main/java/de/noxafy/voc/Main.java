@@ -25,7 +25,7 @@ public class Main {
 			"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 			"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
 			"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + LANG.getAvailableString() + "\n" +
-			"\t" + bold("-v") + "\tBe a bit verbose. \n" +
+			"\t" + bold("-v") + "\tBe a bit verbose.\n" +
 			"\t" + bold("-d") + "\tPrints very much debug information while asking. \n" +
 			"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
 			"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
@@ -92,10 +92,10 @@ public class Main {
 					justSummarize = true;
 					break;
 				case "-v":
-					Settings.DEBUG = 1;
+					Settings.DEBUG = Settings.DEBUG_LEVEL.SHORT;
 					break;
 				case "-d":
-					Settings.DEBUG = 2;
+					Settings.DEBUG = Settings.DEBUG_LEVEL.LONG;
 					break;
 				case "-t":
 					Settings.TRAINING_MODE = true;
