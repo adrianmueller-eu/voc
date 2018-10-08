@@ -6,6 +6,7 @@ import java.util.Random;
 
 import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.core.Vocabulary;
+import de.noxafy.voc.view.lang.Strings;
 
 /**
  * @author noxafy

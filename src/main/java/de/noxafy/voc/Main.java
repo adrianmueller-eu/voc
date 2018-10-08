@@ -8,7 +8,7 @@ import de.noxafy.voc.core.AskingRoutine;
 import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.fileManager.SettingsFileManager;
 import de.noxafy.voc.fileManager.VocabularyFileManager;
-import de.noxafy.voc.view.Lang;
+import de.noxafy.voc.view.lang.Lang;
 
 import static de.noxafy.voc.view.ANSI.*;
 

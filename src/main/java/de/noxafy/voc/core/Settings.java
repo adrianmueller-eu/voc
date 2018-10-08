@@ -3,7 +3,7 @@ package de.noxafy.voc.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.noxafy.voc.view.Lang;
+import de.noxafy.voc.view.lang.Lang;
 
 /**
  * @author noxafy

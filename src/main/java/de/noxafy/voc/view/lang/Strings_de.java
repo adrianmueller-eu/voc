@@ -1,4 +1,4 @@
-package de.noxafy.voc.view;
+package de.noxafy.voc.view.lang;
 
 /**
  * @author noxafy
