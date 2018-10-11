@@ -217,12 +217,38 @@ public class VocabularyBase {
 		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ",
 				asked_vocs.size() - todo.size(), number_vocs, (1 - perc_todo - perc_new) * 100));
 		ui.tell(String.format(ui.str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, perc_todo * 100));
-		ui.tell(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
+		ui.tellLn(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 
 		if (!unknowns.isEmpty()) {
-			ui.tellLn("");
-			ui.tell(unknowns.size() + ui.str.getUnknownVocsLeft());
+			ui.tellLn(unknowns.size() + ui.str.getUnknownVocsLeft());
 		}
+
+		int k1 = 0, k2 = 0, k3 = 0, k4 = 0, k5 = 0;
+		for (Vocabulary v : asked_vocs) {
+			switch (v.getLevel()) {
+				case LEVEL1:
+					k1++;
+					break;
+				case LEVEL2:
+					k2++;
+					break;
+				case LEVEL3:
+					k3++;
+					break;
+				case LEVEL4:
+					k4++;
+					break;
+				case LEVEL5:
+					k5++;
+					break;
+			}
+		}
+
+		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL1.name(), k1));
+		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL2.name(), k2));
+		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL3.name(), k3));
+		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL4.name(), k4));
+		ui.tell(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL5.name(), k5));
 		// newline printed at exit
 	}
 

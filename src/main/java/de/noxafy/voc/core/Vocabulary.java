@@ -113,6 +113,10 @@ public class Vocabulary {
 		return failed;
 	}
 
+	public KnowledgeLevel getLevel() {
+		return level;
+	}
+
 	public double getRating(long now) {
 		if (ratingDate == 0 || now != ratingDate) {
 			ratingDate = now;
