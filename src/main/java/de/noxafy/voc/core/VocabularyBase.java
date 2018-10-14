@@ -1,5 +1,6 @@
 package de.noxafy.voc.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,13 +45,21 @@ public class VocabularyBase {
 		}
 	}
 
-	void generateVocsForToday(Settings settings) {
+	void generateVocsForToday(Settings settings) throws IOException {
 		long now = System.currentTimeMillis();
 		ui.init();
 		generateTodo();
 
+		if (todo.isEmpty() && unknowns.isEmpty()) {
+			ui.debug("No todo left for now!");
+			if (!ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
+				ui.tell(ui.str.comeTomorrow());
+				System.exit(0);
+			}
+		}
+
 		// get how many at all should be asked
-		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS - settings.vocs_learned_today;
+		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS;
 
 		// add from unknown, remove them from todo_tmp
 		ui.debug("Unknowns to ask: " + unknowns.size());
@@ -132,12 +141,11 @@ public class VocabularyBase {
 		ui.debug(list);
 	}
 
-	void update(Settings settings) {
+	void update() {
 		if (last_asked.isKnown()) {
-			settings.vocLearned();
 			ui.debug("\"" + last_asked.getWord() + "\" removed because it's known!");
 			todo_now.remove(last_asked);
-			// Don't know where it came from
+			// Don't know where it came from, but keep "old" store updated for summary
 			if (!unknowns.remove(last_asked)) {
 				todo.remove(last_asked);
 			}
@@ -188,15 +196,18 @@ public class VocabularyBase {
 	}
 
 	void summarize() {
-		if (asked_vocs.isEmpty() && new_vocs.isEmpty()) {
-			return;
-		}
+		if (isEmpty()) return;
 
 		final int statistics_length = 80;
+		todo.addAll(unknowns);
+
+		if (todo.isEmpty()) {
+			ui.tellLn(ui.str.getDoneForNow());
+		}
 
 		ui.tellLn(ui.str.getStatistics());
 		int number_vocs = asked_vocs.size() + new_vocs.size();
-		todo.addAll(unknowns);
+
 		final double perc_todo = todo.size() / (double) number_vocs;
 		final double perc_new = new_vocs.size() / (double) number_vocs;
 

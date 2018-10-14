@@ -35,8 +35,6 @@ public class AskingRoutine {
 	}
 
 	public void run() throws IOException {
-		checkIfEnoughLearned(settingsFileManager);
-
 		if (vocabularyBase.isEmpty()) {
 			ui.tellLn(ui.str.getNoVocFound());
 			System.exit(1);
@@ -46,25 +44,8 @@ public class AskingRoutine {
 		while (vocabularyBase.hasNextVocabulary()) {
 			Vocabulary next = vocabularyBase.getNextVocabulary();
 			ui.ask(next);
-			vocabularyBase.update(settings);
+			vocabularyBase.update();
 			writeOutChanges();
-		}
-		ui.tellLn(ui.str.getFinal());
-	}
-
-	private void checkIfEnoughLearned(SettingsFileManager settingsFileManager) throws IOException {
-		// test if enough is learned for today
-		ui.debug("Already " + settings.vocs_learned_today + " vocs learned today.");
-		if (settings.allDone()) {
-			if (ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
-				settings.resetAllLearned();
-				settingsFileManager.write(settings);
-				ui.debug("Reset Settings.vocs_learned_today to 0.");
-			}
-			else {
-				ui.tell(ui.str.comeTomorrow());
-				System.exit(0);
-			}
 		}
 	}
 

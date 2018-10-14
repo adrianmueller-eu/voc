@@ -14,13 +14,13 @@ public class Strings_de implements Strings {
 	}
 
 	@Override
-	public String getFinal() {
+	public String getDoneForNow() {
 		return "Alle Vokabeln für heute gelernt! :)";
 	}
 
 	@Override
 	public String getFinalAndReset() {
-		return "Alle Vokabeln für heute bereits gelernt. Möchtest du das zurücksetzen?";
+		return "Alle Vokabeln für heute sind bereits gelernt. Möchtest du neue Vokabeln lernen?";
 	}
 
 	@Override

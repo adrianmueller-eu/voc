@@ -8,7 +8,7 @@ public interface Strings {
 
 	String[] getGoodVibes();
 
-	String getFinal();
+	String getDoneForNow();
 
 	String getFinalAndReset();
 

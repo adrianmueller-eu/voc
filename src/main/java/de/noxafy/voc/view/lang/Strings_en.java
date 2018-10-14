@@ -14,13 +14,13 @@ public class Strings_en implements Strings {
 	}
 
 	@Override
-	public String getFinal() {
+	public String getDoneForNow() {
 		return "All vocabulary items learned for today! :)";
 	}
 
 	@Override
 	public String getFinalAndReset() {
-		return "All vocabulary items already learned for today. Do you want to reset that?";
+		return "All vocabulary items for today are already learned. Do you want to learn a new set of vocs?";
 	}
 
 	@Override

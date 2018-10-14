@@ -1,8 +1,5 @@
 package de.noxafy.voc.core;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import de.noxafy.voc.view.lang.Lang;
 
 /**
@@ -19,29 +16,10 @@ public class Settings {
 	public final int NUMBER_SIMUL_VOCS;
 	// should not be bigger than the previous two
 	public final int NUMBER_NEW_VOCS_AT_START;
-	public int vocs_learned_today;
-	public String lastUpdated;
 
-	public Settings(int number_simul_vocs, int number_new_vocs_at_start, int vocs_learned_today, String lastUpdated) {
+	public Settings(int number_simul_vocs, int number_new_vocs_at_start) {
 		NUMBER_SIMUL_VOCS = number_simul_vocs;
 		NUMBER_NEW_VOCS_AT_START = number_new_vocs_at_start;
-		this.vocs_learned_today = vocs_learned_today;
-		String currentDate = this.lastUpdated = new SimpleDateFormat("yyyy/DDD").format(new Date());
-		if (!currentDate.equals(lastUpdated)) {
-			resetAllLearned();
-		}
-	}
-
-	public void vocLearned() {
-		vocs_learned_today++;
-	}
-
-	public boolean allDone() {
-		return vocs_learned_today >= NUMBER_SIMUL_VOCS;
-	}
-
-	public void resetAllLearned() {
-		vocs_learned_today = 0;
 	}
 
 	public enum DEBUG_LEVEL {
