@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.noxafy.voc.Log;
-import de.noxafy.voc.core.Vocabulary;
 import de.noxafy.voc.core.VocabularyBase;
+import de.noxafy.voc.core.model.Vocabulary;
 
 /**
  * @author noxafy

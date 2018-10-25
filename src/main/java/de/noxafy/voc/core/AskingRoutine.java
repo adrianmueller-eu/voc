@@ -3,6 +3,7 @@ package de.noxafy.voc.core;
 import java.io.IOException;
 
 import de.noxafy.voc.Log;
+import de.noxafy.voc.core.model.Vocabulary;
 import de.noxafy.voc.fileManager.SettingsFileManager;
 import de.noxafy.voc.fileManager.VocabularyFileManager;
 import de.noxafy.voc.view.UserInterface;
@@ -18,16 +19,15 @@ public class AskingRoutine {
 	private final Settings settings;
 	private final VocabularyBase vocabularyBase;
 
-	private final UserInterface ui = UserInterface.getInstance();
+	private final UserInterface ui;
 
-	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager) {
+	public AskingRoutine(SettingsFileManager settingsFileManager, VocabularyFileManager vocabularyFileManager, UserInterface ui) {
 		this.settingsFileManager = settingsFileManager;
 		this.vocabularyFileManager = vocabularyFileManager;
+		this.ui = ui;
 
 		Log.debug("Loading settings from " + settingsFileManager.getFilePath());
 		settings = settingsFileManager.load();
-		// Check for enough learned should conceptually be done before voc load
-		// But for statistics only it's not needed, even not desired. So it will be checked on routine run.
 
 		Log.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
 		long now = System.currentTimeMillis();
@@ -35,28 +35,67 @@ public class AskingRoutine {
 		Log.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
 	}
 
-	public void run() throws IOException {
+	public void run() {
 		if (vocabularyBase.isEmpty()) {
-			ui.tellLn(ui.str.getNoVocFound());
+			ui.noVocsFound();
 			System.exit(1);
+		}
+
+		ui.init();
+		vocabularyBase.generateTodo();
+		if (vocabularyBase.nothingTodo()) {
+			Log.debug("No todo left for now!");
+			if (ui.shouldReset()) {
+				ui.bye();
+				System.exit(0);
+			}
 		}
 		vocabularyBase.generateVocsForToday(settings);
 
 		while (vocabularyBase.hasNextVocabulary()) {
 			Vocabulary next = vocabularyBase.getNextVocabulary();
-			ui.ask(next);
+			ask(next);
 			vocabularyBase.update();
 			writeOutChanges();
 		}
 	}
 
-	public void summarize() {
-		vocabularyBase.generateTodo();
-		vocabularyBase.summarize();
+	private void ask(Vocabulary voc) {
+		boolean askWord = Math.random() < 0.5;
+		if (askWord) {
+			ui.doAsk(voc.getWord());
+			ui.waitForUserFinished();
+			ui.showAnswer(voc.getMeaning(), voc.getMnemonic());
+		}
+		else {
+			ui.doAsk(voc.getMeaning());
+			ui.waitForUserFinished();
+			ui.showAnswer(voc.getWord(), voc.getMnemonic());
+		}
+		if (ui.isCorrect()) {
+			voc.succeeded();
+			if (voc.isKnown()) {
+				ui.praiseUser();
+			}
+		}
+		else {
+			voc.failed();
+		}
+		ui.prepareForNext();
 	}
 
-	private void writeOutChanges() throws IOException {
-		vocabularyFileManager.write(vocabularyBase);
-		settingsFileManager.write(settings);
+	public void summarize() {
+		vocabularyBase.generateTodo();
+		ui.summarize(vocabularyBase);
+	}
+
+	private void writeOutChanges() {
+		try {
+			vocabularyFileManager.write(vocabularyBase);
+			settingsFileManager.write(settings);
+		}
+		catch (IOException e) {
+			Log.error(e.toString());
+		}
 	}
 }

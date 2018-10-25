@@ -12,6 +12,7 @@ public class Settings {
 	public static DEBUG_LEVEL DEBUG = DEBUG_LEVEL.NONE;
 	// shrink window on start and clear after each voc
 	public static boolean TRAINING_MODE = false;
+	public static boolean justSummarize = false;
 
 	public final int NUMBER_SIMUL_VOCS;
 	// should not be bigger than the previous two

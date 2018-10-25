@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 import de.noxafy.voc.Log;
 import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.core.Vocabulary;
+import de.noxafy.voc.core.model.Vocabulary;
 
 /**
  * @author noxafy

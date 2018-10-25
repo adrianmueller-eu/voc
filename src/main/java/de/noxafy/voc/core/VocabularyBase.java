@@ -1,13 +1,12 @@
 package de.noxafy.voc.core;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 import de.noxafy.voc.Log;
-import de.noxafy.voc.view.UserInterface;
+import de.noxafy.voc.core.model.Vocabulary;
 
 import static java.util.Comparator.comparingDouble;
 
@@ -18,7 +17,6 @@ import static java.util.Comparator.comparingDouble;
 public class VocabularyBase {
 
 	private static final Random rand = new Random();
-	private final UserInterface ui = UserInterface.getInstance();
 
 	private final List<Vocabulary> asked_vocs = new LinkedList<>();
 	private final List<Vocabulary> new_vocs = new LinkedList<>();
@@ -26,8 +24,8 @@ public class VocabularyBase {
 
 	/**
 	 * Contains all vocs already asked (not {@link Vocabulary#isNew}) but {@link Vocabulary#shouldBeAsked}, EXCEPT ones
-	 * that are {@link Vocabulary#isUnknown}. Unknown vocs are only existing in database if user terminated session
-	 * premature and therefore stored in own list {@link #unknowns} for being preferred in todo_now selection.
+	 * that are {@link Vocabulary#isUnknown}. Unknown vocs are only existing in database, if user terminated session
+	 * premature, and are therefore stored in an dedicated list {@link #unknowns} to get preferred in {@link #generateVocsForToday}.
 	 */
 	private List<Vocabulary> todo;
 
@@ -47,23 +45,13 @@ public class VocabularyBase {
 		}
 	}
 
-	void generateVocsForToday(Settings settings) throws IOException {
+	void generateVocsForToday(Settings settings) {
 		long now = System.currentTimeMillis();
-		ui.init();
-		generateTodo();
-
-		if (todo.isEmpty() && unknowns.isEmpty()) {
-			Log.debug("No todo left for now!");
-			if (!ui.getAnswer(ui.str.getFinalAndReset() + " (y/n) [y]: ", true)) {
-				ui.tell(ui.str.comeTomorrow());
-				System.exit(0);
-			}
-		}
 
 		// get how many at all should be asked
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS;
 
-		// add from unknown, remove them from todo_tmp
+		// first, add all from unknown vocs (per definition not contained in todolist)
 		Log.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
@@ -71,20 +59,26 @@ public class VocabularyBase {
 			todo_now.add(v);
 		}
 
-		// get how many asked should be asked (leave space for new)
-		int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
-		Log.debug("Space left for asked: " + (should_be_asked_overall - todo_now.size()));
-		// if space left
-		if (should_be_asked_from_asked > todo_now.size()) {
-			// sort list todo_tmp
-			Log.debug("Sorting todo by rating ...");
-			sortList(todo);
-			// add highest rated
-			Log.debug("Adding highest rated vocs.");
-			for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
-				Vocabulary v = todo.get(i);
-				Log.debug("Add from asked vocs: " + v, Settings.DEBUG_LEVEL.LONG);
-				todo_now.add(v);
+		// see if all todos fit in rest (ignores new vocs constraint, but satisfies user)
+		if (should_be_asked_overall - todo_now.size() >= todo.size()) {
+			todo_now.addAll(todo);
+		}
+		else {
+			// add the highest rated vocs from todolist but leave space for new
+			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
+			Log.debug("Space left for asked: " + (should_be_asked_overall - todo_now.size()));
+			// if space left
+			if (should_be_asked_overall - todo_now.size() > 0) {
+				// sort todolist
+				Log.debug("Sorting todo by rating ...");
+				sortList(todo);
+				// add highest rated vocs
+				Log.debug("Adding highest rated vocs.");
+				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
+					Vocabulary v = todo.get(i);
+					Log.debug("Add from asked vocs: " + v, Settings.DEBUG_LEVEL.LONG);
+					todo_now.add(v);
+				}
 			}
 		}
 
@@ -197,79 +191,31 @@ public class VocabularyBase {
 		return vocabularies;
 	}
 
-	void summarize() {
-		if (isEmpty()) return;
-
-		final int statistics_length = 80;
-		todo.addAll(unknowns);
-
-		if (todo.isEmpty()) {
-			ui.tellLn(ui.str.getDoneForNow());
-		}
-
-		ui.tellLn(ui.str.getStatistics());
-		int number_vocs = asked_vocs.size() + new_vocs.size();
-
-		final double perc_todo = todo.size() / (double) number_vocs;
-		final double perc_new = new_vocs.size() / (double) number_vocs;
-
-		int todo_signs = (int) Math.round(perc_todo * statistics_length);
-		int new_signs = (int) Math.round(perc_new * statistics_length);
-		int known_signs = statistics_length - (todo_signs + new_signs);
-
-		for (; known_signs > 0; known_signs--) {
-			ui.tell("#");
-		}
-		for (; todo_signs > 0; todo_signs--) {
-			ui.tell("-");
-		}
-		for (; new_signs > 0; new_signs--) {
-			ui.tell("+");
-		}
-
-		ui.tell(String.format("\n" + ui.str.getKnown() + ": %d/%d (%.2f%%); ",
-				asked_vocs.size() - todo.size(), number_vocs, (1 - perc_todo - perc_new) * 100));
-		ui.tell(String.format(ui.str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, perc_todo * 100));
-		ui.tellLn(String.format(ui.str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
-
-		if (!unknowns.isEmpty()) {
-			ui.tellLn(unknowns.size() + ui.str.getUnknownVocsLeft());
-		}
-
-		int k1 = 0, k2 = 0, k3 = 0, k4 = 0, k5 = 0;
-		for (Vocabulary v : asked_vocs) {
-			switch (v.getLevel()) {
-				case LEVEL1:
-					k1++;
-					break;
-				case LEVEL2:
-					k2++;
-					break;
-				case LEVEL3:
-					k3++;
-					break;
-				case LEVEL4:
-					k4++;
-					break;
-				case LEVEL5:
-					k5++;
-					break;
-			}
-		}
-
-		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL1.name(), k1));
-		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL2.name(), k2));
-		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL3.name(), k3));
-		ui.tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL4.name(), k4));
-		ui.tell(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL5.name(), k5));
-		// newline printed at exit
-	}
-
-	boolean isEmpty() {
+	public boolean isEmpty() {
 		return asked_vocs.isEmpty() && new_vocs.isEmpty();
 	}
 
 	int size() {
 		return asked_vocs.size() + new_vocs.size();
+	}
+
+	public List<Vocabulary> getAskedVocs() {
+		return asked_vocs;
+	}
+
+	public List<Vocabulary> getNewVocs() {
+		return new_vocs;
+	}
+
+	public List<Vocabulary> getUnknowns() {
+		return unknowns;
+	}
+
+	public List<Vocabulary> getTodo() {
+		return todo;
+	}
+
+	boolean nothingTodo() {
+		return todo.isEmpty() && unknowns.isEmpty();
 	}
 }

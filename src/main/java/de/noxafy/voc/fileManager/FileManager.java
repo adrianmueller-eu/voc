@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import de.noxafy.voc.Log;
 
@@ -26,7 +27,7 @@ abstract class FileManager<T> {
 
 	void writeOutFile(String content) throws IOException {
 		try (FileOutputStream out = new FileOutputStream(file)) {
-			out.write(content.getBytes());
+			out.write(content.getBytes(StandardCharsets.UTF_8));
 		}
 		catch (IOException e) {
 			Log.debug("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");

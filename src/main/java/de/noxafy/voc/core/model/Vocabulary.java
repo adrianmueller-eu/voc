@@ -1,7 +1,7 @@
-package de.noxafy.voc.core;
+package de.noxafy.voc.core.model;
 
 import de.noxafy.voc.Log;
-import de.noxafy.voc.view.ANSI;
+import de.noxafy.voc.core.Settings;
 
 /**
  * @author noxafy
@@ -85,10 +85,6 @@ public class Vocabulary {
 	private void asked() {
 		asked++;
 		lastAsked = System.currentTimeMillis();
-	}
-
-	public boolean hasMnemonic() {
-		return (mnemonic != null) && !"".equals(mnemonic);
 	}
 
 	public boolean isNew() {
@@ -175,10 +171,10 @@ public class Vocabulary {
 
 	@Override
 	public String toString() {
-		return String.format("word: %s" + ANSI.transparent("; meaning: %s%s ") + "(l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
+		return String.format("word: %s; meaning: %s%s (l: %s, a: %d, f: %d, srow: %d, rtng: %.2f)",
 				word,
 				meaning,
-				(hasMnemonic()) ? "; mnemonic: " + mnemonic : "",
+				((mnemonic != null) && !"".equals(mnemonic)) ? "; mnemonic: " + mnemonic : "",
 				level.toString(),
 				asked,
 				failed,
@@ -187,7 +183,7 @@ public class Vocabulary {
 		);
 	}
 
-	enum KnowledgeLevel {
+	public enum KnowledgeLevel {
 		UNKNOWN, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5;
 
 		static KnowledgeLevel decide(int succeeded_in_a_row) {
