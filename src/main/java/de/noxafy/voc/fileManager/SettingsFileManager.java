@@ -1,15 +1,13 @@
 package de.noxafy.voc.fileManager;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
+import de.noxafy.voc.Log;
+import de.noxafy.voc.core.Settings;
 
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
-
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.Settings;
+import java.io.File;
+import java.io.StringReader;
 
 /**
  * @author noxafy
@@ -35,8 +33,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	}
 
 	@Override
-	public Settings load() {
-		String jsonContent = getStringFromFile();
+	protected Settings onLoad(String jsonContent) {
 		if (jsonContent == null) {
 			return new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
 		}
@@ -65,10 +62,10 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	}
 
 	@Override
-	public void write(Settings settings) throws IOException {
+	public String onWrite(Settings settings) {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
 		obj.add(str_NUMBER_NEW_VOCS_AT_START, settings.NUMBER_NEW_VOCS_AT_START);
-		writeOutFile(obj.build().toString());
+		return obj.build().toString();
 	}
 }

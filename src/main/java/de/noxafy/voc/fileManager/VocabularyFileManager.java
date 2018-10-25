@@ -1,13 +1,12 @@
 package de.noxafy.voc.fileManager;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import de.noxafy.voc.Log;
 import de.noxafy.voc.core.VocabularyBase;
 import de.noxafy.voc.core.model.Vocabulary;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author noxafy
@@ -29,8 +28,7 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 	}
 
 	@Override
-	public VocabularyBase load() {
-		String content = getStringFromFile();
+	public VocabularyBase onLoad(String content) {
 		if (content == null) {
 			return new VocabularyBase(new ArrayList<>());
 		}
@@ -44,7 +42,7 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 			}
 			catch (Exception e) {
 				Log.error("Failed to parse line " + (i + 1) + ": " + line);
-				Log.debug(e.toString());
+				Log.error(e.toString());
 			}
 		}
 		return new VocabularyBase(vocs);
@@ -73,13 +71,13 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 	}
 
 	@Override
-	public void write(VocabularyBase base) throws IOException {
+	public String onWrite(VocabularyBase base) {
 		List<Vocabulary> vocs = base.getAllVocs();
 		StringBuilder csv = new StringBuilder();
 		for (Vocabulary voc : vocs) {
 			csv.append(getLine(voc)).append("\n");
 		}
-		writeOutFile(csv.toString());
+		return csv.toString();
 	}
 
 	private StringBuilder getLine(Vocabulary voc) {

@@ -1,37 +1,70 @@
 package de.noxafy.voc.fileManager;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import de.noxafy.voc.Log;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
 /**
+ * Abstract class for writing and reading from a file as String from the file system. Inheriting classes can focus on
+ * parsing the file content.
+ *
  * @author noxafy
  * @created 28.08.17
  */
-abstract class FileManager<T> {
+public abstract class FileManager<T> {
 
 	private final File file;
 
-	FileManager(File file) {
+	/**
+	 * Give the file to read from and write to. It does not need to exist.
+	 *
+	 * @param file file to read from and write to
+	 */
+	protected FileManager(File file) {
 		this.file = file;
 	}
 
-	abstract T load();
+	/**
+	 * Parse the given content of the specified file to an object of type {@link T}.
+	 *
+	 * @return Parsed data as object of type {@link T} or <code>null</code> if the file is not available.
+	 */
+	protected abstract T onLoad(String content);
 
-	abstract void write(T data) throws IOException;
+	/**
+	 * Parse the given data object to a String to be saved at the specified file.
+	 *
+	 * @param data The data to be parsed
+	 * @return Data as String
+	 */
+	protected abstract String onWrite(T data);
 
-	void writeOutFile(String content) throws IOException {
+	/**
+	 * Loads the data from the specified file.
+	 *
+	 * @return Data from file as object of type {@link T}
+	 */
+	public T load() {
+		return onLoad(getStringFromFile());
+	}
+
+	/**
+	 * Writes the given data to the specified destination file.
+	 *
+	 * @param data The data to be saved in file
+	 */
+	public void write(T data) throws IOException {
+		writeOutFile(onWrite(data));
+	}
+
+	private void writeOutFile(String content) {
 		try (FileOutputStream out = new FileOutputStream(file)) {
 			out.write(content.getBytes(StandardCharsets.UTF_8));
 		}
 		catch (IOException e) {
-			Log.debug("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");
-			throw e;
+			Log.error("Writing " + content.length() + " bytes to file " + file.getAbsolutePath() + " failed.");
+			Log.error(e.toString());
 		}
 	}
 
@@ -41,7 +74,7 @@ abstract class FileManager<T> {
 	 *
 	 * @return the content as String or <code>null</code> if no content available
 	 */
-	String getStringFromFile() {
+	private String getStringFromFile() {
 		try (FileInputStream fis = new FileInputStream(file); ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			byte[] buf = new byte[1024];
 			int bytesRead;
@@ -52,7 +85,7 @@ abstract class FileManager<T> {
 		}
 		catch (Exception e) {
 			Log.error("Reading from file " + file.getAbsolutePath() + " failed.");
-			Log.debug(e.toString());
+			Log.error(e.toString());
 			return null;
 		}
 	}

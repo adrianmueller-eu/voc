@@ -13,7 +13,7 @@ import static de.noxafy.voc.view.commandline.ANSI.*;
  * @author noxafy
  * @created 25.10.18
  */
-public class CLParser {
+public class CLArgsParser {
 	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-v|-d] [-s] [-f " + underline("csv") + "]";
 
 	static {

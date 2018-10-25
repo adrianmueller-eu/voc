@@ -6,7 +6,7 @@ import de.noxafy.voc.core.AskingRoutine;
 import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.fileManager.SettingsFileManager;
 import de.noxafy.voc.fileManager.VocabularyFileManager;
-import de.noxafy.voc.view.commandline.CLParser;
+import de.noxafy.voc.view.commandline.CLArgsParser;
 import de.noxafy.voc.view.commandline.CLUserInterface;
 
 public class Main {
@@ -17,7 +17,7 @@ public class Main {
 	public static void main(String[] args) {
 		// parse args
 		if (args.length > 0) {
-			CLParser.parse(args, voc_file.getAbsolutePath(), settings_file.getAbsolutePath());
+			CLArgsParser.parse(args, voc_file.getAbsolutePath(), settings_file.getAbsolutePath());
 		}
 
 		// load settings file

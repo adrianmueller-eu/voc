@@ -1,21 +1,26 @@
 package de.noxafy.voc;
 
-import java.util.List;
-
 import de.noxafy.voc.core.Settings;
+
+import java.util.List;
 
 /**
  * @author noxafy
  * @created 25.10.18
  */
 public class Log {
-	public static void debug(String debug_message) {
-		debug(debug_message, Settings.DEBUG_LEVEL.SHORT);
+
+	public static void info(String message) {
+		System.out.println(message);
 	}
 
-	public static void debug(String debug_message, Settings.DEBUG_LEVEL level) {
+	public static void debug(String debug_message) {
+		debug(Settings.DEBUG_LEVEL.SHORT, debug_message);
+	}
+
+	public static void debug(Settings.DEBUG_LEVEL level, String debug_fmt_message, Object... objs) {
 		if (Settings.DEBUG.is(level)) {
-			System.out.println("DEBUG: " + debug_message);
+			System.out.println("DEBUG: " + String.format(debug_fmt_message, objs));
 		}
 	}
 

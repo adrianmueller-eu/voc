@@ -1,12 +1,12 @@
 package de.noxafy.voc.core;
 
+import de.noxafy.voc.Log;
+import de.noxafy.voc.core.model.Vocabulary;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.model.Vocabulary;
 
 import static java.util.Comparator.comparingDouble;
 
@@ -55,7 +55,7 @@ public class VocabularyBase {
 		Log.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
-			Log.debug("Add from unknown vocs: " + v, Settings.DEBUG_LEVEL.LONG);
+			Log.debug(Settings.DEBUG_LEVEL.LONG, "Add from unknown vocs: %s", v);
 			todo_now.add(v);
 		}
 
@@ -66,7 +66,7 @@ public class VocabularyBase {
 		else {
 			// add the highest rated vocs from todolist but leave space for new
 			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
-			Log.debug("Space left for asked: " + (should_be_asked_overall - todo_now.size()));
+			Log.debug("Space left for asked (+ new): " + (should_be_asked_overall - todo_now.size()));
 			// if space left
 			if (should_be_asked_overall - todo_now.size() > 0) {
 				// sort todolist
@@ -76,7 +76,7 @@ public class VocabularyBase {
 				Log.debug("Adding highest rated vocs.");
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
-					Log.debug("Add from asked vocs: " + v, Settings.DEBUG_LEVEL.LONG);
+					Log.debug(Settings.DEBUG_LEVEL.LONG, "Add from asked vocs: %s", v);
 					todo_now.add(v);
 				}
 			}
