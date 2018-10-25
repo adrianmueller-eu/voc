@@ -1,7 +1,6 @@
 package de.noxafy.voc.view;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 
 import de.noxafy.voc.core.Settings;
@@ -99,30 +98,6 @@ public final class UserInterface {
 
 	public void tell(String message) {
 		System.out.print(message);
-	}
-
-	public void debug(String debug_message) {
-		debug(debug_message, Settings.DEBUG_LEVEL.SHORT);
-	}
-
-	public void debug(String debug_message, Settings.DEBUG_LEVEL level) {
-		if (Settings.DEBUG.is(level)) {
-			tellLn("DEBUG: " + debug_message);
-		}
-	}
-
-	public void debugWithTab(String debug_fmt_message, Object... objs) {
-		if (Settings.DEBUG.is(Settings.DEBUG_LEVEL.LONG)) {
-			tellLn("\tDEBUG: " + String.format(debug_fmt_message, objs));
-		}
-	}
-
-	public void debug(List list) {
-		if (Settings.DEBUG.is(Settings.DEBUG_LEVEL.LONG)) return;
-
-		for (Object o : list) {
-			debugWithTab(o.toString());
-		}
 	}
 
 	public void init() {

@@ -8,8 +8,8 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
+import de.noxafy.voc.Log;
 import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy
@@ -22,8 +22,6 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	private static final int NUMBER_SIMUL_VOCS_DEFAULT = 20;
 	private static final int NUMBER_NEW_VOCS_AT_START_DEFAULT = 4;
 	private static SettingsFileManager singleton;
-
-	private final UserInterface ui = UserInterface.getInstance();
 
 	private SettingsFileManager(File file) {
 		super(file);
@@ -51,7 +49,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
 		}
 		catch (NullPointerException e) {
-			ui.debug(str_NUMBER_SIMUL_VOCS + " was missing.");
+			Log.debug(str_NUMBER_SIMUL_VOCS + " was missing.");
 		}
 
 		// NUMBER_NEW_VOCS_AT_START
@@ -60,7 +58,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_NEW_VOCS_AT_START = obj.getInt(str_NUMBER_NEW_VOCS_AT_START);
 		}
 		catch (Exception e) {
-			ui.debug(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
+			Log.debug(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
 		}
 
 		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START);

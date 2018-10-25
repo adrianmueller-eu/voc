@@ -1,15 +1,13 @@
 package de.noxafy.voc.core;
 
+import de.noxafy.voc.Log;
 import de.noxafy.voc.view.ANSI;
-import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy
  * @created 28.08.17
  */
 public class Vocabulary {
-
-	private static final UserInterface ui = UserInterface.getInstance();
 
 	// foreign lang
 	private final String word;
@@ -73,7 +71,7 @@ public class Vocabulary {
 		succeeded_in_a_row++;
 		level = KnowledgeLevel.decide(succeeded_in_a_row);
 		asked();
-		ui.debug("Success! " + succeeded_in_a_row + " in a row.");
+		Log.debug("Success! " + succeeded_in_a_row + " in a row.");
 	}
 
 	public void failed() {
@@ -81,7 +79,7 @@ public class Vocabulary {
 		level = KnowledgeLevel.UNKNOWN;
 		failed++;
 		asked();
-		ui.debug("Failed!");
+		Log.debug("Failed!");
 	}
 
 	private void asked() {
@@ -148,7 +146,7 @@ public class Vocabulary {
 				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
 					tabs.append("\t");
 				}
-				ui.debugWithTab("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
+				Log.debugWithTab("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
 						word, tabs, level, 3 * failRate, time_passed_rating, random, rating);
 			}
 		}

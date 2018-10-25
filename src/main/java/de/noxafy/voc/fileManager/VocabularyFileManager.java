@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.noxafy.voc.Log;
 import de.noxafy.voc.core.Vocabulary;
 import de.noxafy.voc.core.VocabularyBase;
-import de.noxafy.voc.view.UserInterface;
 
 /**
  * @author noxafy
@@ -16,8 +16,6 @@ import de.noxafy.voc.view.UserInterface;
 public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 
 	private static VocabularyFileManager singleton;
-
-	private final UserInterface ui = UserInterface.getInstance();
 
 	private VocabularyFileManager(File file) {
 		super(file);
@@ -45,8 +43,8 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 				vocs.add(getVocabulary(line));
 			}
 			catch (Exception e) {
-				ui.tellLn("Failed to parse line " + (i + 1) + ": " + line);
-				ui.debug(e.toString());
+				Log.error("Failed to parse line " + (i + 1) + ": " + line);
+				Log.debug(e.toString());
 			}
 		}
 		return new VocabularyBase(vocs);
