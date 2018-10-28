@@ -61,6 +61,7 @@ public class VocabularyBase {
 
 		// see if all todos fit in rest (ignores new vocs constraint, but satisfies user)
 		if (should_be_asked_overall - todo_now.size() >= todo.size()) {
+			Log.debug("Add all " + todo.size() + " items to do.");
 			todo_now.addAll(todo);
 		}
 		else {
