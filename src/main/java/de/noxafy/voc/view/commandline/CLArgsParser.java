@@ -1,11 +1,11 @@
 package de.noxafy.voc.view.commandline;
 
+import de.noxafy.voc.core.Settings;
+import de.noxafy.voc.view.lang.Lang;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
-import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.view.lang.Lang;
 
 import static de.noxafy.voc.view.commandline.ANSI.*;
 
@@ -107,16 +107,26 @@ public class CLArgsParser {
 				"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
 				"\n" +
 				"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file + ").\n" +
-				"Each entry there contains following information:\n" +
+				"Each entry there contains the following information:\n" +
 				"\t1. word\n" +
 				"\t2. meaning\n" +
 				"\t3. further information for memorizing or pronouncing (mnemonic)\n" +
-				"\t4. date when voc was added\n" +
-				"\t5. date when voc was last asked\n" +
+				"\t4. date when voc was added (unix time)\n" +
+				"\t5. date when voc was last asked (unix time)\n" +
 				"\t6. how often it has been asked\n" +
 				"\t7. how often the user failed to answer\n" +
 				"\t8. how often user succeeded in a row\n" +
 				"The last four stats are used by rating calculation.\n" +
+				"If 6. is not 0, the last stat is used for forget time calculation, as follows:\n" +
+				"\tLEVEL\t\tS. IN A ROW\tFORGET TIME\n" +
+				"\tUnknown:\t0-2\t\tinstant\n" +
+				"\tLevel 1:\t3-4\t\t1 day\n" +
+				"\tLevel 2:\t5-6\t\t3 days\n" +
+				"\tLevel 3:\t7-10\t\t1 week\n" +
+				"\tLevel 4:\t11-13\t\t3 months\n" +
+				"\tLevel 5:\t>13\t\t1 year\n" +
+				"Each routine run guarantees each vocabulary has succeeded min. 3 times, so is min. Level 1.\n" +
+				"Only if a run is interrupted premature, \"unknown\" vocabularies are possible.\n" +
 				"\n" +
 				"Further, a settings file is used (defaults to " + settings_file + ")\n" +
 				"There is defined:\n" +
