@@ -6,6 +6,7 @@ import de.noxafy.voc.core.AskingRoutine;
 import de.noxafy.voc.core.Settings;
 import de.noxafy.voc.fileManager.SettingsFileManager;
 import de.noxafy.voc.fileManager.VocabularyFileManager;
+import de.noxafy.voc.view.UserInterface;
 import de.noxafy.voc.view.commandline.CLArgsParser;
 import de.noxafy.voc.view.commandline.CLUserInterface;
 
@@ -25,7 +26,7 @@ public class Main {
 		// load voc file
 		final VocabularyFileManager vocabularyFileManager = VocabularyFileManager.getInstance(voc_file.getAbsolutePath());
 		// UI
-		final CLUserInterface ui = new CLUserInterface();
+		final UserInterface ui = new CLUserInterface();
 
 		// start voc routine
 		final AskingRoutine askingRoutine = new AskingRoutine(settingsFileManager, vocabularyFileManager, ui);

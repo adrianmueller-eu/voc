@@ -62,7 +62,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	}
 
 	@Override
-	public String onWrite(Settings settings) {
+	protected String onWrite(Settings settings) {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
 		obj.add(str_NUMBER_NEW_VOCS_AT_START, settings.NUMBER_NEW_VOCS_AT_START);

@@ -22,7 +22,7 @@ public class VocabularyFileManager extends FileManager<String[]> {
 		}
 
 		if (content.isEmpty()) {
-			Log.info("File " + getFilePath() + " is empty. No line processed.");
+			Log.info("File " + getFile().getAbsolutePath() + " is empty. No line processed.");
 			return new String[0];
 		}
 		return content.split("\n");

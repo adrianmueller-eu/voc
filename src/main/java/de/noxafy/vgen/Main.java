@@ -15,7 +15,7 @@ public class Main {
 	private static File from = null;
 	private static File to = null;
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		if (!parseArgs(args)) return;
 
 		if (from == null || to == null) {
@@ -35,7 +35,7 @@ public class Main {
 		VocGenerator.generate(from, to);
 	}
 
-	private static boolean parseArgs(String[] args) throws IOException {
+	private static boolean parseArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-d":
@@ -78,11 +78,16 @@ public class Main {
 		}
 	}
 
-	private static File ensureFile(String[] args, int i) throws IOException {
+	private static File ensureFile(String[] args, int i) {
 		if (i < args.length) {
 			File file = new File(args[i]);
-			file.createNewFile();
-			return file;
+			try {
+				file.createNewFile();
+				return file;
+			}
+			catch (IOException e) {
+				throw new IllegalArgumentException("File creation failed: " + file.getAbsolutePath());
+			}
 		}
 		else {
 			Log.error("Please give a path to a csv with vocs. See --help for more information.");

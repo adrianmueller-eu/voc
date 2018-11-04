@@ -26,10 +26,10 @@ public class AskingRoutine {
 		this.vocabularyFileManager = vocabularyFileManager;
 		this.ui = ui;
 
-		Log.debug("Loading settings from " + settingsFileManager.getFilePath());
+		Log.debug("Loading settings from " + settingsFileManager.getFile().getAbsolutePath());
 		settings = settingsFileManager.load();
 
-		Log.debug("Loading vocabulary base from " + vocabularyFileManager.getFilePath());
+		Log.debug("Loading vocabulary base from " + vocabularyFileManager.getFile().getAbsolutePath());
 		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
 		Log.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
@@ -90,12 +90,7 @@ public class AskingRoutine {
 	}
 
 	private void writeOutChanges() {
-		try {
-			vocabularyFileManager.write(vocabularyBase);
-			settingsFileManager.write(settings);
-		}
-		catch (IOException e) {
-			Log.error(e.toString());
-		}
+		vocabularyFileManager.write(vocabularyBase);
+		settingsFileManager.write(settings);
 	}
 }

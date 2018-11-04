@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
  */
 final class VocGenerator {
 
-	static void generate(File from, File to) throws IOException {
+	static void generate(File from, File to) {
 		final VocabularyFileManager fileManager = new VocabularyFileManager(from);
 		String[] lines = fileManager.load();
 		String res;
@@ -35,7 +35,13 @@ final class VocGenerator {
 			res = getLine(voc);
 			Log.info("Processing " + res);
 			// add to destination file
-			appendNewVoc(res, to);
+			try {
+				appendNewVoc(res, to);
+			}
+			catch (IOException e) {
+				Log.error("Writing line [" + res + "] to " + to.getAbsolutePath() + " failed. Source (" + from.getAbsolutePath() + ") not " + "updated.");
+				throw new RuntimeException(e);
+			}
 			// update source file
 			lines[i] = "";
 			fileManager.write(lines);
@@ -135,10 +141,6 @@ final class VocGenerator {
 		line += "\n";
 		try (FileOutputStream out = new FileOutputStream(to, true)) {
 			out.write(line.getBytes(StandardCharsets.UTF_8));
-		}
-		catch (IOException e) {
-			Log.error("Writing a new line to " + to.getAbsolutePath() + " failed.");
-			throw e;
 		}
 	}
 }

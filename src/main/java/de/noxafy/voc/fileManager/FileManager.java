@@ -54,7 +54,7 @@ public abstract class FileManager<T> {
 	 *
 	 * @param data The data to be saved in file
 	 */
-	public void write(T data) throws IOException {
+	public void write(T data) {
 		writeOutFile(onWrite(data));
 	}
 
@@ -90,7 +90,7 @@ public abstract class FileManager<T> {
 		}
 	}
 
-	public String getFilePath() {
-		return file.getAbsolutePath();
+	public File getFile() {
+		return file;
 	}
 }

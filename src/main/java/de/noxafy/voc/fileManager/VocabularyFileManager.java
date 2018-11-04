@@ -6,7 +6,9 @@ import de.noxafy.voc.core.model.Vocabulary;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author noxafy
@@ -14,21 +16,18 @@ import java.util.List;
  */
 public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 
-	private static VocabularyFileManager singleton;
+	private static final Map<String, VocabularyFileManager> singletons = new HashMap<>();
 
 	private VocabularyFileManager(File file) {
 		super(file);
 	}
 
 	public static VocabularyFileManager getInstance(String settings_path) {
-		if (singleton == null) {
-			singleton = new VocabularyFileManager(new File(settings_path));
-		}
-		return singleton;
+		return singletons.computeIfAbsent(settings_path, path -> new VocabularyFileManager(new File(path)));
 	}
 
 	@Override
-	public VocabularyBase onLoad(String content) {
+	protected VocabularyBase onLoad(String content) {
 		if (content == null) {
 			return new VocabularyBase(new ArrayList<>());
 		}
@@ -71,9 +70,10 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 	}
 
 	@Override
-	public String onWrite(VocabularyBase base) {
+	protected String onWrite(VocabularyBase base) {
 		List<Vocabulary> vocs = base.getAllVocs();
 		StringBuilder csv = new StringBuilder();
+		// TODO: save a map of strings (voc as key) and replace only the changed key (= last_asked?)
 		for (Vocabulary voc : vocs) {
 			csv.append(getLine(voc)).append("\n");
 		}
