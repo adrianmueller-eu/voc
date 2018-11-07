@@ -1,6 +1,7 @@
-package de.noxafy.voc.fileManager;
+package de.noxafy.voc.core.fileManager;
 
-import de.noxafy.voc.Log;
+import de.noxafy.utils.FileManager;
+import de.noxafy.utils.Log;
 import de.noxafy.voc.core.Settings;
 
 import javax.json.Json;

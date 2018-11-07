@@ -1,7 +1,7 @@
 package de.noxafy.vgen;
 
-import de.noxafy.voc.Log;
-import de.noxafy.voc.fileManager.FileManager;
+import de.noxafy.utils.FileManager;
+import de.noxafy.utils.Log;
 
 import java.io.File;
 
@@ -9,9 +9,9 @@ import java.io.File;
  * @author noxafy
  * @created 26.10.18
  */
-public class VocabularyFileManager extends FileManager<String[]> {
+public class LineWiseFileManager extends FileManager<String[]> {
 
-	VocabularyFileManager(File file) {
+	LineWiseFileManager(File file) {
 		super(file);
 	}
 

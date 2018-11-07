@@ -1,6 +1,4 @@
-package de.noxafy.voc.fileManager;
-
-import de.noxafy.voc.Log;
+package de.noxafy.utils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

@@ -1,13 +1,16 @@
-package de.noxafy.voc.view.commandline;
+package de.noxafy.voc.cli;
 
+import de.noxafy.utils.Log;
+import de.noxafy.voc.cli.lang.Lang;
 import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.view.lang.Lang;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static de.noxafy.voc.view.commandline.ANSI.*;
+import static de.noxafy.utils.ANSI.bold;
+import static de.noxafy.utils.ANSI.underline;
+import static de.noxafy.voc.cli.CLUserInterface.TRAINING_WINDOW_DIMENSIONS;
 
 /**
  * @author noxafy
@@ -49,10 +52,10 @@ public class CLArgsParser {
 					Settings.justSummarize = true;
 					break;
 				case "-v":
-					Settings.DEBUG = Settings.DEBUG_LEVEL.SHORT;
+					Log.setDebugLevel(Log.DEBUG_LEVEL.SHORT);
 					break;
 				case "-d":
-					Settings.DEBUG = Settings.DEBUG_LEVEL.LONG;
+					Log.setDebugLevel(Log.DEBUG_LEVEL.LONG);
 					break;
 				case "-t":
 					Settings.TRAINING_MODE = true;
@@ -158,6 +161,8 @@ public class CLArgsParser {
 			else if (!voc_file.canRead() || !voc_file.canWrite()) {
 				throw new IllegalArgumentException("Please give a read- and writable file to a csv with vocs. See -h for more information.");
 			}
+			// TODO: else use the file!
+			throw new IllegalArgumentException("Sorry, alternative csv is NIY.");
 		}
 		else {
 			throw new IllegalArgumentException("Please give a path to a csv with vocs. See -h for more information.");

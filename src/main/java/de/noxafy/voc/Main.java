@@ -4,11 +4,11 @@ import java.io.File;
 
 import de.noxafy.voc.core.AskingRoutine;
 import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.fileManager.SettingsFileManager;
-import de.noxafy.voc.fileManager.VocabularyFileManager;
-import de.noxafy.voc.view.UserInterface;
-import de.noxafy.voc.view.commandline.CLArgsParser;
-import de.noxafy.voc.view.commandline.CLUserInterface;
+import de.noxafy.voc.core.fileManager.SettingsFileManager;
+import de.noxafy.voc.core.fileManager.VocabularyFileManager;
+import de.noxafy.voc.core.UserInterface;
+import de.noxafy.voc.cli.CLArgsParser;
+import de.noxafy.voc.cli.CLUserInterface;
 
 public class Main {
 	private static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";

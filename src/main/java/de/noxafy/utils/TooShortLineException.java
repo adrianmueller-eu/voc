@@ -1,4 +1,4 @@
-package de.noxafy.voc.fileManager;
+package de.noxafy.utils;
 
 /**
  * @author noxafy

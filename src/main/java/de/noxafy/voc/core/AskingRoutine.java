@@ -1,12 +1,10 @@
 package de.noxafy.voc.core;
 
-import java.io.IOException;
-
-import de.noxafy.voc.Log;
+import de.noxafy.utils.Log;
+import de.noxafy.voc.core.fileManager.SettingsFileManager;
+import de.noxafy.voc.core.fileManager.VocabularyFileManager;
 import de.noxafy.voc.core.model.Vocabulary;
-import de.noxafy.voc.fileManager.SettingsFileManager;
-import de.noxafy.voc.fileManager.VocabularyFileManager;
-import de.noxafy.voc.view.UserInterface;
+import de.noxafy.voc.core.model.VocabularyBase;
 
 /**
  * @author noxafy
@@ -43,7 +41,7 @@ public class AskingRoutine {
 
 		ui.init();
 		vocabularyBase.generateTodo();
-		if (vocabularyBase.nothingTodo()) {
+		if (vocabularyBase.isNothingTodo()) {
 			Log.debug("No todo left for now!");
 			if (ui.shouldReset()) {
 				ui.bye();

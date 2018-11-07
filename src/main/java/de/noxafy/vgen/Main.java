@@ -1,7 +1,6 @@
 package de.noxafy.vgen;
 
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.Settings;
+import de.noxafy.utils.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class Main {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-d":
-					Settings.DEBUG = Settings.DEBUG_LEVEL.SHORT;
+					Log.setDebugLevel(Log.DEBUG_LEVEL.SHORT);
 					break;
 				case "-f":
 					from = evalFile(args, ++i);

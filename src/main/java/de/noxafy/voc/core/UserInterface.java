@@ -1,6 +1,6 @@
-package de.noxafy.voc.view;
+package de.noxafy.voc.core;
 
-import de.noxafy.voc.core.VocabularyBase;
+import de.noxafy.voc.core.model.VocabularyBase;
 
 /**
  * @author noxafy

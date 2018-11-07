@@ -1,8 +1,8 @@
 package de.noxafy.vgen;
 
-import de.noxafy.voc.Log;
+import de.noxafy.utils.Log;
+import de.noxafy.utils.TooShortLineException;
 import de.noxafy.voc.core.model.Vocabulary;
-import de.noxafy.voc.fileManager.TooShortLineException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 final class VocGenerator {
 
 	static void generate(File from, File to) {
-		final VocabularyFileManager fileManager = new VocabularyFileManager(from);
+		final LineWiseFileManager fileManager = new LineWiseFileManager(from);
 		String[] lines = fileManager.load();
 		String res;
 		int success = 0;

@@ -1,4 +1,4 @@
-package de.noxafy.voc.view.lang;
+package de.noxafy.voc.cli.lang;
 
 import de.noxafy.voc.core.Settings;
 

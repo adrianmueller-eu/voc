@@ -1,7 +1,7 @@
-package de.noxafy.voc.core;
+package de.noxafy.voc.core.model;
 
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.model.Vocabulary;
+import de.noxafy.utils.Log;
+import de.noxafy.voc.core.Settings;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -45,7 +45,7 @@ public class VocabularyBase {
 		}
 	}
 
-	void generateVocsForToday(Settings settings) {
+	public void generateVocsForToday(Settings settings) {
 		long now = System.currentTimeMillis();
 
 		// get how many at all should be asked
@@ -55,7 +55,7 @@ public class VocabularyBase {
 		Log.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
-			Log.debug(Settings.DEBUG_LEVEL.LONG, "Add from unknown vocs: %s", v);
+			Log.debug(Log.DEBUG_LEVEL.LONG, "Add from unknown vocs: %s", v);
 			todo_now.add(v);
 		}
 
@@ -77,7 +77,7 @@ public class VocabularyBase {
 				Log.debug("Adding highest rated vocs.");
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
-					Log.debug(Settings.DEBUG_LEVEL.LONG, "Add from asked vocs: %s", v);
+					Log.debug(Log.DEBUG_LEVEL.LONG, "Add from asked vocs: %s", v);
 					todo_now.add(v);
 				}
 			}
@@ -110,7 +110,7 @@ public class VocabularyBase {
 //		}
 	}
 
-	void generateTodo() {
+	public void generateTodo() {
 		// sort out vocs that have to be learned now
 		Log.debug("Picking up vocs that have to be learned now ...");
 		long now = System.currentTimeMillis();
@@ -138,7 +138,7 @@ public class VocabularyBase {
 		Log.debug(list);
 	}
 
-	void update() {
+	public void update() {
 		if (last_asked.isKnown()) {
 			Log.debug("\"" + last_asked.getWord() + "\" removed because it's known!");
 			todo_now.remove(last_asked);
@@ -162,7 +162,7 @@ public class VocabularyBase {
 //		}
 	}
 
-	Vocabulary getNextVocabulary() {
+	public Vocabulary getNextVocabulary() {
 		Log.debug("Fetch next voc. " + todo_now.size() + " vocs left.");
 		if (todo_now.size() == 1) {
 			last_asked = todo_now.get(0);
@@ -182,7 +182,7 @@ public class VocabularyBase {
 		return last_asked;
 	}
 
-	boolean hasNextVocabulary() {
+	public boolean hasNextVocabulary() {
 		return !todo_now.isEmpty();
 	}
 
@@ -196,7 +196,7 @@ public class VocabularyBase {
 		return asked_vocs.isEmpty() && new_vocs.isEmpty();
 	}
 
-	int size() {
+	public int size() {
 		return asked_vocs.size() + new_vocs.size();
 	}
 
@@ -216,7 +216,7 @@ public class VocabularyBase {
 		return todo;
 	}
 
-	boolean nothingTodo() {
+	public boolean isNothingTodo() {
 		return todo.isEmpty() && unknowns.isEmpty();
 	}
 }

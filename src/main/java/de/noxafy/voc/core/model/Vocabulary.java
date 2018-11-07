@@ -1,7 +1,6 @@
 package de.noxafy.voc.core.model;
 
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.Settings;
+import de.noxafy.utils.Log;
 
 /**
  * @author noxafy
@@ -137,7 +136,7 @@ public class Vocabulary {
 			// failRate weighted 3 times
 			// 57% via heuristics, 43% random
 			rating = 3 * failRate + time_passed_rating + random;
-			if (Settings.DEBUG.is(Settings.DEBUG_LEVEL.LONG)) {
+			if (Log.isDebugLevel(Log.DEBUG_LEVEL.LONG)) {
 				StringBuilder tabs = new StringBuilder();
 				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
 					tabs.append("\t");

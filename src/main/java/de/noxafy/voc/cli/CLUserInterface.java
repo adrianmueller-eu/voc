@@ -1,15 +1,16 @@
-package de.noxafy.voc.view.commandline;
+package de.noxafy.voc.cli;
+
+import de.noxafy.utils.ANSI;
+import de.noxafy.utils.Log;
+import de.noxafy.voc.cli.lang.Strings;
+import de.noxafy.voc.core.Settings;
+import de.noxafy.voc.core.UserInterface;
+import de.noxafy.voc.core.model.Vocabulary;
+import de.noxafy.voc.core.model.VocabularyBase;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Random;
-
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.Settings;
-import de.noxafy.voc.core.model.Vocabulary;
-import de.noxafy.voc.core.VocabularyBase;
-import de.noxafy.voc.view.UserInterface;
-import de.noxafy.voc.view.lang.Strings;
 
 /**
  * @author noxafy
@@ -20,6 +21,8 @@ public class CLUserInterface implements UserInterface {
 	private static final Random rnd = new Random();
 	private final Strings str;
 
+	public static final String TRAINING_WINDOW_DIMENSIONS = "5;100";
+
 	public CLUserInterface() {
 		str = Settings.LANG.getStrings();
 	}
@@ -27,7 +30,7 @@ public class CLUserInterface implements UserInterface {
 	@Override
 	public void init() {
 		if (Settings.TRAINING_MODE) {
-			tell(ANSI.SHIRNK_WINDOW);
+			tell(ANSI.getShrinkWindow(TRAINING_WINDOW_DIMENSIONS));
 			tell(ANSI.CLEAR_WINDOW);
 		}
 	}

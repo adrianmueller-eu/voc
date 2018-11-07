@@ -1,7 +1,9 @@
-package de.noxafy.voc.fileManager;
+package de.noxafy.voc.core.fileManager;
 
-import de.noxafy.voc.Log;
-import de.noxafy.voc.core.VocabularyBase;
+import de.noxafy.utils.FileManager;
+import de.noxafy.utils.TooShortLineException;
+import de.noxafy.utils.Log;
+import de.noxafy.voc.core.model.VocabularyBase;
 import de.noxafy.voc.core.model.Vocabulary;
 
 import java.io.File;
