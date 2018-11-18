@@ -80,7 +80,7 @@ public class AskingRoutine {
 		else {
 			voc.failed();
 		}
-		Log.log(Settings.TRAINING_MODE ? Log.LEVEL.INFO : Log.LEVEL.DEBUG, siar_before + " -> " + voc.getSucceeded_in_a_row());
+		Log.log(Settings.TRAINING_MODE ? Log.Level.INFO : Log.Level.DEBUG, siar_before + " -> " + voc.getSucceeded_in_a_row());
 
 		ui.prepareForNext();
 	}

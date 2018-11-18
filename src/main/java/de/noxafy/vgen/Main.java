@@ -38,7 +38,7 @@ public class Main {
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "-d":
-					Log.setLevel(Log.LEVEL.DEBUG);
+					Log.setLevel(Log.Level.DEBUG);
 					break;
 				case "-f":
 					from = evalFile(args, ++i);

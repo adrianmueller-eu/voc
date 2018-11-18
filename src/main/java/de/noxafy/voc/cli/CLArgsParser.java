@@ -61,10 +61,10 @@ public class CLArgsParser {
 								Settings.justSummarize = true;
 								break;
 							case 'v':
-								Log.setLevel(Log.LEVEL.VERBOSE);
+								Log.setLevel(Log.Level.VERBOSE);
 								break;
 							case 'd':
-								Log.setLevel(Log.LEVEL.DEBUG);
+								Log.setLevel(Log.Level.DEBUG);
 								break;
 							case 't':
 								Settings.TRAINING_MODE = true;

@@ -1,5 +1,8 @@
 package de.noxafy.utils;
 
+import java.io.PrintStream;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -8,28 +11,36 @@ import java.util.List;
  */
 public class Log {
 
-	private static LEVEL DEBUG = LEVEL.INFO;
+	private static final Collection<Log> loggers = new LinkedList<>();
+	private static Level LEVEL = Level.INFO;
+
+	private final PrintStream out;
+
+	protected Log(PrintStream out) {
+		this.out = out;
+	}
 
 	public static void info(String message) {
-		System.out.println(message);
+		log(Level.INFO, message);
 	}
 
-	public static void debug(String debug_fmt_message, Object... objs) {
-		log(LEVEL.DEBUG, debug_fmt_message, objs);
+	public static void debug(String fmt_message, Object... objs) {
+		log(Level.DEBUG, fmt_message, objs);
 	}
 
-	public static void verbose(String debug_fmt_message, Object... objs) {
-		log(LEVEL.VERBOSE, debug_fmt_message, objs);
+	public static void verbose(String fmt_message, Object... objs) {
+		log(Level.VERBOSE, fmt_message, objs);
 	}
 
-	public static void verboseWithTab(String debug_fmt_message, Object... objs) {
-		if (Log.isLevel(LEVEL.VERBOSE)) {
-			System.out.println("\tVERBOSE: " + String.format(debug_fmt_message, objs));
+	public static void verboseWithTab(String fmt_message, Object... objs) {
+		for (Log logger : loggers) {
+			logger.out.print("\t");
 		}
+		log(Level.VERBOSE, fmt_message, objs);
 	}
 
 	public static void verbose(List list) {
-		if (!Log.isLevel(LEVEL.VERBOSE)) return;
+		if (!Log.isLevel(Level.VERBOSE)) return;
 
 		for (Object o : list) {
 			verboseWithTab(o.toString());
@@ -37,27 +48,36 @@ public class Log {
 	}
 
 	public static void error(String message) {
-		System.err.println("ERROR: " + message);
+		log(Level.ERROR, message);
 	}
 
-	public static void log(LEVEL level, String debug_fmt_message, Object... objs) {
+	public static void log(Level level, String fmt_message, Object... objs) {
 		if (Log.isLevel(level)) {
-			System.out.println(level.name() + ": " + String.format(debug_fmt_message, objs));
+			String mes = level.name() + ": " + String.format(fmt_message, objs);
+			for (Log logger : loggers) {
+				logger.out.println(mes);
+			}
 		}
 	}
 
-	public static void setLevel(LEVEL level) {
-		DEBUG = level;
+	public static void addLogger(PrintStream out) {
+		if (out == null) throw new IllegalArgumentException("Please give a valid PrintStream for logging.");
+
+		loggers.add(new Log(out));
 	}
 
-	public static boolean isLevel(LEVEL level) {
-		return DEBUG.is(level);
+	public static void setLevel(Level level) {
+		LEVEL = level;
 	}
 
-	public enum LEVEL {
-		INFO, DEBUG, VERBOSE;
+	public static boolean isLevel(Level level) {
+		return LEVEL.is(level);
+	}
 
-		boolean is(LEVEL level) {
+	public enum Level {
+		ERROR, INFO, DEBUG, VERBOSE;
+
+		boolean is(Level level) {
 			return this.ordinal() >= level.ordinal();
 		}
 	}
