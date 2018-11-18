@@ -44,54 +44,71 @@ public class CLArgsParser {
 
 	private static void parse0(String[] args) throws IllegalArgumentException {
 		for (int i = 0; i < args.length; i++) {
-			switch (args[i]) {
-				case "-h":
-				case "--help":
-					throw new IllegalArgumentException("help");
-				case "-s":
-					Settings.justSummarize = true;
-					break;
-				case "-v":
-					Log.setDebugLevel(Log.DEBUG_LEVEL.SHORT);
-					break;
-				case "-d":
-					Log.setDebugLevel(Log.DEBUG_LEVEL.LONG);
-					break;
-				case "-t":
-					Settings.TRAINING_MODE = true;
-					break;
-				case "-n":
-					try {
-						args[i] = ""; // delete -n argument (prevent circularity)
-						final String[] cmd = { "osascript", "-e",
-								"tell application \"Terminal\" to do script \"voc -t " + String.join(" ", args) + "\""
-						};
-						final Process p = Runtime.getRuntime().exec(cmd);
-						// print out possible error
-						InputStream in = p.getErrorStream();
-						int c;
-						while ((c = in.read()) != -1) {
-							System.out.print((char) c);
+			String arg = args[i];
+			switch (arg.charAt(0)) {
+				case '-':
+					for (int j = 1; j < arg.length(); j++) {
+						switch (arg.charAt(j)) {
+							case '-':
+								switch (arg.substring(2)) {
+									case "help":
+										throw new IllegalArgumentException("help");
+								}
+								break;
+							case 'h':
+								throw new IllegalArgumentException("help");
+							case 's':
+								Settings.justSummarize = true;
+								break;
+							case 'v':
+								Log.setLevel(Log.LEVEL.VERBOSE);
+								break;
+							case 'd':
+								Log.setLevel(Log.LEVEL.DEBUG);
+								break;
+							case 't':
+								Settings.TRAINING_MODE = true;
+								break;
+							case 'n':
+								newWindow(args, i);
+								break;
+							case 'l':
+								evalLang(args, ++i);
+								break;
+							case 'f':
+								evalFile(args, ++i);
+								break;
+							default:
+								throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
+										usage + " -- " + "See -h for more help.");
 						}
-						in.close();
-						// exit with osascript's exit code
-						System.exit(p.waitFor());
 					}
-					catch (IOException | InterruptedException e) {
-						throw new IllegalArgumentException("New window not available in this mode");
-					}
-				case "-l":
-					evalLang(args, ++i);
-					break;
-				case "-f":
-					evalFile(args, ++i);
 					break;
 				default:
-//					if (args[i].matches("-*")) {
 					throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
 							usage + " -- See -h for more help.");
-//					}
 			}
+		}
+	}
+
+	private static void newWindow(String[] args, int i) {
+		try {
+			args[i] = ""; // delete -n argument (prevent circularity)
+			final String[] cmd = { "osascript", "-e",
+					"tell application \"Terminal\" to do script \"voc -t " + String.join(" ", args) + "\"" };
+			final Process p = Runtime.getRuntime().exec(cmd);
+			// print out possible error
+			InputStream in = p.getErrorStream();
+			int c;
+			while ((c = in.read()) != -1) {
+				System.out.print((char) c);
+			}
+			in.close();
+			// exit with osascript's exit code
+			System.exit(p.waitFor());
+		}
+		catch (IOException | InterruptedException e) {
+			throw new IllegalArgumentException("New window not available in this mode");
 		}
 	}
 
