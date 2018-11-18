@@ -70,6 +70,7 @@ public class AskingRoutine {
 			ui.waitForUserFinished();
 			ui.showAnswer(voc.getWord(), voc.getMnemonic());
 		}
+		int siar_before = voc.getSucceeded_in_a_row();
 		if (ui.isCorrect()) {
 			voc.succeeded();
 			if (voc.isKnown()) {
@@ -79,6 +80,8 @@ public class AskingRoutine {
 		else {
 			voc.failed();
 		}
+		Log.log(Settings.TRAINING_MODE ? Log.LEVEL.INFO : Log.LEVEL.DEBUG, siar_before + " -> " + voc.getSucceeded_in_a_row());
+
 		ui.prepareForNext();
 	}
 
