@@ -87,7 +87,7 @@ public class Vocabulary {
 	}
 
 	public boolean isNew() {
-		return asked < 3;
+		return asked < 3 && succeeded_in_a_row < 1;
 	}
 
 	public int getSucceeded_in_a_row() {
