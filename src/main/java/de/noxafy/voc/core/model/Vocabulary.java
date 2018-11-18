@@ -136,12 +136,12 @@ public class Vocabulary {
 			// failRate weighted 3 times
 			// 57% via heuristics, 43% random
 			rating = 3 * failRate + time_passed_rating + random;
-			if (Log.isDebugLevel(Log.DEBUG_LEVEL.LONG)) {
+			if (Log.isLevel(Log.LEVEL.VERBOSE)) {
 				StringBuilder tabs = new StringBuilder();
 				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
 					tabs.append("\t");
 				}
-				Log.debugWithTab("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
+				Log.verboseWithTab("Rated \"%s\":%slevel = %s, failR = %.2f, tpr = %.2f, rnd = %.2f -> rating = %.2f",
 						word, tabs, level, 3 * failRate, time_passed_rating, random, rating);
 			}
 		}

@@ -55,7 +55,7 @@ public class VocabularyBase {
 		Log.debug("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
-			Log.debug(Log.DEBUG_LEVEL.LONG, "Add from unknown vocs: %s", v);
+			Log.verbose("Add from unknown vocs: %s", v);
 			todo_now.add(v);
 		}
 
@@ -77,7 +77,7 @@ public class VocabularyBase {
 				Log.debug("Adding highest rated vocs.");
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
-					Log.debug(Log.DEBUG_LEVEL.LONG, "Add from asked vocs: %s", v);
+					Log.verbose("Add from asked vocs: %s", v);
 					todo_now.add(v);
 				}
 			}
@@ -90,7 +90,7 @@ public class VocabularyBase {
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
 			while (todo_now.size() < should_be_asked_overall && !new2.isEmpty()) {
 				Vocabulary v = new2.remove(rand.nextInt(new2.size()));
-				Log.debugWithTab("Added from new vocs: %s", v);
+				Log.verboseWithTab("Added from new vocs: %s", v);
 				todo_now.add(v);
 			}
 		}
@@ -118,14 +118,14 @@ public class VocabularyBase {
 		for (Vocabulary v : asked_vocs) {
 			if (v.isUnknown()) {
 				unknowns.add(v);
-				Log.debugWithTab("To ask from unknown: %s", v);
+				Log.verboseWithTab("To ask from unknown: %s", v);
 			}
 			else if (v.shouldBeAsked(now)) {
 				todo.add(v);
-				Log.debugWithTab("To ask: %s", v);
+				Log.verboseWithTab("To ask: %s", v);
 			}
 			else {
-				Log.debugWithTab("Not to ask: %s", v);
+				Log.verboseWithTab("Not to ask: %s", v);
 			}
 		}
 		Log.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
@@ -135,7 +135,7 @@ public class VocabularyBase {
 		long now = System.currentTimeMillis();
 		list.sort(comparingDouble(v -> v.getRating(now)));
 		Log.debug("List sorted");
-		Log.debug(list);
+		Log.verbose(list);
 	}
 
 	public void update() {

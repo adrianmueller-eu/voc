@@ -8,33 +8,31 @@ import java.util.List;
  */
 public class Log {
 
-	private static DEBUG_LEVEL DEBUG = DEBUG_LEVEL.NONE;
+	private static LEVEL DEBUG = LEVEL.INFO;
 
 	public static void info(String message) {
 		System.out.println(message);
 	}
 
-	public static void debug(String debug_message) {
-		debug(DEBUG_LEVEL.SHORT, debug_message);
+	public static void debug(String debug_fmt_message, Object... objs) {
+		log(LEVEL.DEBUG, debug_fmt_message, objs);
 	}
 
-	public static void debug(DEBUG_LEVEL level, String debug_fmt_message, Object... objs) {
-		if (Log.isDebugLevel(level)) {
-			System.out.println("DEBUG: " + String.format(debug_fmt_message, objs));
+	public static void verbose(String debug_fmt_message, Object... objs) {
+		log(LEVEL.VERBOSE, debug_fmt_message, objs);
+	}
+
+	public static void verboseWithTab(String debug_fmt_message, Object... objs) {
+		if (Log.isLevel(LEVEL.VERBOSE)) {
+			System.out.println("\tVERBOSE: " + String.format(debug_fmt_message, objs));
 		}
 	}
 
-	public static void debugWithTab(String debug_fmt_message, Object... objs) {
-		if (Log.isDebugLevel(DEBUG_LEVEL.LONG)) {
-			System.out.println("\tDEBUG: " + String.format(debug_fmt_message, objs));
-		}
-	}
-
-	public static void debug(List list) {
-		if (Log.isDebugLevel(DEBUG_LEVEL.LONG)) return;
+	public static void verbose(List list) {
+		if (!Log.isLevel(LEVEL.VERBOSE)) return;
 
 		for (Object o : list) {
-			debugWithTab(o.toString());
+			verboseWithTab(o.toString());
 		}
 	}
 
@@ -42,18 +40,24 @@ public class Log {
 		System.err.println("ERROR: " + message);
 	}
 
-	public static void setDebugLevel(DEBUG_LEVEL level) {
+	public static void log(LEVEL level, String debug_fmt_message, Object... objs) {
+		if (Log.isLevel(level)) {
+			System.out.println(level.name() + ": " + String.format(debug_fmt_message, objs));
+		}
+	}
+
+	public static void setLevel(LEVEL level) {
 		DEBUG = level;
 	}
 
-	public static boolean isDebugLevel(DEBUG_LEVEL level) {
+	public static boolean isLevel(LEVEL level) {
 		return DEBUG.is(level);
 	}
 
-	public enum DEBUG_LEVEL {
-		NONE, SHORT, LONG;
+	public enum LEVEL {
+		INFO, DEBUG, VERBOSE;
 
-		boolean is(DEBUG_LEVEL level) {
+		boolean is(LEVEL level) {
 			return this.ordinal() >= level.ordinal();
 		}
 	}
