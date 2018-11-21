@@ -138,7 +138,7 @@ public class Vocabulary {
 			rating = 3 * failRate + time_passed_rating + random;
 			if (Log.isLevel(Log.Level.VERBOSE)) {
 				StringBuilder tabs = new StringBuilder();
-				for (int wlength = word.length() + 16; wlength < 48; wlength += 8) {
+				for (int wlength = word.length() + 17; wlength < 48; wlength += 8) {
 					tabs.append("\t");
 				}
 				Log.verboseWithTab(

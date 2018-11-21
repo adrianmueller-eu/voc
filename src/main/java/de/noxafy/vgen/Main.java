@@ -17,6 +17,9 @@ public class Main {
 	public static void main(String[] args) {
 		if (!parseArgs(args)) return;
 
+		Log.addLogger(System.out);
+		Log.setPrefix(false);
+
 		if (from == null || to == null) {
 			if (to == null && from != null) {
 				Log.error("Please give a csv where to write the generated items.");

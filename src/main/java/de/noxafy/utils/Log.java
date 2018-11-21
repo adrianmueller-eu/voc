@@ -13,6 +13,7 @@ public class Log {
 
 	private static final Collection<Log> loggers = new LinkedList<>();
 	private static Level LEVEL = Level.INFO;
+	private static boolean prefixOn = true;
 
 	private final PrintStream out;
 
@@ -33,14 +34,13 @@ public class Log {
 	}
 
 	public static void verboseWithTab(String fmt_message, Object... objs) {
-		for (Log logger : loggers) {
-			logger.out.print("\t");
+		if (isLevel(Level.VERBOSE)) {
+			log0(String.format("\t" + fmt_message, objs));
 		}
-		log(Level.VERBOSE, fmt_message, objs);
 	}
 
 	public static void verbose(List list) {
-		if (!Log.isLevel(Level.VERBOSE)) return;
+		if (isLevel(Level.VERBOSE)) return;
 
 		for (Object o : list) {
 			verboseWithTab(o.toString());
@@ -52,11 +52,16 @@ public class Log {
 	}
 
 	public static void log(Level level, String fmt_message, Object... objs) {
-		if (Log.isLevel(level)) {
-			String mes = level.name() + ": " + String.format(fmt_message, objs);
-			for (Log logger : loggers) {
-				logger.out.println(mes);
-			}
+		if (isLevel(level)) {
+			String prefix = prefixOn ? level.name() + ": " : "";
+			String message = String.format(fmt_message, objs);
+			log0(prefix + message);
+		}
+	}
+
+	private static void log0(String message) {
+		for (Log logger : loggers) {
+			logger.out.println(message);
 		}
 	}
 
@@ -64,6 +69,7 @@ public class Log {
 		if (out == null) throw new IllegalArgumentException("Please give a valid PrintStream for logging.");
 
 		loggers.add(new Log(out));
+		Log.debug("Added logger!");
 	}
 
 	public static void setLevel(Level level) {
@@ -74,11 +80,15 @@ public class Log {
 		return LEVEL.is(level);
 	}
 
+	public static void setPrefix(boolean prefixOn) {
+		Log.prefixOn = prefixOn;
+	}
+
 	public enum Level {
 		ERROR, INFO, DEBUG, VERBOSE;
 
 		boolean is(Level level) {
-			return this.ordinal() >= level.ordinal();
+			return level.ordinal() <= this.ordinal();
 		}
 	}
 }
