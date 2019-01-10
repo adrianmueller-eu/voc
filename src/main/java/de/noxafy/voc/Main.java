@@ -13,15 +13,12 @@ import java.io.File;
 
 public class Main {
 
-	private static final String voc_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-	private static final File voc_file = new File(voc_dir + "Englisch.csv");
+	public static File voc_file;
 	private static final File settings_file = new File(System.getProperty("user.home") + "/.voc.conf");
 
 	public static void main(String[] args) {
 		// parse args
-		if (args.length > 0) {
-			CLArgsParser.parse(args, voc_file.getAbsolutePath(), settings_file.getAbsolutePath());
-		}
+		CLArgsParser.parse(args, settings_file.getAbsolutePath());
 
 		Log.addLogger(System.out);
 

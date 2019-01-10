@@ -1,6 +1,7 @@
 package de.noxafy.voc.cli;
 
 import de.noxafy.utils.Log;
+import de.noxafy.voc.Main;
 import de.noxafy.voc.cli.lang.Lang;
 import de.noxafy.voc.core.Settings;
 
@@ -17,23 +18,27 @@ import static de.noxafy.voc.cli.CLUserInterface.TRAINING_WINDOW_DIMENSIONS;
  * @created 25.10.18
  */
 public class CLArgsParser {
-	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-v|-d] [-s] [-f " + underline("csv") + "]";
+
+	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-v|-d] [-s] -f " + underline("csv");
 
 	static {
 		// Print newline after sigint
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println()));
 	}
 
-	public static void parse(String[] args, String voc_file, String settings_file) {
+	public static void parse(String[] args, String settings_file) {
 		try {
 			parse0(args);
+			if (Main.voc_file == null) {
+				throw new IllegalArgumentException("Please give a valid vocabulary database to read from. See -h for more information.");
+			}
 		}
 		catch (IllegalArgumentException e) {
 			String message = e.getMessage();
 			int exitCode = 1;
 
 			if ("help".equals(message)) {
-				message = createHelpMessage(voc_file, settings_file);
+				message = createHelpMessage(settings_file);
 				exitCode = 0;
 			}
 
@@ -71,10 +76,10 @@ public class CLArgsParser {
 							newWindow(args, i);
 							break;
 						case 'l':
-							evalLang(args, ++i);
+							Settings.LANG = evalLang(args, ++i);
 							break;
 						case 'f':
-							evalFile(args, ++i);
+							Main.voc_file = evalFile(args, ++i);
 							break;
 						default:
 							throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
@@ -116,7 +121,7 @@ public class CLArgsParser {
 		return p;
 	}
 
-	private static String createHelpMessage(String voc_file, String settings_file) {
+	private static String createHelpMessage(String settings_file) {
 		return "Asks vocabularies based on a rating algorithm.\n" +
 				usage + "\n" +
 				"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
@@ -128,9 +133,9 @@ public class CLArgsParser {
 				"\t" + bold("-d") + "\tPrints very much debug information while asking. \n" +
 				"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
 				"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
-				"\t" + bold("-f") + "\tChoose an alternative csv file.\n" +
+				"\t" + bold("-f") + "\tChoose a csv file as vocabulary database.\n" +
 				"\n" +
-				"Source of vocabularies is " + underline("csv") + " (defaults to " + voc_file + ").\n" +
+				"Source of vocabularies is " + underline("csv") + " and is therefore obligatory.\n" +
 				"Each entry there contains the following information:\n" +
 				"\t1. word\n" +
 				"\t2. meaning\n" +
@@ -152,20 +157,20 @@ public class CLArgsParser {
 				"Each routine run guarantees each vocabulary has succeeded min. 3 times, so is min. Level 1.\n" +
 				"Only if a run is interrupted premature, \"unknown\" vocabularies are possible.\n" +
 				"\n" +
-				"Further, a settings file is used (defaults to " + settings_file + ")\n" +
+				"Further a settings file is used (defaults to " + settings_file + ").\n" +
 				"There is defined:\n" +
 				"\t- how many vocs should be asked each day (NUMBER_SIMUL_VOCS) and\n" +
 				"\t- how many of them should be new ones (NUMBER_NEW_VOCS_AT_START).";
 	}
 
-	private static void evalLang(String[] args, int i) throws IllegalArgumentException {
+	private static Lang evalLang(String[] args, int i) throws IllegalArgumentException {
 		if (i < args.length) {
 			final Lang lang = Lang.get(args[i].toUpperCase());
 			if (lang == null) {
 				throw new IllegalArgumentException("Please give an available language. Available: " + Lang.getAvailableString() + ".  See -h for more help.");
 			}
 			else {
-				Settings.LANG = lang;
+				return lang;
 			}
 		}
 		else {
@@ -173,7 +178,7 @@ public class CLArgsParser {
 		}
 	}
 
-	private static void evalFile(String[] args, int i) throws IllegalArgumentException {
+	private static File evalFile(String[] args, int i) throws IllegalArgumentException {
 		if (i < args.length) {
 			File voc_file = new File(args[i]);
 			if (!voc_file.exists()) {
@@ -182,8 +187,7 @@ public class CLArgsParser {
 			else if (!voc_file.canRead() || !voc_file.canWrite()) {
 				throw new IllegalArgumentException("Please give a read- and writable file to a csv with vocs. See -h for more information.");
 			}
-			// TODO: else use the file!
-			throw new IllegalArgumentException("Sorry, alternative csv is NIY.");
+			return voc_file;
 		}
 		else {
 			throw new IllegalArgumentException("Please give a path to a csv with vocs. See -h for more information.");

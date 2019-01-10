@@ -15,23 +15,19 @@ public class Main {
 	private static File to = null;
 
 	public static void main(String[] args) {
-		if (!parseArgs(args)) return;
-
 		Log.addLogger(System.out);
 		Log.setPrefix(false);
+
+		if (!parseArgs(args)) return;
 
 		if (from == null || to == null) {
 			if (to == null && from != null) {
 				Log.error("Please give a csv where to write the generated items.");
-				return;
 			}
-			else if (to != null) {
+			else {
 				Log.error("Please give a csv where to read the items from.");
-				return;
 			}
-			final String voc_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-			from = new File(voc_dir + "vocs");
-			to = new File(voc_dir + "Englisch.csv");
+			return;
 		}
 
 		VocGenerator.generate(from, to);
@@ -39,21 +35,42 @@ public class Main {
 
 	private static boolean parseArgs(String[] args) {
 		for (int i = 0; i < args.length; i++) {
-			switch (args[i]) {
-				case "-d":
-					Log.setLevel(Log.Level.DEBUG);
-					break;
-				case "-f":
-					from = evalFile(args, ++i);
-					break;
-				case "-t":
-					to = ensureFile(args, ++i);
-					break;
-				//				case "-h":
-				//				case "--help":
+			String arg = args[i];
+			if (arg.charAt(0) == '-') {
+				if (arg.length() > 1 && arg.charAt(1) == '-') {
+					if ("--help".equals(arg)) {
+						logHelpMessage();
+						return false;
+					}
+				}
+				for (int j = 1; j < arg.length(); j++) {
+					switch (arg.charAt(j)) {
+						case 'd':
+							Log.setLevel(Log.Level.DEBUG);
+							break;
+						case 'f':
+							from = evalFile(args, ++i);
+							break;
+						case 't':
+							to = ensureFile(args, ++i);
+							break;
+						case 'h':
+							logHelpMessage();
+							return false;
+						default:
+							Log.error("Wrong argument: " + args[i] +
+									// "\n" + usage +
+									" -- See --help for more information.");
+							return false;
+					}
+				}
 			}
 		}
 		return true;
+	}
+
+	private static void logHelpMessage() {
+		Log.info("Unfortunately help message is NIY.");
 	}
 
 	private static File evalFile(String[] args, int i) {
