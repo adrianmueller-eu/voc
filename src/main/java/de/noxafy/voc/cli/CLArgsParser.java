@@ -45,48 +45,46 @@ public class CLArgsParser {
 	private static void parse0(String[] args) throws IllegalArgumentException {
 		for (int i = 0; i < args.length; i++) {
 			String arg = args[i];
-			switch (arg.charAt(0)) {
-				case '-':
-					for (int j = 1; j < arg.length(); j++) {
-						switch (arg.charAt(j)) {
-							case '-':
-								switch (arg.substring(2)) {
-									case "help":
-										throw new IllegalArgumentException("help");
-								}
-								break;
-							case 'h':
+			if (arg.charAt(0) == '-') {
+				for (int j = 1; j < arg.length(); j++) {
+					switch (arg.charAt(j)) {
+						case '-':
+							if ("help".equals(arg.substring(2))) {
 								throw new IllegalArgumentException("help");
-							case 's':
-								Settings.justSummarize = true;
-								break;
-							case 'v':
-								Log.setLevel(Log.Level.VERBOSE);
-								break;
-							case 'd':
-								Log.setLevel(Log.Level.DEBUG);
-								break;
-							case 't':
-								Settings.TRAINING_MODE = true;
-								break;
-							case 'n':
-								newWindow(args, i);
-								break;
-							case 'l':
-								evalLang(args, ++i);
-								break;
-							case 'f':
-								evalFile(args, ++i);
-								break;
-							default:
-								throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
-										usage + " -- " + "See -h for more help.");
-						}
+							}
+							break;
+						case 'h':
+							throw new IllegalArgumentException("help");
+						case 's':
+							Settings.justSummarize = true;
+							break;
+						case 'v':
+							Log.setLevel(Log.Level.VERBOSE);
+							break;
+						case 'd':
+							Log.setLevel(Log.Level.DEBUG);
+							break;
+						case 't':
+							Settings.TRAINING_MODE = true;
+							break;
+						case 'n':
+							newWindow(args, i);
+							break;
+						case 'l':
+							evalLang(args, ++i);
+							break;
+						case 'f':
+							evalFile(args, ++i);
+							break;
+						default:
+							throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
+									usage + " -- " + "See -h for more help.");
 					}
-					break;
-				default:
-					throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
-							usage + " -- See -h for more help.");
+				}
+			}
+			else {
+				throw new IllegalArgumentException("Wrong argument: " + args[i] + "\n" +
+						usage + " -- See -h for more help.");
 			}
 		}
 	}

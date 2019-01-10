@@ -29,9 +29,9 @@ public class Main {
 				Log.error("Please give a csv where to read the items from.");
 				return;
 			}
-			final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-			from = new File(vok_dir + "vocs");
-			to = new File(vok_dir + "Englisch.csv");
+			final String voc_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
+			from = new File(voc_dir + "vocs");
+			to = new File(voc_dir + "Englisch.csv");
 		}
 
 		VocGenerator.generate(from, to);

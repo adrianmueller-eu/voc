@@ -13,9 +13,9 @@ import java.io.File;
 
 public class Main {
 
-	private static final String vok_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
-	private static final File settings_file = new File(vok_dir + "voc.conf");
-	private static final File voc_file = new File(vok_dir + "Englisch.csv");
+	private static final String voc_dir = System.getProperty("user.home") + "/Dropbox/Sonstiges/Sprachen/Vokabeln/";
+	private static final File voc_file = new File(voc_dir + "Englisch.csv");
+	private static final File settings_file = new File(System.getProperty("user.home") + "/.voc.conf");
 
 	public static void main(String[] args) {
 		// parse args
