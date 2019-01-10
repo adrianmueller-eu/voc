@@ -94,22 +94,28 @@ public class CLArgsParser {
 	private static void newWindow(String[] args, int i) {
 		try {
 			args[i] = ""; // delete -n argument (prevent circularity)
-			final String[] cmd = { "osascript", "-e",
-					"tell application \"Terminal\" to do script \"voc -t " + String.join(" ", args) + "\"" };
-			final Process p = Runtime.getRuntime().exec(cmd);
-			// print out possible error
-			InputStream in = p.getErrorStream();
-			int c;
-			while ((c = in.read()) != -1) {
-				System.out.print((char) c);
-			}
-			in.close();
-			// exit with osascript's exit code
+			final String[] terminal_exec = { "osascript",
+					"-e", "tell application \"Terminal\" to do script \"voc -t " + String.join(" ", args) + "\"",
+					"-e", "tell application \"System Events\" to set frontmost of process \"Terminal\" to true"
+			};
+			final Process p = executeCmd(terminal_exec);
 			System.exit(p.waitFor());
 		}
 		catch (IOException | InterruptedException e) {
 			throw new IllegalArgumentException("New window not available in this mode");
 		}
+	}
+
+	private static Process executeCmd(String[] cmd) throws IOException {
+		final Process p = Runtime.getRuntime().exec(cmd);
+		// print out possible error
+		InputStream in = p.getErrorStream();
+		int c;
+		while ((c = in.read()) != -1) {
+			System.err.print((char) c);
+		}
+		in.close();
+		return p;
 	}
 
 	private static String createHelpMessage(String voc_file, String settings_file) {
