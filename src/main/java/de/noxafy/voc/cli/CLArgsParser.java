@@ -26,7 +26,7 @@ public class CLArgsParser {
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println()));
 	}
 
-	public static void parse(String[] args, String settings_file) {
+	public static void parse(String[] args) {
 		try {
 			parse0(args);
 			if (Main.voc_file == null) {
@@ -38,7 +38,7 @@ public class CLArgsParser {
 			int exitCode = 1;
 
 			if ("help".equals(message)) {
-				message = createHelpMessage(settings_file);
+				message = createHelpMessage(Main.settings_file.getAbsolutePath());
 				exitCode = 0;
 			}
 

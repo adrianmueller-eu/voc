@@ -14,11 +14,11 @@ import java.io.File;
 public class Main {
 
 	public static File voc_file;
-	private static final File settings_file = new File(System.getProperty("user.home") + "/.voc.conf");
+	public static final File settings_file = new File(System.getProperty("user.home") + "/.voc.conf");
 
 	public static void main(String[] args) {
 		// parse args
-		CLArgsParser.parse(args, settings_file.getAbsolutePath());
+		CLArgsParser.parse(args);
 
 		Log.addLogger(System.out);
 
