@@ -54,6 +54,7 @@ public class AskingRoutine {
 			Vocabulary next = vocabularyBase.getNextVocabulary();
 			ask(next);
 			vocabularyBase.update();
+			ui.prepareForNext();
 			writeOutChanges();
 		}
 	}
@@ -81,8 +82,6 @@ public class AskingRoutine {
 			voc.failed();
 		}
 		Log.log(Settings.TRAINING_MODE ? Log.Level.INFO : Log.Level.DEBUG, siar_before + " -> " + voc.getSucceeded_in_a_row());
-
-		ui.prepareForNext();
 	}
 
 	public void summarize() {
