@@ -24,13 +24,13 @@ public class AskingRoutine {
 		this.vocabularyFileManager = vocabularyFileManager;
 		this.ui = ui;
 
-		Log.debug("Loading settings from " + settingsFileManager.getFile().getAbsolutePath());
+		Log.verbose("Loading settings from " + settingsFileManager.getFile().getAbsolutePath());
 		settings = settingsFileManager.load();
 
-		Log.debug("Loading vocabulary base from " + vocabularyFileManager.getFile().getAbsolutePath());
+		Log.verbose("Loading vocabulary base from " + vocabularyFileManager.getFile().getAbsolutePath());
 		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
-		Log.debug("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
+		Log.verbose("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
 	}
 
 	public void run() {
@@ -42,7 +42,7 @@ public class AskingRoutine {
 		ui.init();
 		vocabularyBase.generateTodo();
 		if (vocabularyBase.isNothingTodo()) {
-			Log.debug("No todo left for now!");
+			Log.verbose("No todo left for now!");
 			if (ui.shouldReset()) {
 				ui.bye();
 				System.exit(0);

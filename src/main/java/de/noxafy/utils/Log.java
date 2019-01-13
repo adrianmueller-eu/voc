@@ -69,7 +69,7 @@ public class Log {
 		if (out == null) throw new IllegalArgumentException("Please give a valid PrintStream for logging.");
 
 		loggers.add(new Log(out));
-		Log.debug("Added logger!");
+		Log.debug("Logger added!");
 	}
 
 	public static void setLevel(Level level) {

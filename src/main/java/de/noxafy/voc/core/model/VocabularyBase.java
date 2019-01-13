@@ -52,39 +52,39 @@ public class VocabularyBase {
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS;
 
 		// first, add all from unknown vocs (per definition not contained in todolist)
-		Log.debug("Unknowns to ask: " + unknowns.size());
+		Log.verbose("Unknowns to ask: " + unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
-			Log.verbose("Add from unknown vocs: %s", v);
+			Log.debug("Add from unknown vocs: %s", v);
 			todo_now.add(v);
 		}
 
 		// see if all todos fit in rest (ignores new vocs constraint, but satisfies user)
 		if (should_be_asked_overall - todo_now.size() >= todo.size()) {
-			Log.debug("Add all " + todo.size() + " items to do.");
+			Log.verbose("Add all " + todo.size() + " items to do.");
 			todo_now.addAll(todo);
 		}
 		else {
 			// add the highest rated vocs from todolist but leave space for new
 			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
-			Log.debug("Space left for asked (+ new): " + (should_be_asked_overall - todo_now.size()));
+			Log.verbose("Space left for asked (+ new): " + (should_be_asked_overall - todo_now.size()));
 			// if space left
 			if (should_be_asked_overall - todo_now.size() > 0) {
 				// sort todolist
-				Log.debug("Sorting todo by rating ...");
+				Log.verbose("Sorting todo by rating ...");
 				sortList(todo);
 				// add highest rated vocs
-				Log.debug("Adding highest rated vocs.");
+				Log.verbose("Adding highest rated vocs.");
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
-					Log.verbose("Add from asked vocs: %s", v);
+					Log.debug("Add from asked vocs: %s", v);
 					todo_now.add(v);
 				}
 			}
 		}
 
 		// if space left
-		Log.debug("Space left for new: " + (should_be_asked_overall - todo_now.size()));
+		Log.verbose("Space left for new: " + (should_be_asked_overall - todo_now.size()));
 		if (should_be_asked_overall > todo_now.size()) {
 			// ask randomly from new vocs
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -95,9 +95,9 @@ public class VocabularyBase {
 			}
 		}
 
-		Log.debug("**********************************************************");
-		Log.debug("*** Todo today generation done with " + todo_now.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms. ***");
-		Log.debug("**********************************************************");
+		Log.verbose("**********************************************************");
+		Log.verbose("*** Todo today generation done with " + todo_now.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms. ***");
+		Log.verbose("**********************************************************");
 
 		//  ask last added new vocs first
 //		List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -112,7 +112,7 @@ public class VocabularyBase {
 
 	public void generateTodo() {
 		// sort out vocs that have to be learned now
-		Log.debug("Picking up vocs that have to be learned now ...");
+		Log.verbose("Picking up vocs that have to be learned now ...");
 		long now = System.currentTimeMillis();
 		todo = new ArrayList<>(asked_vocs.size()); // filled if asking routine has been run
 		for (Vocabulary v : asked_vocs) {
@@ -128,19 +128,19 @@ public class VocabularyBase {
 				Log.debugWithTab("Not to ask: %s", v);
 			}
 		}
-		Log.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
+		Log.verbose("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
 	}
 
 	private void sortList(List<Vocabulary> list) {
 		long now = System.currentTimeMillis();
 		list.sort(comparingDouble(v -> v.getRating(now)));
-		Log.debug("List sorted");
-		Log.verbose(list);
+		Log.verbose("List sorted");
+		Log.debug(list);
 	}
 
 	public void update() {
 		if (last_asked.isKnown()) {
-			Log.debug("\"" + last_asked.getWord() + "\" removed because it's known!");
+			Log.verbose("\"" + last_asked.getWord() + "\" removed because it's known!");
 			todo_now.remove(last_asked);
 			// Don't know where it came from, but keep "old" store updated for summary
 			if (!unknowns.remove(last_asked)) {
@@ -168,7 +168,7 @@ public class VocabularyBase {
 			last_asked = todo_now.get(0);
 		}
 		else {
-			Log.debug("Sorting todo_now by rating ...");
+			Log.verbose("Sorting todo_now by rating ...");
 			sortList(todo_now);
 			// get and remove highest rated
 			Vocabulary last = todo_now.get(todo_now.size() - 1);

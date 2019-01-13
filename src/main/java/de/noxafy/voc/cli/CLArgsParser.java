@@ -30,7 +30,7 @@ public class CLArgsParser {
 		try {
 			parse0(args);
 			if (Main.voc_file == null) {
-				throw new IllegalArgumentException("Please give a valid vocabulary database to read from. See -h for more information.");
+				throw new IllegalArgumentException("Please give a vocabulary database to read from. See -h for more information.");
 			}
 		}
 		catch (IllegalArgumentException e) {

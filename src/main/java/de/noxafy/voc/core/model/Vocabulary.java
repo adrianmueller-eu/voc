@@ -70,7 +70,6 @@ public class Vocabulary {
 		succeeded_in_a_row++;
 		level = KnowledgeLevel.decide(succeeded_in_a_row);
 		asked();
-		Log.debug("Success! " + succeeded_in_a_row + " in a row.");
 	}
 
 	public void failed() {
@@ -78,7 +77,6 @@ public class Vocabulary {
 		level = KnowledgeLevel.UNKNOWN;
 		failed++;
 		asked();
-		Log.debug("Failed!");
 	}
 
 	private void asked() {

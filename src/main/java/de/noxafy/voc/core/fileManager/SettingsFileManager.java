@@ -36,6 +36,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@Override
 	protected Settings onLoad(String jsonContent) {
 		if (jsonContent == null) {
+			Log.info("No settings file found. It will be created now.");
 			return new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
 		}
 
@@ -47,7 +48,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
 		}
 		catch (NullPointerException e) {
-			Log.debug(str_NUMBER_SIMUL_VOCS + " was missing.");
+			Log.info(str_NUMBER_SIMUL_VOCS + " was missing.");
 		}
 
 		// NUMBER_NEW_VOCS_AT_START
@@ -56,7 +57,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_NEW_VOCS_AT_START = obj.getInt(str_NUMBER_NEW_VOCS_AT_START);
 		}
 		catch (Exception e) {
-			Log.debug(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
+			Log.info(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
 		}
 
 		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START);
