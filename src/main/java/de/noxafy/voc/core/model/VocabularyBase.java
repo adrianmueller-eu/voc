@@ -52,7 +52,7 @@ public class VocabularyBase {
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS;
 
 		// first, add all from unknown vocs (per definition not contained in todolist)
-		Log.verbose("Unknowns to ask: " + unknowns.size());
+		Log.verbose("Unknowns to ask: %d", unknowns.size());
 		for (int i = 0; i < unknowns.size() && todo_now.size() < should_be_asked_overall; i++) {
 			Vocabulary v = unknowns.get(i);
 			Log.debug("Add from unknown vocs: %s", v);
@@ -61,20 +61,20 @@ public class VocabularyBase {
 
 		// see if all todos fit in rest (ignores new vocs constraint, but satisfies user)
 		if (should_be_asked_overall - todo_now.size() >= todo.size()) {
-			Log.verbose("Add all " + todo.size() + " items to do.");
+			Log.verbose("Add all %d items to do", todo.size());
 			todo_now.addAll(todo);
 		}
 		else {
 			// add the highest rated vocs from todolist but leave space for new
 			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
-			Log.verbose("Space left for asked (+ new): " + (should_be_asked_overall - todo_now.size()));
+			Log.verbose("Space left for asked (+ new): %d", should_be_asked_overall - todo_now.size());
 			// if space left
 			if (should_be_asked_overall - todo_now.size() > 0) {
 				// sort todolist
-				Log.verbose("Sorting todo by rating ...");
+				Log.verbose("Sorting all todo's by rating");
 				sortList(todo);
 				// add highest rated vocs
-				Log.verbose("Adding highest rated vocs.");
+				Log.verbose("Adding highest rated vocs");
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
 					Log.debug("Add from asked vocs: %s", v);
@@ -84,7 +84,7 @@ public class VocabularyBase {
 		}
 
 		// if space left
-		Log.verbose("Space left for new: " + (should_be_asked_overall - todo_now.size()));
+		Log.verbose("Space left for new: %d", should_be_asked_overall - todo_now.size());
 		if (should_be_asked_overall > todo_now.size()) {
 			// ask randomly from new vocs
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -95,9 +95,7 @@ public class VocabularyBase {
 			}
 		}
 
-		Log.verbose("**********************************************************");
-		Log.verbose("*** Todo today generation done with " + todo_now.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms. ***");
-		Log.verbose("**********************************************************");
+		Log.verbose("Todo today generation done with %d vocs in %d ms", todo_now.size(), System.currentTimeMillis() - now);
 
 		//  ask last added new vocs first
 //		List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -112,7 +110,7 @@ public class VocabularyBase {
 
 	public void generateTodo() {
 		// sort out vocs that have to be learned now
-		Log.verbose("Picking up vocs that have to be learned now ...");
+		Log.verbose("Picking up vocs that have to be learned now");
 		long now = System.currentTimeMillis();
 		todo = new ArrayList<>(asked_vocs.size()); // filled if asking routine has been run
 		for (Vocabulary v : asked_vocs) {
@@ -128,7 +126,7 @@ public class VocabularyBase {
 				Log.debugWithTab("Not to ask: %s", v);
 			}
 		}
-		Log.verbose("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
+		Log.verbose("There are %d vocs to ask out of %d", todo.size(), asked_vocs.size());
 	}
 
 	private void sortList(List<Vocabulary> list) {
@@ -140,7 +138,7 @@ public class VocabularyBase {
 
 	public void update() {
 		if (last_asked.isKnown()) {
-			Log.verbose("\"" + last_asked.getWord() + "\" removed because it's known!");
+			Log.verbose("\"%s\" removed because it's known", last_asked.getWord());
 			todo_now.remove(last_asked);
 			// Don't know where it came from, but keep "old" store updated for summary
 			if (!unknowns.remove(last_asked)) {
@@ -163,12 +161,12 @@ public class VocabularyBase {
 	}
 
 	public Vocabulary getNextVocabulary() {
-		Log.debug("Fetch next voc. " + todo_now.size() + " vocs left.");
+		Log.debug("Fetch next voc. %d vocs left.", todo_now.size());
 		if (todo_now.size() == 1) {
 			last_asked = todo_now.get(0);
 		}
 		else {
-			Log.verbose("Sorting todo_now by rating ...");
+			Log.verbose("Sorting voc to do now by rating");
 			sortList(todo_now);
 			// get and remove highest rated
 			Vocabulary last = todo_now.get(todo_now.size() - 1);

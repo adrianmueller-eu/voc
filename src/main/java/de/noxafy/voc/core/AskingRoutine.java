@@ -24,13 +24,13 @@ public class AskingRoutine {
 		this.vocabularyFileManager = vocabularyFileManager;
 		this.ui = ui;
 
-		Log.verbose("Loading settings from " + settingsFileManager.getFile().getAbsolutePath());
+		Log.verbose("Loading settings from: %s", settingsFileManager.getFile().getAbsolutePath());
 		settings = settingsFileManager.load();
 
-		Log.verbose("Loading vocabulary base from " + vocabularyFileManager.getFile().getAbsolutePath());
+		Log.verbose("Loading vocabulary base from: %s", vocabularyFileManager.getFile().getAbsolutePath());
 		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
-		Log.verbose("Loaded " + vocabularyBase.size() + " vocs in " + (System.currentTimeMillis() - now) + " ms.");
+		Log.verbose("Loaded %d vocs in %d ms", vocabularyBase.size(), System.currentTimeMillis() - now);
 	}
 
 	public void run() {
