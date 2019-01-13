@@ -1,7 +1,9 @@
 package de.noxafy.utils;
 
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,20 +27,36 @@ public class Log {
 		log(Level.INFO, message);
 	}
 
-	public static void debug(String fmt_message, Object... objs) {
-		log(Level.DEBUG, fmt_message, objs);
-	}
-
+	/**
+	 * Inform about current running processes (for people who <b>don't know</b> the code).
+	 * The string will only be built if debug mode is activated.
+	 */
 	public static void verbose(String fmt_message, Object... objs) {
 		log(Level.VERBOSE, fmt_message, objs);
 	}
 
+	/**
+	 * Debug to get into the current state of given objects (for people who <b>know</b> the code).
+	 * The string will only be built if debug mode is activated.
+	 */
+	public static void debug(String fmt_message, Object... objs) {
+		log(Level.DEBUG, fmt_message, objs);
+	}
+
+	/**
+	 * Debug with a preceding tab and without prefix.
+	 * As in {@link #debug(String, Object...)} the string will only be built if debug mode is activated.
+	 */
 	public static void debugWithTab(String fmt_message, Object... objs) {
 		if (isLevel(Level.DEBUG)) {
 			log0(String.format("\t" + fmt_message, objs));
 		}
 	}
 
+	/**
+	 * Debug the current state of the list.
+	 * As in {@link #debug(String, Object...)} the list will only be processed if debug mode is activated.
+	 */
 	public static void debug(List list) {
 		if (!isLevel(Level.DEBUG)) return;
 
@@ -47,8 +65,18 @@ public class Log {
 		}
 	}
 
+	/**
+	 * Program will exit after an error
+	 */
 	public static void error(String message) {
 		log(Level.ERROR, message);
+	}
+
+	/**
+	 * Program will continue running, but might be in an undesired state
+	 */
+	public static void warn(String message) {
+		log(Level.WARNING, message);
 	}
 
 	public static void log(Level level, String fmt_message, Object... objs) {
@@ -85,7 +113,7 @@ public class Log {
 	}
 
 	public enum Level {
-		ERROR, INFO, VERBOSE, DEBUG;
+		ERROR, WARNING, INFO, VERBOSE, DEBUG;
 
 		boolean is(Level level) {
 			return level.ordinal() <= this.ordinal();
