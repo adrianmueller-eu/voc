@@ -81,7 +81,11 @@ public class Log {
 
 	public static void log(Level level, String fmt_message, Object... objs) {
 		if (isLevel(level)) {
-			String prefix = prefixOn ? level.name() + ": " : "";
+			String prefix = "";
+			if (prefixOn) {
+				String timeStamp = new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
+				prefix = String.format("%s\t[%s]: ", level.name(), timeStamp);
+			}
 			String message = String.format(fmt_message, objs);
 			log0(prefix + message);
 		}
