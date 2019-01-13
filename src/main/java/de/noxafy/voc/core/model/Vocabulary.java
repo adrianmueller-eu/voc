@@ -185,7 +185,7 @@ public class Vocabulary {
 	public enum KnowledgeLevel {
 		UNKNOWN, LEVEL1, LEVEL2, LEVEL3, LEVEL4, LEVEL5;
 
-		static KnowledgeLevel decide(int succeeded_in_a_row) {
+		public static KnowledgeLevel decide(int succeeded_in_a_row) {
 			switch (succeeded_in_a_row) {
 				case 0:
 				case 1:

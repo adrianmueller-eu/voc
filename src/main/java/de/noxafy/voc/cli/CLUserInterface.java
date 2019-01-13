@@ -9,8 +9,11 @@ import de.noxafy.voc.core.model.Vocabulary;
 import de.noxafy.voc.core.model.VocabularyBase;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Random;
+
+import static de.noxafy.voc.core.model.Vocabulary.KnowledgeLevel.UNKNOWN;
 
 /**
  * @author noxafy
@@ -157,37 +160,42 @@ public class CLUserInterface implements UserInterface {
 		tell(String.format(str.getTodo() + ": %d/%d (%.2f%%); ", todo.size(), number_vocs, perc_todo * 100));
 		tellLn(String.format(str.getNew() + ": %d/%d (%.2f%%)", new_vocs.size(), number_vocs, perc_new * 100));
 
-		if (!unknowns.isEmpty()) {
-			tellLn(unknowns.size() + str.getUnknownVocsLeft());
-		}
+		// map for cnt level
+		EnumMap<Vocabulary.KnowledgeLevel, Integer> knowledgeLevelCnts = new EnumMap<>(Vocabulary.KnowledgeLevel.class);
 
-		int k1 = 0, k2 = 0, k3 = 0, k4 = 0, k5 = 0;
+		// get highest siar and create fitting array for siar cnt
+		int siar_highest = 0;
 		for (Vocabulary v : asked_vocs) {
-			switch (v.getLevel()) {
-				case LEVEL1:
-					k1++;
-					break;
-				case LEVEL2:
-					k2++;
-					break;
-				case LEVEL3:
-					k3++;
-					break;
-				case LEVEL4:
-					k4++;
-					break;
-				case LEVEL5:
-					k5++;
-					break;
-			}
+			if (v.getSucceeded_in_a_row() > siar_highest) siar_highest = v.getSucceeded_in_a_row();
+		}
+		int[] siarCnts = new int[siar_highest + 1];
+
+		// cnt vocs
+		for (Vocabulary v : asked_vocs) {
+			int siar = v.getSucceeded_in_a_row();
+			// push siar
+			siarCnts[siar]++;
+
+			// push level
+			Vocabulary.KnowledgeLevel level = v.getLevel();
+			Integer knowledgeLevelCnt = knowledgeLevelCnts.get(level);
+			if (knowledgeLevelCnt == null) knowledgeLevelCnt = 0;
+			knowledgeLevelCnts.put(level, knowledgeLevelCnt + 1);
 		}
 
-		tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL1.name(), k1));
-		tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL2.name(), k2));
-		tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL3.name(), k3));
-		tellLn(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL4.name(), k4));
-		tell(String.format("%s: %d", Vocabulary.KnowledgeLevel.LEVEL5.name(), k5));
-		// newline printed at exit
+		// print results
+		Vocabulary.KnowledgeLevel currentLevel = UNKNOWN;
+		for (int i = 3; i < siarCnts.length; i++) {
+			Vocabulary.KnowledgeLevel correspondingLevel = Vocabulary.KnowledgeLevel.decide(i);
+			if (correspondingLevel != currentLevel) {
+				currentLevel = correspondingLevel;
+				tellLn(String.format("%s: %d", currentLevel.name(), knowledgeLevelCnts.get(currentLevel)));
+			}
+			tellLn(String.format("\t%d: %d", i, siarCnts[i]));
+		}
+
+		if (!unknowns.isEmpty()) tellLn(unknowns.size() + str.getUnknownVocsLeft());
+		CLArgsParser.printNewlineAtExit = false;
 	}
 
 	private void letReadThat(String message) {

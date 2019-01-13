@@ -21,9 +21,12 @@ public class CLArgsParser {
 
 	private static final String usage = "Usage: " + bold("voc") + " -h | [-n|-t] [-l " + underline("lang") + "] [-v|-d] [-s] -f " + underline("csv");
 
+	static boolean printNewlineAtExit = true;
 	static {
 		// Print newline after sigint
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> System.out.println()));
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			if (printNewlineAtExit) System.out.println();
+		}));
 	}
 
 	public static void parse(String[] args) {
