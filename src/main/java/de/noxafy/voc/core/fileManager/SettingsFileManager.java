@@ -36,8 +36,10 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@Override
 	protected Settings onLoad(String jsonContent) {
 		if (jsonContent == null) {
-			Log.info("No settings file found. It will be created now.");
-			return new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
+			Log.warn("No settings file found. It will be created now.");
+			Settings settings = new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
+			this.write(settings);
+			return settings;
 		}
 
 		JsonObject obj = Json.createReader(new StringReader(jsonContent)).readObject();

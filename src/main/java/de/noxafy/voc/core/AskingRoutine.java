@@ -92,6 +92,6 @@ public class AskingRoutine {
 
 	private void writeOutChanges() {
 		vocabularyFileManager.write(vocabularyBase);
-		settingsFileManager.write(settings);
+		//settingsFileManager.write(settings); // settings do not change currently
 	}
 }
