@@ -124,16 +124,15 @@ public class CLArgsParser {
 	private static String createHelpMessage(String settings_file) {
 		return "Asks vocabularies based on a rating algorithm.\n" +
 				usage + "\n" +
-				"\t" + bold("-h") + "\tDisplays this message and exits.\n" +
-				"\t" + bold("-n") + "\tOpens a new window and tests you from there in training mode.\n" +
+				"\t" + bold("-h") + "\tDisplay this message and exit.\n" +
+				"\t" + bold("-n") + "\tOpen a new window in training mode.\n" +
 				"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
-				"\t" + bold("-t") + "\tStarts training mode in this window (not recommended, use " + bold("-n") + ").\n" +
-				"\t" + bold("-l") + "\tChoose an alternative interface language. Available: " + Lang.getAvailableString() + "\n" +
+				"\t" + bold("-t") + "\tStart training mode in this window.\n" +
+				"\t" + bold("-l") + " " + underline("lang") + "\tSet an alternative interface language. Available: " + Lang.getAvailableString() + "\n" +
 				"\t" + bold("-v") + "\tBe a bit verbose.\n" +
-				"\t" + bold("-d") + "\tPrints very much debug information while asking. \n" +
-				"\t" + "\tNot recommended in combination with " + bold("-n") + " or " + bold("-t") + ".\n" +
-				"\t" + bold("-s") + "\tShows current statistics as shown after learned all vocs for a day and exits.\n" +
-				"\t" + bold("-f") + "\tChoose a csv file as vocabulary database.\n" +
+				"\t" + bold("-d") + "\tPrint very much debug information while asking. Not recommended in training mode.\n" +
+				"\t" + bold("-s") + "\tShow current statistics as shown after learned all vocs for a day and exit.\n" +
+				"\t" + bold("-f") + " " + underline("csv") + "\tRead vocabulary database from a specified " + underline("csv") + " file.\n" +
 				"\n" +
 				"Source of vocabularies is " + underline("csv") + " and is therefore obligatory.\n" +
 				"Each entry there contains the following information:\n" +
@@ -146,7 +145,7 @@ public class CLArgsParser {
 				"\t7. how often the user failed to answer\n" +
 				"\t8. how often user succeeded in a row\n" +
 				"The last four stats are used by rating calculation.\n" +
-				"If 6. is not 0, the last stat is used for forget time calculation, as follows:\n" +
+				"If 6. is not 0, the last stat (succeeded in a row) is used for forget time calculation, as follows:\n" +
 				"\tLEVEL\t\tS. IN A ROW\tFORGET TIME\n" +
 				"\tUnknown:\t0-2\t\tinstant\n" +
 				"\tLevel 1:\t3-4\t\t1 day\n" +
