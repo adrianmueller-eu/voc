@@ -42,8 +42,8 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 				vocs.add(getVocabulary(line));
 			}
 			catch (Exception e) {
-				Log.error("Failed to parse line " + (i + 1) + ": " + line);
-				Log.error(e.toString());
+				Log.warn("Failed to parse line " + (i + 1) + ": " + line);
+				Log.warn(e.toString());
 			}
 		}
 		return new VocabularyBase(vocs);

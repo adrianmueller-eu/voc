@@ -27,8 +27,8 @@ final class VocGenerator {
 				voc = getVoc(lines[i]);
 			}
 			catch (IllegalArgumentException e) {
-				Log.error("Failed to process line " + (i + 1) + ": " + lines[i]);
-				Log.error(e.toString());
+				Log.warn("Failed to process line " + (i + 1) + ": " + lines[i]);
+				Log.warn(e.toString());
 				continue;
 			}
 			// parse voc to line

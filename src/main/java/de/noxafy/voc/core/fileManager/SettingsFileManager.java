@@ -48,7 +48,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
 		}
 		catch (NullPointerException e) {
-			Log.info(str_NUMBER_SIMUL_VOCS + " was missing.");
+			Log.warn(str_NUMBER_SIMUL_VOCS + " was missing.");
 		}
 
 		// NUMBER_NEW_VOCS_AT_START
@@ -57,7 +57,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 			NUMBER_NEW_VOCS_AT_START = obj.getInt(str_NUMBER_NEW_VOCS_AT_START);
 		}
 		catch (Exception e) {
-			Log.info(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
+			Log.warn(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
 		}
 
 		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START);
