@@ -83,8 +83,13 @@ public class Log {
 		if (isLevel(level)) {
 			String prefix = "";
 			if (prefixOn) {
-				String timeStamp = new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
-				prefix = String.format("%s\t[%s]: ", level.name(), timeStamp);
+				if (isLevel(Level.VERBOSE)) {
+					String timeStamp = new SimpleDateFormat("HH:mm:ss.SSS").format(new Date());
+					prefix = String.format("%s\t[%s]: ", level.name(), timeStamp);
+				}
+				else {
+					prefix = String.format("%s: ", level.name());
+				}
 			}
 			String message = String.format(fmt_message, objs);
 			log0(prefix + message);
