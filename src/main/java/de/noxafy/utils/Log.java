@@ -33,17 +33,17 @@ public class Log {
 		log(Level.VERBOSE, fmt_message, objs);
 	}
 
-	public static void verboseWithTab(String fmt_message, Object... objs) {
-		if (isLevel(Level.VERBOSE)) {
+	public static void debugWithTab(String fmt_message, Object... objs) {
+		if (isLevel(Level.DEBUG)) {
 			log0(String.format("\t" + fmt_message, objs));
 		}
 	}
 
-	public static void verbose(List list) {
-		if (isLevel(Level.VERBOSE)) return;
+	public static void debug(List list) {
+		if (!isLevel(Level.DEBUG)) return;
 
 		for (Object o : list) {
-			verboseWithTab(o.toString());
+			debugWithTab(o.toString());
 		}
 	}
 
@@ -85,7 +85,7 @@ public class Log {
 	}
 
 	public enum Level {
-		ERROR, INFO, DEBUG, VERBOSE;
+		ERROR, INFO, VERBOSE, DEBUG;
 
 		boolean is(Level level) {
 			return level.ordinal() <= this.ordinal();

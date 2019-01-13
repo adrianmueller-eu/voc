@@ -90,7 +90,7 @@ public class VocabularyBase {
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
 			while (todo_now.size() < should_be_asked_overall && !new2.isEmpty()) {
 				Vocabulary v = new2.remove(rand.nextInt(new2.size()));
-				Log.verboseWithTab("Added from new vocs: %s", v);
+				Log.debugWithTab("Added from new vocs: %s", v);
 				todo_now.add(v);
 			}
 		}
@@ -118,14 +118,14 @@ public class VocabularyBase {
 		for (Vocabulary v : asked_vocs) {
 			if (v.isUnknown()) {
 				unknowns.add(v);
-				Log.verboseWithTab("To ask from unknown: %s", v);
+				Log.debugWithTab("To ask from unknown: %s", v);
 			}
 			else if (v.shouldBeAsked(now)) {
 				todo.add(v);
-				Log.verboseWithTab("To ask: %s", v);
+				Log.debugWithTab("To ask: %s", v);
 			}
 			else {
-				Log.verboseWithTab("Not to ask: %s", v);
+				Log.debugWithTab("Not to ask: %s", v);
 			}
 		}
 		Log.debug("There are " + todo.size() + " vocs to ask out of " + asked_vocs.size() + ".");
