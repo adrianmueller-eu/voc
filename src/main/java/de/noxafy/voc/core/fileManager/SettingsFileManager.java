@@ -1,8 +1,10 @@
 package de.noxafy.voc.core.fileManager;
 
-import de.noxafy.utils.FileManager;
+import de.noxafy.utils.data.FileManager;
 import de.noxafy.utils.Log;
 import de.noxafy.voc.core.Settings;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -33,8 +35,9 @@ public final class SettingsFileManager extends FileManager<Settings> {
 		return singleton;
 	}
 
+	@NotNull
 	@Override
-	protected Settings onLoad(String jsonContent) {
+	protected Settings onLoad(@Nullable String jsonContent) {
 		if (jsonContent == null) {
 			Log.warn("No settings file found. It will be created now.");
 			Settings settings = new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
@@ -65,8 +68,9 @@ public final class SettingsFileManager extends FileManager<Settings> {
 		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START);
 	}
 
+	@NotNull
 	@Override
-	protected String onWrite(Settings settings) {
+	protected String onWrite(@NotNull Settings settings) {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
 		obj.add(str_NUMBER_NEW_VOCS_AT_START, settings.NUMBER_NEW_VOCS_AT_START);

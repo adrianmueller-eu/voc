@@ -1,7 +1,9 @@
 package de.noxafy.vgen;
 
-import de.noxafy.utils.FileManager;
+import de.noxafy.utils.data.FileManager;
 import de.noxafy.utils.Log;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
@@ -15,8 +17,9 @@ public class LineWiseFileManager extends FileManager<String[]> {
 		super(file);
 	}
 
+	@NotNull
 	@Override
-	protected String[] onLoad(String content) {
+	protected String[] onLoad(@Nullable String content) {
 		if (content == null) {
 			return new String[0];
 		}
@@ -28,8 +31,9 @@ public class LineWiseFileManager extends FileManager<String[]> {
 		return content.split("\n");
 	}
 
+	@NotNull
 	@Override
-	protected String onWrite(String[] data) {
+	protected String onWrite(@NotNull String[] data) {
 		StringBuilder sb = new StringBuilder();
 		for (String line : data) {
 			if (line.isEmpty()) continue;

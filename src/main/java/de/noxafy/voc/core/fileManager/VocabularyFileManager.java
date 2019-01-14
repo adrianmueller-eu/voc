@@ -1,10 +1,12 @@
 package de.noxafy.voc.core.fileManager;
 
-import de.noxafy.utils.FileManager;
+import de.noxafy.utils.data.FileManager;
 import de.noxafy.utils.TooShortLineException;
 import de.noxafy.utils.Log;
 import de.noxafy.voc.core.model.VocabularyBase;
 import de.noxafy.voc.core.model.Vocabulary;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,8 +30,9 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 		return singletons.computeIfAbsent(settings_path, path -> new VocabularyFileManager(new File(path)));
 	}
 
+	@NotNull
 	@Override
-	protected VocabularyBase onLoad(String content) {
+	protected VocabularyBase onLoad(@Nullable String content) {
 		if (content == null) {
 			return new VocabularyBase(new ArrayList<>());
 		}
@@ -71,8 +74,9 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 		return new Vocabulary(word, meaning, mnemonic, added, lastAsked, asked, failed, succeeded_in_a_row);
 	}
 
+	@NotNull
 	@Override
-	protected String onWrite(VocabularyBase base) {
+	protected String onWrite(@NotNull VocabularyBase base) {
 		List<Vocabulary> vocs = base.getAllVocs();
 		StringBuilder csv = new StringBuilder();
 		// TODO: save a map of strings (voc as key) and replace only the changed key (= last_asked?)
