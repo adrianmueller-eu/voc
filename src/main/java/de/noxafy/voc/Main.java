@@ -18,11 +18,18 @@ public class Main {
 
 	public static void main(String[] args) {
 		// parse args
+		// TODO: -a     Add voc as in voc2
+		// TODO:        -> database for unknowns needed
+		// TODO: -s     Search voc as in voc2
 		CLArgsParser.parse(args);
 
 		Log.addLogger(System.out);
 
 		// load settings file
+		// TODO: voc_file as part of settings
+		// TODO: ask for file if no is set in config
+		// TODO: default folder ~/.voc/ for csv's
+		// TODO: automatic database, just specify folder (but also with default)
 		final SettingsFileManager settingsFileManager = SettingsFileManager.getInstance(settings_file.getAbsolutePath());
 		// load voc file
 		final VocabularyFileManager vocabularyFileManager = VocabularyFileManager.getInstance(voc_file.getAbsolutePath());
@@ -30,6 +37,7 @@ public class Main {
 		final UserInterface ui = new CLUserInterface();
 
 		// start voc routine
+		// TODO: undo
 		final AskingRoutine askingRoutine = new AskingRoutine(settingsFileManager, vocabularyFileManager, ui);
 		if (!Settings.justSummarize) {
 			askingRoutine.run();
