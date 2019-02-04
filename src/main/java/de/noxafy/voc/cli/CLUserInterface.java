@@ -177,10 +177,15 @@ public class CLUserInterface implements UserInterface {
 			siarCnts[siar]++;
 
 			// push level
-			Vocabulary.KnowledgeLevel level = v.getLevel();
-			Integer knowledgeLevelCnt = knowledgeLevelCnts.get(level);
-			if (knowledgeLevelCnt == null) knowledgeLevelCnt = 0;
-			knowledgeLevelCnts.put(level, knowledgeLevelCnt + 1);
+			knowledgeLevelCnts.compute(v.getLevel(), (level, cnt) -> (cnt == null) ? 1 : ++cnt);
+		}
+
+		// cnt known vocs by all minus to do
+		EnumMap<Vocabulary.KnowledgeLevel, Integer> knownLevelCnts = new EnumMap<>(knowledgeLevelCnts);
+		int[] knownSiarCnts = siarCnts.clone();
+		for (Vocabulary v : todo) {
+			knownSiarCnts[v.getSucceeded_in_a_row()]--;
+			knownLevelCnts.compute(v.getLevel(), (level, cnt) -> (cnt == null) ? 1 : --cnt);
 		}
 
 		// print results
@@ -189,9 +194,15 @@ public class CLUserInterface implements UserInterface {
 			Vocabulary.KnowledgeLevel correspondingLevel = Vocabulary.KnowledgeLevel.decide(i);
 			if (correspondingLevel != currentLevel) {
 				currentLevel = correspondingLevel;
-				tellLn(String.format("%s: %d", currentLevel.name(), knowledgeLevelCnts.get(currentLevel)));
+				Integer levelCnt = knowledgeLevelCnts.get(currentLevel);
+				Integer knownLevelCnt = knownLevelCnts.get(currentLevel);
+				double perc_level_known = (double) knownLevelCnt / levelCnt;
+				tellLn(String.format("%s: %d/%d (%.2f%%)", currentLevel.name(), knownLevelCnt, levelCnt,
+						perc_level_known * 100));
 			}
-			tellLn(String.format("\t%d: %d", i, siarCnts[i]));
+
+			double perc_known = (double) knownSiarCnts[i] / siarCnts[i];
+			tellLn(String.format("\t%d: %d/%d (%.2f%%)", i, knownSiarCnts[i], siarCnts[i], perc_known * 100));
 		}
 
 		if (!unknowns.isEmpty()) tellLn(unknowns.size() + str.getUnknownVocsLeft());
