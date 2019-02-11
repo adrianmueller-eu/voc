@@ -73,8 +73,8 @@ public class Vocabulary {
 	}
 
 	public void failed() {
-		succeeded_in_a_row = 0;
-		level = KnowledgeLevel.UNKNOWN;
+		succeeded_in_a_row = Math.max(succeeded_in_a_row - 3, 0);
+		level = KnowledgeLevel.decide(succeeded_in_a_row);
 		failed++;
 		asked();
 	}
