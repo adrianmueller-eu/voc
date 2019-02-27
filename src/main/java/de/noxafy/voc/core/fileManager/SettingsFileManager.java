@@ -1,7 +1,7 @@
 package de.noxafy.voc.core.fileManager;
 
-import de.noxafy.utils.data.FileManager;
 import de.noxafy.utils.Log;
+import de.noxafy.utils.data.FileManager;
 import de.noxafy.voc.core.Settings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,6 +10,7 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 
 /**
@@ -26,6 +27,13 @@ public final class SettingsFileManager extends FileManager<Settings> {
 
 	private SettingsFileManager(File file) {
 		super(file);
+		// settings file should be created silently
+		try {
+			file.createNewFile();
+		}
+		catch (IOException e) {
+			Log.error(e.getMessage());
+		}
 	}
 
 	public static SettingsFileManager getInstance(String settings_path) {
@@ -38,8 +46,8 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@NotNull
 	@Override
 	protected Settings onLoad(@Nullable String jsonContent) {
-		if (jsonContent == null) {
-			Log.warn("No settings file found. It will be created now.");
+		if (jsonContent == null || jsonContent.isBlank()) {
+			Log.warn("No settings file found. It will be created at " + getFile().getAbsolutePath() + " now.");
 			Settings settings = new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
 			this.write(settings);
 			return settings;
