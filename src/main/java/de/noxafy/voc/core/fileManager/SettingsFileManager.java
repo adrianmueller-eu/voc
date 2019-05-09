@@ -46,7 +46,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@NotNull
 	@Override
 	protected Settings onLoad(@Nullable String jsonContent) {
-		if (jsonContent == null || jsonContent.isBlank()) {
+		if (jsonContent == null || jsonContent.isEmpty()) {
 			Log.warn("No settings file found. It will be created at " + getFile().getAbsolutePath() + " now.");
 			Settings settings = new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
 			this.write(settings);
