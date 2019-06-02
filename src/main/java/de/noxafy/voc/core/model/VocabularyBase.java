@@ -66,7 +66,7 @@ public class VocabularyBase {
 		}
 		else {
 			// add the highest rated vocs from todolist but leave space for new
-			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS_AT_START;
+			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS;
 			Log.verbose("Space left for asked (+ new): %d", should_be_asked_overall - todo_now.size());
 			// if space left
 			if (should_be_asked_overall - todo_now.size() > 0) {

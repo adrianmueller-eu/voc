@@ -19,10 +19,10 @@ import java.io.StringReader;
  */
 public final class SettingsFileManager extends FileManager<Settings> {
 
-	private static final String str_NUMBER_NEW_VOCS_AT_START = "NUMBER_NEW_VOCS_AT_START";
+	private static final String str_NUMBER_NEW_VOCS = "NUMBER_NEW_VOCS";
 	private static final String str_NUMBER_SIMUL_VOCS = "NUMBER_SIMUL_VOCS";
 	private static final int NUMBER_SIMUL_VOCS_DEFAULT = 20;
-	private static final int NUMBER_NEW_VOCS_AT_START_DEFAULT = 4;
+	private static final int NUMBER_NEW_VOCS_DEFAULT = 4;
 	private static SettingsFileManager singleton;
 
 	private SettingsFileManager(File file) {
@@ -46,34 +46,36 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@NotNull
 	@Override
 	protected Settings onLoad(@Nullable String jsonContent) {
+		int NUMBER_SIMUL_VOCS = NUMBER_SIMUL_VOCS_DEFAULT;
+		int NUMBER_NEW_VOCS = NUMBER_NEW_VOCS_DEFAULT;
+		boolean error = false;
 		if (jsonContent == null || jsonContent.isEmpty()) {
 			Log.warn("No settings file found. It will be created at " + getFile().getAbsolutePath() + " now.");
-			Settings settings = new Settings(NUMBER_SIMUL_VOCS_DEFAULT, NUMBER_NEW_VOCS_AT_START_DEFAULT);
-			this.write(settings);
-			return settings;
+			error = true;
+		}
+		else {
+			JsonObject obj = Json.createReader(new StringReader(jsonContent)).readObject();
+
+			try {
+				NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
+			}
+			catch (NullPointerException e) {
+				Log.warn(str_NUMBER_SIMUL_VOCS + " was missing.");
+				error = true;
+			}
+
+			try {
+				NUMBER_NEW_VOCS = obj.getInt(str_NUMBER_NEW_VOCS);
+			}
+			catch (Exception e) {
+				Log.warn(str_NUMBER_NEW_VOCS + " was missing.");
+				error = true;
+			}
 		}
 
-		JsonObject obj = Json.createReader(new StringReader(jsonContent)).readObject();
-
-		// NUMBER_SIMUL_VOCS
-		int NUMBER_SIMUL_VOCS = NUMBER_SIMUL_VOCS_DEFAULT;
-		try {
-			NUMBER_SIMUL_VOCS = obj.getInt(str_NUMBER_SIMUL_VOCS);
-		}
-		catch (NullPointerException e) {
-			Log.warn(str_NUMBER_SIMUL_VOCS + " was missing.");
-		}
-
-		// NUMBER_NEW_VOCS_AT_START
-		int NUMBER_NEW_VOCS_AT_START = NUMBER_NEW_VOCS_AT_START_DEFAULT;
-		try {
-			NUMBER_NEW_VOCS_AT_START = obj.getInt(str_NUMBER_NEW_VOCS_AT_START);
-		}
-		catch (Exception e) {
-			Log.warn(str_NUMBER_NEW_VOCS_AT_START + " was missing.");
-		}
-
-		return new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS_AT_START);
+		Settings settings = new Settings(NUMBER_SIMUL_VOCS, NUMBER_NEW_VOCS);
+		if (error) this.write(settings); // to ensure sync
+		return settings;
 	}
 
 	@NotNull
@@ -81,7 +83,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	protected String onWrite(@NotNull Settings settings) {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
-		obj.add(str_NUMBER_NEW_VOCS_AT_START, settings.NUMBER_NEW_VOCS_AT_START);
+		obj.add(str_NUMBER_NEW_VOCS, settings.NUMBER_NEW_VOCS);
 		return obj.build().toString();
 	}
 }

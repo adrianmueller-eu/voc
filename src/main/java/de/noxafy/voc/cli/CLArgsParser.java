@@ -128,41 +128,41 @@ public class CLArgsParser {
 		return "Asks vocabularies based on a rating algorithm.\n" +
 				usage + "\n" +
 				"\t" + bold("-h") + "\tDisplay this message and exit.\n" +
-				"\t" + bold("-n") + "\tOpen a new window in training mode.\n" +
-				"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
 				"\t" + bold("-t") + "\tStart training mode in this window.\n" +
+				"\t" + "\tIn training mode the shell window shrinks to " + TRAINING_WINDOW_DIMENSIONS + " and clears the screen after each voc.\n" +
+				"\t" + bold("-n") + "\tOpen a new window in training mode.\n" +
 				"\t" + bold("-l") + " " + underline("lang") + "\tSet an alternative interface language. Available: " + Lang.getAvailableString() + "\n" +
-				"\t" + bold("-v") + "\tBe a bit verbose.\n" +
-				"\t" + bold("-d") + "\tPrint very much debug information while asking. Not recommended in training mode.\n" +
-				"\t" + bold("-s") + "\tShow current statistics as shown after learned all vocs for a day and exit.\n" +
+				"\t" + bold("-v") + "\tBe verbose.\n" +
+				"\t" + bold("-d") + "\tPrint very much debug information while asking.\n" +
+				"\t" + bold("-s") + "\tShow current statistics as shown after routine finished and exit.\n" +
 				"\t" + bold("-f") + " " + underline("csv") + "\tRead vocabulary database from a specified " + underline("csv") + " file.\n" +
 				"\n" +
-				"Source of vocabularies is " + underline("csv") + " and is therefore obligatory.\n" +
-				"Each entry there contains the following information:\n" +
+				"The source of vocabularies is " + underline("csv") + " and is hence obligatory.\n" +
+				"Each entry (line) contains the following information:\n" +
 				"\t1. word\n" +
 				"\t2. meaning\n" +
 				"\t3. further information for memorizing or pronouncing (mnemonic)\n" +
-				"\t4. date when voc was added (unix time)\n" +
-				"\t5. date when voc was last asked (unix time)\n" +
-				"\t6. how often it has been asked\n" +
-				"\t7. how often the user failed to answer\n" +
+				"\t4. date when voc was added (unix time, in milliseconds)\n" +
+				"\t5. date when voc was last asked (unix time, in milliseconds)\n" +
+				"\t6. how often it has ever been asked\n" +
+				"\t7. how often the user ever failed to answer\n" +
 				"\t8. how often user succeeded in a row\n" +
 				"The last four stats are used by rating calculation.\n" +
-				"If 6. is not 0, the last stat (succeeded in a row) is used for forget time calculation, as follows:\n" +
-				"\tLEVEL\t\tS. IN A ROW\tFORGET TIME\n" +
+				"If 6. is not 0, the last stat (succeeded in a row) is used for forgetting time calculation:\n" +
+				"\tLEVEL\t\tS. IN A ROW\tFORGETTING TIME\n" +
 				"\tUnknown:\t0-2\t\tinstant\n" +
 				"\tLevel 1:\t3-4\t\t1 day\n" +
 				"\tLevel 2:\t5-6\t\t3 days\n" +
 				"\tLevel 3:\t7-10\t\t1 week\n" +
 				"\tLevel 4:\t11-13\t\t3 months\n" +
 				"\tLevel 5:\t>13\t\t1 year\n" +
-				"Each routine run guarantees each vocabulary has succeeded min. 3 times, so is min. Level 1.\n" +
+				"Each routine run guarantees each vocabulary has succeeded 3 times in a row, thus is min. Level 1.\n" +
 				"Only if a run is interrupted premature, \"unknown\" vocabularies are possible.\n" +
 				"\n" +
 				"Further a settings file is used (defaults to " + settings_file + ").\n" +
 				"There is defined:\n" +
-				"\t- how many vocs should be asked each day (NUMBER_SIMUL_VOCS) and\n" +
-				"\t- how many of them should be new ones (NUMBER_NEW_VOCS_AT_START).";
+				"\t- how many vocs should be asked each routine run (NUMBER_SIMUL_VOCS) and\n" +
+				"\t- how many of them should be new ones (NUMBER_NEW_VOCS).";
 	}
 
 	private static Lang evalLang(String[] args, int i) throws IllegalArgumentException {

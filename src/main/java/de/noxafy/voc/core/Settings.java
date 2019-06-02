@@ -15,10 +15,10 @@ public class Settings {
 
 	public final int NUMBER_SIMUL_VOCS;
 	// should not be bigger than the previous two
-	public final int NUMBER_NEW_VOCS_AT_START;
+	public final int NUMBER_NEW_VOCS;
 
 	public Settings(int number_simul_vocs, int number_new_vocs_at_start) {
 		NUMBER_SIMUL_VOCS = number_simul_vocs;
-		NUMBER_NEW_VOCS_AT_START = number_new_vocs_at_start;
+		NUMBER_NEW_VOCS = number_new_vocs_at_start;
 	}
 }
