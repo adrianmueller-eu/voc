@@ -46,6 +46,8 @@ public final class SettingsFileManager extends FileManager<Settings> {
 	@NotNull
 	@Override
 	protected Settings onLoad(@Nullable String jsonContent) {
+		Log.verbose("Loading settings from: %s", getFile().getAbsolutePath());
+
 		int NUMBER_SIMUL_VOCS = NUMBER_SIMUL_VOCS_DEFAULT;
 		int NUMBER_NEW_VOCS = NUMBER_NEW_VOCS_DEFAULT;
 		boolean error = false;
@@ -84,6 +86,7 @@ public final class SettingsFileManager extends FileManager<Settings> {
 		JsonObjectBuilder obj = Json.createObjectBuilder();
 		obj.add(str_NUMBER_SIMUL_VOCS, settings.NUMBER_SIMUL_VOCS);
 		obj.add(str_NUMBER_NEW_VOCS, settings.NUMBER_NEW_VOCS);
+		Log.verbose("Write settings to: %s", getFile().getAbsolutePath());
 		return obj.build().toString();
 	}
 }

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.min;
 import static java.util.Comparator.comparingDouble;
 
 /**
@@ -50,6 +51,7 @@ public class VocabularyBase {
 
 		// get how many at all should be asked
 		int should_be_asked_overall = settings.NUMBER_SIMUL_VOCS;
+		Log.verbose("Todays list should contain %d vocs", should_be_asked_overall);
 
 		// first, add all from unknown vocs (per definition not contained in todolist)
 		Log.verbose("Unknowns to ask: %d", unknowns.size());
@@ -67,14 +69,15 @@ public class VocabularyBase {
 		else {
 			// add the highest rated vocs from todolist but leave space for new
 			int should_be_asked_from_asked = should_be_asked_overall - settings.NUMBER_NEW_VOCS;
-			Log.verbose("Space left for asked (+ new): %d", should_be_asked_overall - todo_now.size());
 			// if space left
 			if (should_be_asked_overall - todo_now.size() > 0) {
 				// sort todolist
 				Log.verbose("Sorting all todo's by rating");
 				sortList(todo);
+				Log.debug(todo);
 				// add highest rated vocs
-				Log.verbose("Adding highest rated vocs");
+				Log.verbose("Adding %d highest rated vocs", min(should_be_asked_from_asked - todo_now.size(),
+						todo.size()));
 				for (int i = todo.size() - 1; i > 0 && todo_now.size() < should_be_asked_from_asked; i--) {
 					Vocabulary v = todo.get(i);
 					Log.debug("Add from asked vocs: %s", v);
@@ -84,7 +87,7 @@ public class VocabularyBase {
 		}
 
 		// if space left
-		Log.verbose("Space left for new: %d", should_be_asked_overall - todo_now.size());
+		Log.verbose("Adding %d new vocs", should_be_asked_overall - todo_now.size());
 		if (should_be_asked_overall > todo_now.size()) {
 			// ask randomly from new vocs
 			List<Vocabulary> new2 = new LinkedList<>(new_vocs);
@@ -126,14 +129,13 @@ public class VocabularyBase {
 				Log.debugWithTab("Not to ask: %s", v);
 			}
 		}
-		Log.verbose("There are %d vocs to ask out of %d", todo.size(), asked_vocs.size());
+		Log.verbose("There are %d vocs todo out of %d", todo.size(), asked_vocs.size());
 	}
 
 	private void sortList(List<Vocabulary> list) {
 		long now = System.currentTimeMillis();
 		list.sort(comparingDouble(v -> v.getRating(now)));
-		Log.verbose("List sorted");
-		Log.debug(list);
+		Log.debug("List sorted");
 	}
 
 	public void update() {
@@ -161,13 +163,14 @@ public class VocabularyBase {
 	}
 
 	public Vocabulary getNextVocabulary() {
-		Log.debug("Fetch next voc. %d vocs left.", todo_now.size());
+		Log.verbose("Fetch next voc. %d vocs left.", todo_now.size());
 		if (todo_now.size() == 1) {
 			last_asked = todo_now.get(0);
 		}
 		else {
-			Log.verbose("Sorting voc to do now by rating");
+			Log.debug("Sorting voc to do now by rating");
 			sortList(todo_now);
+			Log.debug(todo_now);
 			// get and remove highest rated
 			Vocabulary last = todo_now.get(todo_now.size() - 1);
 			if (last == last_asked) {

@@ -24,10 +24,8 @@ public class AskingRoutine {
 		this.vocabularyFileManager = vocabularyFileManager;
 		this.ui = ui;
 
-		Log.verbose("Loading settings from: %s", settingsFileManager.getFile().getAbsolutePath());
 		settings = settingsFileManager.load();
 
-		Log.verbose("Loading vocabulary base from: %s", vocabularyFileManager.getFile().getAbsolutePath());
 		long now = System.currentTimeMillis();
 		vocabularyBase = vocabularyFileManager.load();
 		Log.verbose("Loaded %d vocs in %d ms", vocabularyBase.size(), System.currentTimeMillis() - now);
@@ -54,8 +52,8 @@ public class AskingRoutine {
 			Vocabulary next = vocabularyBase.getNextVocabulary();
 			ask(next);
 			vocabularyBase.update();
-			ui.prepareForNext();
 			writeOutChanges();
+			ui.prepareForNext();
 		}
 	}
 
@@ -81,7 +79,9 @@ public class AskingRoutine {
 		else {
 			voc.failed();
 		}
-		Log.log(Settings.TRAINING_MODE ? Log.Level.INFO : Log.Level.DEBUG, siar_before + " -> " + voc.getSucceeded_in_a_row());
+
+		Log.verbose(siar_before + " -> " + voc.getSucceeded_in_a_row()
+				+ " (" + Vocabulary.KnowledgeLevel.decide(siar_before) + " -> " + voc.getLevel() + ")");
 	}
 
 	public void summarize() {

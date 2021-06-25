@@ -33,6 +33,7 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 	@NotNull
 	@Override
 	protected VocabularyBase onLoad(@Nullable String content) {
+		Log.verbose("Loading vocabulary base from: %s", getFile().getAbsolutePath());
 		if (content == null) {
 			return new VocabularyBase(new ArrayList<>());
 		}
@@ -83,6 +84,7 @@ public final class VocabularyFileManager extends FileManager<VocabularyBase> {
 		for (Vocabulary voc : vocs) {
 			csv.append(getLine(voc)).append("\n");
 		}
+		Log.verbose("Write vocabulary base to: %s", getFile().getAbsolutePath());
 		return csv.toString();
 	}
 

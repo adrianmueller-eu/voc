@@ -47,10 +47,26 @@ public class Log {
 	 * Debug with a preceding tab and without prefix.
 	 * As in {@link #debug(String, Object...)} the string will only be built if debug mode is activated.
 	 */
-	public static void debugWithTab(String fmt_message, Object... objs) {
-		if (isLevel(Level.DEBUG)) {
+	private static void logWithTab(Level level, String fmt_message, Object... objs) {
+		if (isLevel(level)) {
 			log0(String.format("\t" + fmt_message, objs));
 		}
+	}
+
+	/**
+	 * Debug with a preceding tab and without prefix.
+	 * As in {@link #debug(String, Object...)} the string will only be built if debug mode is activated.
+	 */
+	public static void debugWithTab(String fmt_message, Object... objs) {
+		logWithTab(Level.DEBUG, fmt_message, objs);
+	}
+
+	/**
+	 * Debug the current state of the list.
+	 * As in {@link #debug(String, Object...)} the list will only be processed if debug mode is activated.
+	 */
+	public static void verbose(List list) {
+		log(Level.VERBOSE, list);
 	}
 
 	/**
@@ -58,10 +74,18 @@ public class Log {
 	 * As in {@link #debug(String, Object...)} the list will only be processed if debug mode is activated.
 	 */
 	public static void debug(List list) {
-		if (!isLevel(Level.DEBUG)) return;
+		log(Level.DEBUG, list);
+	}
+
+	/**
+	 * Debug the current state of the list.
+	 * As in {@link #debug(String, Object...)} the list will only be processed if debug mode is activated.
+	 */
+	public static void log(Level level, List list) {
+		if (!isLevel(level)) return;
 
 		for (Object o : list) {
-			debugWithTab(o.toString());
+			logWithTab(level, o.toString());
 		}
 	}
 
